@@ -2,6 +2,7 @@ SET(EXEC_NAME ssvp-interface)
 
 SET(${EXEC_NAME}_src
     ./ssvp-interface.cpp
+    ./square-function.cpp
 )
 
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include)
