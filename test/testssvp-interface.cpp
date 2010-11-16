@@ -15,7 +15,11 @@ void otherLoop()
     for(int timer = 0; timer < 10; ++timer)
     {
         std::cout << timer << std::endl;
+        #ifndef WIN32
         sleep(1);
+        #else
+        Sleep(1000);
+        #endif
     }
 }
 

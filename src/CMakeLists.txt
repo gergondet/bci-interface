@@ -12,7 +12,7 @@ ADD_LIBRARY(${EXEC_NAME}
   SHARED
   ${${EXEC_NAME}_src}
   ${${EXEC_NAME}_headers}
-  )
+)
 
 
 SET_TARGET_PROPERTIES(${LIB_NAME} 
