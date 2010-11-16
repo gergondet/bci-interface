@@ -9,10 +9,11 @@ using namespace ssvpinterface;
 
 int main(int argc, char * argv[])
 {
-    int winW = 1280;
-    int winH = 800;
+    int winW = 1600;
+    int winH = 900;
     sf::RenderWindow app(sf::VideoMode(winW, winH), "ssvp-interface", sf::Style::Fullscreen);
     app.UseVerticalSync(true);
+    app.SetFramerateLimit(60);
     sf::Clock clock;
 
 

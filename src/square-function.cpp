@@ -9,6 +9,13 @@
 namespace ssvpinterface
 {
 
+#ifdef WIN32
+    double nearbyint(double x)
+    {
+        return floor(x+0.5);
+    }
+#endif
+
 bool squarefunction(int frequency, int screenFrequency, std::vector< std::pair<int, int> > & seq)
 {
     // Cannot display this frequencies on a monitor
@@ -65,13 +72,19 @@ bool squarefunction(int frequency, int screenFrequency, std::vector< std::pair<i
     seq.resize(0);
     time_t t;
     time(&t);
+    #ifndef WIN32
     srandom(t);
+    #endif
  
     for(int i = 0; i < frequency; ++i)
     {
         if(highBoundFrameVector.size() != 0)
         {
+            #ifndef WIN32
             double tirage = (double)random()/RAND_MAX;
+            #else
+            double tirage = (double)rand()/RAND_MAX;
+            #endif
             if(lowBoundFrameVector.size() == 0 || tirage < highFrameRateProbability)
             {
                 std::pair<int, int> tmp = highBoundFrameVector.back();
