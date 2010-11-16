@@ -1,0 +1,9 @@
+SET(${PROJECT_NAME}_HEADERS
+	ssvp-interface/FlickeringSquare.h
+	ssvp-interface/square-function.h
+)
+
+INSTALL(FILES ${${PROJECT_NAME}_HEADERS}
+	DESTINATION include/${PROJECT_NAME}
+	PERMISSIONS	OWNER_READ GROUP_READ WORLD_READ OWNER_WRITE
+)
