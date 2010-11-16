@@ -6,6 +6,9 @@
 
 #include <iostream>
 
+namespace ssvpinterface
+{
+
 bool squarefunction(int frequency, int screenFrequency, std::vector< std::pair<int, int> > & seq)
 {
     // Cannot display this frequencies on a monitor
@@ -43,7 +46,7 @@ bool squarefunction(int frequency, int screenFrequency, std::vector< std::pair<i
     }
     else
     {
-        int demiFrame = highBoundFrameRate/2;
+        int demiFrame = (lowBoundFrameRate+1)/2;
         for(unsigned int i = 0; i < nbLowBoundFrame/2; ++i)
         {
             lowBoundFrameVector.push_back(std::pair<int,int>(demiFrame-1,demiFrame));
@@ -92,3 +95,6 @@ bool squarefunction(int frequency, int screenFrequency, std::vector< std::pair<i
 
     return true;
 }
+
+} // namespace ssvpinterface
+
