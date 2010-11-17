@@ -10,27 +10,33 @@
 
 using namespace ssvpinterface;
 
+SSVPInterface * interface = 0;
+
 void otherLoop()
 {
-    for(int timer = 0; timer < 10; ++timer)
+    for(int timer = 0; timer < 5; ++timer)
     {
         std::cout << timer << std::endl;
         sleep(1);
     }
+    if(interface)
+    {
+        interface->Close();
+    }   
 }
 
 int main(int argc, char * argv[])
 {
     int winW = 1280;
     int winH = 800;
-    SSVPInterface interface(winW, winH);
+    interface = new SSVPInterface(winW, winH);
 
-    interface.AddSquare(new FlickeringSquare(5,60, winW/2-50, 50));
-    interface.AddSquare(new FlickeringSquare(10,60, winW-150, winH/2-50));
-    interface.AddSquare(new FlickeringSquare(15,60, winW/2-50, winH-150));
-    interface.AddSquare(new FlickeringSquare(20,60, 50, winH/2-50));
+    interface->AddSquare(new FlickeringSquare(5,60, winW/2-50, 50));
+    interface->AddSquare(new FlickeringSquare(10,60, winW-150, winH/2-50));
+    interface->AddSquare(new FlickeringSquare(15,60, winW/2-50, winH-150));
+    interface->AddSquare(new FlickeringSquare(20,60, 50, winH/2-50));
 
-    boost::thread th(boost::bind(&SSVPInterface::DisplayLoop, &interface));
+    boost::thread th(boost::bind(&SSVPInterface::DisplayLoop, interface));
     boost::thread th2(&otherLoop);
     
     th.join();
