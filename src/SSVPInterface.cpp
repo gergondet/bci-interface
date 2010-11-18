@@ -62,25 +62,22 @@ struct SSVPInterfaceImpl
         {
             if(crossEnable)
             {
-                if(squareId == 0)
+                for(int i = 0; i < m_squares.size(); ++i)
                 {
-                    for(int i = 0; i < m_squares.size(); ++i)
+                    m_squares[i]->SetArrowDisplay(true);
+                }
+            }
+            else
+            {
+                for(int i = 0; i < m_squares.size(); ++i)
+                {
+                    if( squareId - 1  == i)
                     {
                         m_squares[i]->SetArrowDisplay(true);
                     }
-                }
-                else
-                {
-                    for(int i = 0; i < m_squares.size(); ++i)
+                    else
                     {
-                        if( squareId - 1  == i)
-                        {
-                            m_squares[i]->SetArrowDisplay(true);
-                        }
-                        else
-                        {
-                            m_squares[i]->SetArrowDisplay(false);
-                        }
+                        m_squares[i]->SetArrowDisplay(false);
                     }
                 }
             }
