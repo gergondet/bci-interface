@@ -40,9 +40,9 @@ struct SSVPInterfaceImpl
                 m_squares.push_back(square);
         }
 
-        void AddSquare(int frequency, int screenFrequency, float x, float y, float size, int r, int g, int b, int a)
+        void AddSquare(int frequency, int screenFrequency, float x, float y, ArrowPosition arrowPos, float size, int r, int g, int b, int a)
         {
-            FlickeringSquare * square = new FlickeringSquare(frequency, screenFrequency, x, y, size, r, g, b, a);
+            FlickeringSquare * square = new FlickeringSquare(frequency, screenFrequency, x, y, arrowPos, size, r, g, b, a);
             AddSquare(square);
         }
 
@@ -75,6 +75,10 @@ struct SSVPInterfaceImpl
                 for(int i = 0; i < m_squares.size(); ++i)
                 {
                     app->Draw(*(m_squares[i]->GetShape()));
+                    if(m_squares[i]->ArrowDisplay())
+                    {
+                        app->Draw(*(m_squares[i]->GetArrow()));
+                    }
                 }
         
                 app->Display();
@@ -103,9 +107,9 @@ void SSVPInterface::AddSquare(FlickeringSquare * square)
     m_impl->AddSquare(square);
 }
 
-void SSVPInterface::AddSquare(int frequency, int screenFrequency, float x, float y, float size, int r, int g, int b, int a)
+void SSVPInterface::AddSquare(int frequency, int screenFrequency, float x, float y, ArrowPosition arrowPos, float size, int r, int g, int b, int a)
 {
-    m_impl->AddSquare(frequency, screenFrequency, x, y, size, r, g, b, a);
+    m_impl->AddSquare(frequency, screenFrequency, x, y, arrowPos, size, r, g, b, a);
 }
 
 void SSVPInterface::DisplayLoop(bool fullScreen)

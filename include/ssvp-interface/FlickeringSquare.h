@@ -21,17 +21,33 @@ namespace ssvpinterface
 
 struct FlickeringSquareImpl;
 
+enum ArrowPosition
+{
+    UP = 0,
+    RIGHT = 1,
+    DOWN = 2,
+    LEFT = 3
+};
+typedef enum ArrowPosition ArrowPosition;
+
 class FlickeringSquare
 {
 public:
     /*! \brief Constructor */ 
-    SSVPINTERFACE_API FlickeringSquare(int frequency, int screenFrequency, float x = 0, float y = 0, float size = 100, int r = 255, int g = 0, int b = 0, int a = 255);
+    SSVPINTERFACE_API FlickeringSquare(int frequency, int screenFrequency, float x = 0, float y = 0, ArrowPosition arrowPos = UP, float size = 100, int r = 255, int g = 0, int b = 0, int a = 255);
 
     /*! \brief Function to be called in the main program loop, make the flicker happens ! */
     void UpdateForNewFrame(unsigned int frameIndex);
 
-    /*! \brief Get the actual shape when working with SFML */
+    /*! \brief Get the actual shape */
     sf::Shape * GetShape();
+
+    void SetArrowDisplay(bool const displayArrow);
+
+    bool ArrowDisplay();
+
+    /*! \brief Get the arrow */
+    sf::Sprite * GetArrow();
 
 private:
     boost::shared_ptr<FlickeringSquareImpl> m_flsqimpl;
