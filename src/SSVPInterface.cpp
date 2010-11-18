@@ -38,7 +38,9 @@ struct SSVPInterfaceImpl
         void AddSquare(FlickeringSquare * square)
         {
             if(square)
+            {
                 m_squares.push_back(square);
+            }
         }
 
         void AddSquare(int frequency, int screenFrequency, float x, float y, ArrowPosition arrowPos, float size, int r, int g, int b, int a)
@@ -64,24 +66,20 @@ struct SSVPInterfaceImpl
                 {
                     for(int i = 0; i < m_squares.size(); ++i)
                     {
-                        if( m_squares[i] )
-                            m_squares[i]->SetArrowDisplay(true);
+                        m_squares[i]->SetArrowDisplay(true);
                     }
                 }
                 else
                 {
                     for(int i = 0; i < m_squares.size(); ++i)
                     {
-                        if( m_squares[i] )
+                        if( squareId - 1  == i)
                         {
-                            if( squareId - 1  == i)
-                            {
-                                m_squares[i]->SetArrowDisplay(true);
-                            }
-                            else
-                            {
-                                m_squares[i]->SetArrowDisplay(false);
-                            }
+                            m_squares[i]->SetArrowDisplay(true);
+                        }
+                        else
+                        {
+                            m_squares[i]->SetArrowDisplay(false);
                         }
                     }
                 }
@@ -90,6 +88,10 @@ struct SSVPInterfaceImpl
 
         void EnableFlash(bool enable)
         {
+            for(int i = 0; i < m_squares.size(); ++i)
+            {
+                m_squares[i]->SetSquareDisplay(enable);
+            }
         }
 
         void EnableCross(bool enable)
@@ -99,8 +101,7 @@ struct SSVPInterfaceImpl
             {
                 for(int i = 0; i < m_squares.size(); ++i)
                 {
-                    if( m_squares[i] )
-                        m_squares[i]->SetArrowDisplay(false);
+                    m_squares[i]->SetArrowDisplay(false);
                 }
             }
         }
