@@ -12,9 +12,10 @@ struct SSVPInterfaceImpl
         unsigned int m_width;
         unsigned int m_height;
         bool closeRequest;
+        bool crossEnable;
         sf::RenderWindow * app;
     public:
-        SSVPInterfaceImpl(unsigned int width, unsigned int height) : m_width(width), m_height(height), closeRequest(false), app(0)
+        SSVPInterfaceImpl(unsigned int width, unsigned int height) : m_width(width), m_height(height), closeRequest(false), crossEnable(false), app(0)
         {
             m_squares.resize(0);
         }
@@ -44,6 +45,64 @@ struct SSVPInterfaceImpl
         {
             FlickeringSquare * square = new FlickeringSquare(frequency, screenFrequency, x, y, arrowPos, size, r, g, b, a);
             AddSquare(square);
+        }
+
+        void ChangeFrequency(unsigned int squareId, int frequency, int screenFrequency)
+        {
+            if(squareId > 0 && squareId <= m_squares.size())
+            {
+                if( m_squares[squareId-1] )
+                    m_squares[squareId-1]->ChangeFrequency(frequency, screenFrequency);
+            }
+        }
+
+        void EnableArrow(unsigned int squareId)
+        {
+            if(crossEnable)
+            {
+                if(squareId == 0)
+                {
+                    for(int i = 0; i < m_squares.size(); ++i)
+                    {
+                        if( m_squares[i] )
+                            m_squares[i]->SetArrowDisplay(true);
+                    }
+                }
+                else
+                {
+                    for(int i = 0; i < m_squares.size(); ++i)
+                    {
+                        if( m_squares[i] )
+                        {
+                            if( squareId - 1  == i)
+                            {
+                                m_squares[i]->SetArrowDisplay(true);
+                            }
+                            else
+                            {
+                                m_squares[i]->SetArrowDisplay(false);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        void EnableFlash(bool enable)
+        {
+        }
+
+        void EnableCross(bool enable)
+        {
+            crossEnable = enable;
+            if(!crossEnable)
+            {
+                for(int i = 0; i < m_squares.size(); ++i)
+                {
+                    if( m_squares[i] )
+                        m_squares[i]->SetArrowDisplay(false);
+                }
+            }
         }
 
         void DisplayLoop(bool fullScreen)
@@ -110,6 +169,26 @@ void SSVPInterface::AddSquare(FlickeringSquare * square)
 void SSVPInterface::AddSquare(int frequency, int screenFrequency, float x, float y, ArrowPosition arrowPos, float size, int r, int g, int b, int a)
 {
     m_impl->AddSquare(frequency, screenFrequency, x, y, arrowPos, size, r, g, b, a);
+}
+
+void SSVPInterface::ChangeFrequency(unsigned int squareId, int frequency, int screenFrequency)
+{
+    m_impl->ChangeFrequency(squareId, frequency, screenFrequency);
+}
+
+void SSVPInterface::EnableArrow(unsigned int squareId)
+{
+    m_impl->EnableArrow(squareId);
+}
+
+void SSVPInterface::EnableFlash(bool enable)
+{
+    m_impl->EnableFlash(enable);
+}
+
+void SSVPInterface::EnableCross(bool enable)
+{
+    m_impl->EnableCross(enable);
 }
 
 void SSVPInterface::DisplayLoop(bool fullScreen)
