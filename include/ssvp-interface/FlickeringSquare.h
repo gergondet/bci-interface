@@ -42,11 +42,16 @@ public:
     /*! \brief Function to be called in the main program loop, make the flicker happens ! */
     void UpdateForNewFrame(unsigned int frameIndex);
 
+    /*! \brief True: display square, flase: do not display square */
+    void SetSquareDisplay(bool const display);
+
+    bool SquareDisplay();
+
     /*! \brief Get the actual shape */
     sf::Shape * GetShape();
 
     /* True: display arrow, false: do not display arrow */
-    void SetArrowDisplay(bool const displayArrow);
+    void SetArrowDisplay(bool const display);
     
     bool ArrowDisplay();
 

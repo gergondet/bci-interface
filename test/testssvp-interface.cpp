@@ -22,9 +22,25 @@ SSVPInterface * interface = 0;
 
 void otherLoop()
 {
-    for(int timer = 0; timer < 5; ++timer)
+    for(int timer = 0; timer < 15; ++timer)
     {
         std::cout << timer << std::endl;
+        if(timer == 2)
+        {
+            interface->EnableCross(true);
+        }
+        if(timer >= 2)
+        {
+            interface->EnableArrow(timer - 2);
+        }
+        if(timer == 7)
+        {
+            interface->EnableFlash(false);
+        }
+        if(timer == 10)
+        {
+            interface->EnableFlash(true);
+        }
         sleep(1);
     }
     if(interface)

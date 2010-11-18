@@ -13,6 +13,7 @@ private:
     sf::Shape square;
     sf::Color on;
     sf::Color off;
+    bool squareDisplay;
     sf::Image calibrationImage;
     sf::Sprite calibrationArrow;
     bool arrowDisplay;
@@ -22,7 +23,7 @@ private:
 public:
     FlickeringSquareImpl(int frequency, int screenFrequency, float x, float y, ArrowPosition arrowPos, float size, int r, int g, int b, int a) : 
         square(sf::Shape::Rectangle(x, y, x+size, y+size, sf::Color(r, g, b, a))) , 
-        on(r,g,b,a) , off(r,g,b,0) ,
+        on(r,g,b,a) , off(r,g,b,0) , squareDisplay(true),
         arrowDisplay(false),
         frequency(frequency) , screenFrequency(screenFrequency)
     {
@@ -117,6 +118,17 @@ public:
             square.SetColor(off);
         }
     }
+
+    void SetSquareDisplay(bool const display)
+    {
+        this->squareDisplay = display;
+    }
+
+    bool SquareDisplay()
+    {
+        return squareDisplay;
+    }
+
     sf::Shape * GetShape()
     {
         return &square;
@@ -151,6 +163,16 @@ bool FlickeringSquare::ChangeFrequency(int frequency, int screenFrequency)
 void FlickeringSquare::UpdateForNewFrame(unsigned int frameIndex)
 {
     m_flsqimpl->UpdateForNewFrame(frameIndex);
+}
+
+void FlickeringSquare::SetSquareDisplay(bool const display)
+{
+    m_flsqimpl->SetSquareDisplay(display);
+}
+
+bool FlickeringSquare::SquareDisplay()
+{
+    return m_flsqimpl->SquareDisplay();
 }
 
 sf::Shape * FlickeringSquare::GetShape()

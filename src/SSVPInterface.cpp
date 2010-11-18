@@ -134,7 +134,10 @@ struct SSVPInterfaceImpl
         
                 for(int i = 0; i < m_squares.size(); ++i)
                 {
-                    app->Draw(*(m_squares[i]->GetShape()));
+                    if(m_squares[i]->SquareDisplay())
+                    {
+                        app->Draw(*(m_squares[i]->GetShape()));
+                    }
                     if(m_squares[i]->ArrowDisplay())
                     {
                         app->Draw(*(m_squares[i]->GetArrow()));
