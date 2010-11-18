@@ -23,6 +23,11 @@ bool squarefunction(int frequency, int screenFrequency, std::vector< std::pair<i
     {
         return false;
     }
+    if(frequency == 0)
+    {
+        seq.push_back(std::pair<int, int>(0,screenFrequency));
+        return true;
+    }
     // Frames per period
     double frameRate = (double)screenFrequency/(double)frequency;
     int lowBoundFrameRate = (int)floor(frameRate);
