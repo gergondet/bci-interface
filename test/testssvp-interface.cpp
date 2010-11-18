@@ -44,7 +44,7 @@ int main(int argc, char * argv[])
     interface->AddSquare(new FlickeringSquare(15,60, winW/2-50, winH-150));
     interface->AddSquare(new FlickeringSquare(20,60, 50, winH/2-50));
 
-    boost::thread th(boost::bind(&SSVPInterface::DisplayLoop, interface));
+    boost::thread th(boost::bind(&SSVPInterface::DisplayLoop, interface, true));
     boost::thread th2(&otherLoop);
     
     th.join();

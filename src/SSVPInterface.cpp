@@ -46,9 +46,12 @@ struct SSVPInterfaceImpl
             AddSquare(square);
         }
 
-        void DisplayLoop()
+        void DisplayLoop(bool fullScreen)
         {
-            app = new sf::RenderWindow(sf::VideoMode(m_width, m_height), "ssvp-interface", sf::Style::Fullscreen);
+			if(fullScreen)
+				app = new sf::RenderWindow(sf::VideoMode(m_width, m_height), "ssvp-interface", sf::Style::Fullscreen);
+			else
+				app = new sf::RenderWindow(sf::VideoMode(m_width, m_height), "ssvp-interface");
             app->UseVerticalSync(true);
             app->SetFramerateLimit(60);
     
@@ -105,9 +108,9 @@ void SSVPInterface::AddSquare(int frequency, int screenFrequency, float x, float
     m_impl->AddSquare(frequency, screenFrequency, x, y, size, r, g, b, a);
 }
 
-void SSVPInterface::DisplayLoop()
+void SSVPInterface::DisplayLoop(bool fullScreen)
 {
-    m_impl->DisplayLoop();
+    m_impl->DisplayLoop(fullScreen);
 }
 
 void SSVPInterface::Close()
