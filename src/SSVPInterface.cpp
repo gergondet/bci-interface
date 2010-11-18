@@ -11,9 +11,10 @@ struct SSVPInterfaceImpl
         std::vector<FlickeringSquare *> m_squares;
         unsigned int m_width;
         unsigned int m_height;
-        bool running;
+        bool closeRequest;
+        sf::RenderWindow * app;
     public:
-        SSVPInterfaceImpl(unsigned int width, unsigned int height) : m_width(width), m_height(height), running(false)
+        SSVPInterfaceImpl(unsigned int width, unsigned int height) : m_width(width), m_height(height), closeRequest(false), app(0)
         {
             m_squares.resize(0);
         }
@@ -26,6 +27,10 @@ struct SSVPInterfaceImpl
                 {
                     delete m_squares[i];
                 }
+            }
+            if(app)
+            {
+                delete app;
             }
         }
 
@@ -43,41 +48,46 @@ struct SSVPInterfaceImpl
 
         void DisplayLoop()
         {
-            sf::RenderWindow app(sf::VideoMode(m_width, m_height), "ssvp-interface", sf::Style::Fullscreen);
-            app.UseVerticalSync(true);
-            app.SetFramerateLimit(60);
+            app = new sf::RenderWindow(sf::VideoMode(m_width, m_height), "ssvp-interface", sf::Style::Fullscreen);
+            app->UseVerticalSync(true);
+            app->SetFramerateLimit(60);
     
             unsigned int frameCount = 0;
 
-            while(app.IsOpened())
+            while(!closeRequest && app->IsOpened())
             {
-                app.Clear();
+                app->Clear();
 
                 sf::Event Event;
-                while (app.GetEvent(Event))
+                while (app->GetEvent(Event))
                 {
                     // Close window : exit
                     if (Event.Type == sf::Event::Closed)
-                        app.Close();
+                        app->Close();
                     if( Event.Type == sf::Event::KeyPressed && ( Event.Key.Code == sf::Key::Escape || Event.Key.Code == sf::Key::Q ) )
-                        app.Close();
+                        app->Close();
                 }
         
         
                 for(int i = 0; i < m_squares.size(); ++i)
                 {
-                    app.Draw(*(m_squares[i]->GetShape()));
+                    app->Draw(*(m_squares[i]->GetShape()));
                 }
         
-                app.Display();
+                app->Display();
         
                 frameCount++;
                 for(int i = 0; i < m_squares.size(); ++i)
                 {
                     m_squares[i]->UpdateForNewFrame(frameCount);
                 }
-        
             }
+            app->Close();
+        }
+        
+        void Close()
+        {
+            closeRequest = true;
         }
 };
 
@@ -98,6 +108,11 @@ void SSVPInterface::AddSquare(int frequency, int screenFrequency, float x, float
 void SSVPInterface::DisplayLoop()
 {
     m_impl->DisplayLoop();
+}
+
+void SSVPInterface::Close()
+{
+    m_impl->Close();
 }
 
 } // namespace ssvpinterface
