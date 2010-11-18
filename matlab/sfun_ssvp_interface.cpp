@@ -165,9 +165,14 @@ static void mdlOutputs(SimStruct *S, int_T tid)
 	{
 		crossOn = in_crossOn;
 		if(crossOn == 0)
+		{
 			m_interface->EnableCross(false);
+			m_interface->EnableArrow(trainArrowIdx);
+		}
 		else
+		{
 			m_interface->EnableCross(true);
+		}
 	}
 	
 	
