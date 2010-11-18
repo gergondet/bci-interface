@@ -77,6 +77,35 @@ public:
     ~FlickeringSquareImpl()
     {
     }
+
+    bool ChangeFrequency(int frequency, int screenFrequency)
+    {
+        std::vector< std::pair<int, int> > tmpSeq;
+        std::vector<bool> newFrameSeq;
+        if(squarefunction(frequency, screenFrequency, tmpSeq))
+        {
+            for(int i = 0; i < tmpSeq.size(); ++i)
+            {
+                for(int j = 0; j < tmpSeq[i].first; ++j)
+                {
+                    newFrameSeq.push_back(true);
+                }
+                for(int j = 0; j < tmpSeq[i].second; ++j)
+                {
+                    newFrameSeq.push_back(false);
+                }
+            }
+        }
+        else
+        {
+            return false;
+        }
+        this->frequency = frequency;
+        this->screenFrequency = screenFrequency;
+        this->frameSeq = newFrameSeq;
+        return true;
+    }
+
     void UpdateForNewFrame(unsigned int frameIndex)
     {
         if(frameSeq[frameIndex % screenFrequency])
@@ -112,6 +141,11 @@ public:
 FlickeringSquare::FlickeringSquare(int frequency, int screenFrequency, float x, float y, ArrowPosition arrowPos, float size, int r, int g, int b, int a) :
     m_flsqimpl(new FlickeringSquareImpl(frequency, screenFrequency, x, y, arrowPos, size, r, g, b, a))
 {
+}
+
+bool FlickeringSquare::ChangeFrequency(int frequency, int screenFrequency)
+{
+    return m_flsqimpl->ChangeFrequency(frequency, screenFrequency);
 }
 
 void FlickeringSquare::UpdateForNewFrame(unsigned int frameIndex)

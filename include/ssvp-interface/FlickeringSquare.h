@@ -36,14 +36,18 @@ public:
     /*! \brief Constructor */ 
     SSVPINTERFACE_API FlickeringSquare(int frequency, int screenFrequency, float x = 0, float y = 0, ArrowPosition arrowPos = UP, float size = 100, int r = 255, int g = 0, int b = 0, int a = 255);
 
+    /* \brief Change flickering frequency */
+    bool ChangeFrequency(int frequency, int screenFrequency);
+
     /*! \brief Function to be called in the main program loop, make the flicker happens ! */
     void UpdateForNewFrame(unsigned int frameIndex);
 
     /*! \brief Get the actual shape */
     sf::Shape * GetShape();
 
+    /* True: display arrow, false: do not display arrow */
     void SetArrowDisplay(bool const displayArrow);
-
+    
     bool ArrowDisplay();
 
     /*! \brief Get the arrow */
