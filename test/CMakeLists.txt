@@ -25,6 +25,6 @@ SET_TARGET_PROPERTIES(${PROJECT_NAME_LIB}
 IF(UNIX)
 TARGET_LINK_LIBRARIES(${EXEC_NAME} "${PROJECT_NAME} -lsfml-graphics -lsfml-window -lsfml-system")
 ELSE(UNIX)
-TARGET_LINK_LIBRARIES(${EXEC_NAME} "${PROJECT_NAME} sfml-graphics sfml-window sfml-system")
+TARGET_LINK_LIBRARIES(${EXEC_NAME} "ssvp-interface.lib sfml-graphics.lib sfml-window.lib sfml-system.lib")
 ENDIF(UNIX)
 TARGET_LINK_LIBRARIES(${EXEC_NAME} ${Boost_LIBRARIES})

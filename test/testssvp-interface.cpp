@@ -5,6 +5,14 @@
 #include <iostream>
 #include <sstream>
 
+#ifdef WIN32
+#include <Windows.h>
+void sleep(DWORD t)
+{
+	Sleep(1000*t);
+}
+#endif
+
 #include <boost/thread.hpp>
 #include <boost/bind.hpp>
 
@@ -15,11 +23,7 @@ void otherLoop()
     for(int timer = 0; timer < 10; ++timer)
     {
         std::cout << timer << std::endl;
-        #ifndef WIN32
         sleep(1);
-        #else
-        Sleep(1000);
-        #endif
     }
 }
 

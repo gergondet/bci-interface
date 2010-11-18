@@ -10,6 +10,12 @@
 #include <boost/shared_ptr.hpp>
 #include <SFML/Graphics.hpp>
 
+#ifdef WIN32
+#define SSVPINTERFACE_API __declspec(dllexport)
+#else
+#define SSVPINTERFACE_API 
+#endif
+
 namespace ssvpinterface
 {
 
@@ -19,7 +25,7 @@ class FlickeringSquare
 {
 public:
     /*! \brief Constructor */ 
-    FlickeringSquare(int frequency, int screenFrequency, float x = 0, float y = 0, float size = 100, int r = 255, int g = 0, int b = 0, int a = 255);
+    SSVPINTERFACE_API FlickeringSquare(int frequency, int screenFrequency, float x = 0, float y = 0, float size = 100, int r = 255, int g = 0, int b = 0, int a = 255);
 
     /*! \brief Function to be called in the main program loop, make the flicker happens ! */
     void UpdateForNewFrame(unsigned int frameIndex);
