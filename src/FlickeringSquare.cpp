@@ -12,7 +12,6 @@ struct FlickeringSquareImpl
 private:
     sf::Shape square;
     sf::Color on;
-    sf::Color off;
     bool squareDisplay;
     sf::Image calibrationImage;
     sf::Sprite calibrationArrow;
@@ -23,7 +22,7 @@ private:
 public:
     FlickeringSquareImpl(int frequency, int screenFrequency, float x, float y, ArrowPosition arrowPos, float size, int r, int g, int b, int a) : 
         square(sf::Shape::Rectangle(x, y, x+size, y+size, sf::Color(r, g, b, a))) , 
-        on(r,g,b,a) , off(r,g,b,0) , squareDisplay(true),
+        on(r,g,b,a), squareDisplay(true),
         arrowDisplay(false),
         frequency(frequency) , screenFrequency(screenFrequency)
     {
@@ -109,14 +108,7 @@ public:
 
     void UpdateForNewFrame(unsigned int frameIndex)
     {
-        if(frameSeq[frameIndex % screenFrequency])
-        {
-            square.SetColor(on);
-        }
-        else
-        {
-            square.SetColor(off);
-        }
+        squareDisplay = frameSeq[frameIndex % screenFrequency];
     }
 
     void SetSquareDisplay(bool const display)

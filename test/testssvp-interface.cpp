@@ -55,16 +55,12 @@ int main(int argc, char * argv[])
     int winH = 800;
     interface = new SSVPInterface(winW, winH);
 
-    interface->AddSquare(new FlickeringSquare(5,60, winW/2-50, 50, DOWN));
-    interface->AddSquare(new FlickeringSquare(10,60, winW-150, winH/2-50, LEFT));
-    interface->AddSquare(new FlickeringSquare(15,60, winW/2-50, winH-150, UP));
-    interface->AddSquare(new FlickeringSquare(20,60, 50, winH/2-50, RIGHT));
+    interface->AddSquare(new FlickeringSquare(10,60, winW/2-50, 50, DOWN));
+    interface->AddSquare(new FlickeringSquare(11,60, winW-150, winH/2-50, LEFT));
+    interface->AddSquare(new FlickeringSquare(12,60, winW/2-50, winH-150, UP));
+    interface->AddSquare(new FlickeringSquare(13,60, 50, winH/2-50, RIGHT));
 
-    boost::thread th(boost::bind(&SSVPInterface::DisplayLoop, interface, true));
-    boost::thread th2(&otherLoop);
+    interface->DisplayLoop();
     
-    th.join();
-    th2.join();
-
     return 0;
 }

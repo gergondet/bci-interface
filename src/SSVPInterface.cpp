@@ -1,6 +1,7 @@
 #include <ssvp-interface/SSVPInterface.h>
 
 #include <SFML/Graphics.hpp>
+#include <fstream>
 
 namespace ssvpinterface
 {
@@ -112,17 +113,23 @@ struct SSVPInterfaceImpl
 
         void DisplayLoop(bool fullScreen)
         {
+            std::ofstream fpsLog("fps.log");
 			if(fullScreen)
 				app = new sf::RenderWindow(sf::VideoMode(m_width, m_height), "ssvp-interface", sf::Style::Fullscreen);
 			else
 				app = new sf::RenderWindow(sf::VideoMode(m_width, m_height), "ssvp-interface");
             app->UseVerticalSync(true);
-            app->SetFramerateLimit(60);
+            //app->SetFramerateLimit(60);
     
             unsigned int frameCount = 0;
+            sf::Clock clock;
 
             while(!closeRequest && app->IsOpened())
             {
+                for(int i = 0; i < m_squares.size(); ++i)
+                {
+                    m_squares[i]->UpdateForNewFrame(frameCount);
+                }
                 app->Clear();
 
                 sf::Event Event;
@@ -151,11 +158,14 @@ struct SSVPInterfaceImpl
                 app->Display();
         
                 frameCount++;
-                for(int i = 0; i < m_squares.size(); ++i)
+                if(frameCount == 60)
                 {
-                    m_squares[i]->UpdateForNewFrame(frameCount);
+                    fpsLog << "fps: " << (frameCount)/clock.GetElapsedTime() << " in " << clock.GetElapsedTime() << " drew " << frameCount << "frames" << std::endl;
+                    frameCount = 0;
+                    clock.Reset();
                 }
             }
+            fpsLog.close();
             app->Close();
         }
         
