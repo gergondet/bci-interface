@@ -101,6 +101,13 @@ struct SSVPInterfaceImpl
                     m_squares[i]->SetArrowDisplay(false);
                 }
             }
+            else
+            {
+                for(int i = 0; i < m_squares.size(); ++i)
+                {
+                    m_squares[i]->SetArrowDisplay(true);
+                }
+            }
         }
 
         void DisplayLoop(bool fullScreen)
