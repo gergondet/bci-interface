@@ -8,12 +8,10 @@
  *  $Revision: 1.1.6.1 $
  */
 
-#include <boost/thread.hpp>
 #include <fstream>
+#include <windows.h>
 
-#pragma comment(lib, "sfml-audio.lib");
-#pragma comment(lib, "sfml-system.lib");
-
+#pragma comment (lib, "winmm.lib")
 
 int freqLED1 = -1;
 int freqLED2 = -1;
@@ -22,16 +20,6 @@ int freqLED4 = -1;
 int trainArrowIdx = -1;
 bool flashOn = true;
 bool crossOn = false;
-
-void PlaySound(const std::string & fileName)
-{
-    sf::SoundBuffer soundBuffer;
-    soundBuffer.LoadFromFile("test.wav");
-    sf::Sound sound;
-    sound.SetBuffer(soundBuffer);
-    sound.Play();
-    while(sound.GetStatus() == sf::Sound::Playing);
-}
 
 #define S_FUNCTION_LEVEL 2
 #define S_FUNCTION_NAME  sfun_ssvp_interface
@@ -87,8 +75,6 @@ static void mdlInitializeSampleTimes(SimStruct *S)
 #if defined(MDL_START) 
   static void mdlStart(SimStruct *S)
   {
-      int winW = 800;
-	  int winH = 600;
       freqLED1 = -1;
       freqLED2 = -1;
       freqLED3 = -1;
@@ -96,6 +82,7 @@ static void mdlInitializeSampleTimes(SimStruct *S)
       trainArrowIdx = -1;
       flashOn = true;
       crossOn = false;
+	  
   }                                            
 #endif /*  MDL_START */
 
@@ -138,16 +125,16 @@ static void mdlOutputs(SimStruct *S, int_T tid)
         switch(trainArrowIdx)
         {
             case 1:
-                boost::thread th(boost::bind(&PlaySound, "data/up.wav"));
+				PlaySound("data/up.wav", NULL, SND_ASYNC);
                 break;
             case 2:
-                boost::thread th(boost::bind(&PlaySound, "data/right.wav"));
+				PlaySound("data/right.wav", NULL, SND_ASYNC);
                 break;
             case 3:
-                boost::thread th(boost::bind(&PlaySound, "data/down.wav"));
+				PlaySound("data/down.wav", NULL, SND_ASYNC);
                 break;
             case 4:
-                boost::thread th(boost::bind(&PlaySound, "data/left.wav"));
+				PlaySound("data/left.wav", NULL, SND_ASYNC);
                 break;
             default:
                 break;
