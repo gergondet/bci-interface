@@ -113,22 +113,21 @@ struct SSVPInterfaceImpl
 
         void DisplayLoop(bool fullScreen)
         {
-            std::ofstream fpsLog("fps.log");
+            std::ofstream frameLog("frame.log");
             if(fullScreen)
                 app = new sf::RenderWindow(sf::VideoMode(m_width, m_height), "ssvp-interface", sf::Style::Fullscreen);
             else
                 app = new sf::RenderWindow(sf::VideoMode(m_width, m_height), "ssvp-interface");
-    
+
             unsigned int frameCount = 0;
-            unsigned int realFrameCount = -1;
             sf::Clock clock;
 
             while(!closeRequest && app->IsOpened())
             {
-                realFrameCount++;
-                frameCount = floor(clock.GetElapsedTime()*60);
+                frameCount = (int)floor(clock.GetElapsedTime()*60) % 60;
                 for(int i = 0; i < m_squares.size(); ++i)
                 {
+                    frameLog << "Frame: " << frameCount << " ";
                     m_squares[i]->UpdateForNewFrame(frameCount);
                 }
                 app->Clear();
@@ -146,6 +145,7 @@ struct SSVPInterfaceImpl
         
                 for(int i = 0; i < m_squares.size(); ++i)
                 {
+                    frameLog << "SquareDisplay : " << m_squares[i]->SquareDisplay() << std::endl;
                     if(m_squares[i]->SquareDisplay())
                     {
                         app->Draw(*(m_squares[i]->GetShape()));
@@ -158,16 +158,9 @@ struct SSVPInterfaceImpl
         
                 app->Display();
         
-                if( clock.GetElapsedTime() > 1 )
-                {
-                    fpsLog << "Real fps: " << realFrameCount/clock.GetElapsedTime() << std::endl;
-                    realFrameCount = 0;
-                    frameCount = 0;
-                    clock.Reset();
-                }
             }
-            fpsLog.close();
             app->Close();
+            frameLog.close();
         }
         
         void Close()
