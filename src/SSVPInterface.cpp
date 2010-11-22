@@ -125,7 +125,11 @@ struct SSVPInterfaceImpl
 
             while(!closeRequest && app->IsOpened())
             {
+                #ifndef WIN32
                 frameCount++;
+                #else
+                frameCount = (int)floor(clock.GetElapsedTime()*60);
+                #endif
                 for(int i = 0; i < m_squares.size(); ++i)
                 {
                     m_squares[i]->UpdateForNewFrame(frameCount);
