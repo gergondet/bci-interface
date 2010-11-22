@@ -8,18 +8,13 @@
  *  $Revision: 1.1.6.1 $
  */
 
-#include <ssvp-interface/SSVPInterface.h>
 #include <boost/thread.hpp>
 #include <fstream>
 
-#pragma comment(lib, "ssvp-interface.lib");
-#pragma comment(lib, "sfml-graphics.lib");
-#pragma comment(lib, "sfml-window.lib");
+#pragma comment(lib, "sfml-audio.lib");
 #pragma comment(lib, "sfml-system.lib");
 
 
-ssvpinterface::SSVPInterface * m_interface = 0;
-boost::thread * th = 0;
 int freqLED1 = -1;
 int freqLED2 = -1;
 int freqLED3 = -1;
@@ -27,6 +22,16 @@ int freqLED4 = -1;
 int trainArrowIdx = -1;
 bool flashOn = true;
 bool crossOn = false;
+
+void PlaySound(const std::string & fileName)
+{
+    sf::SoundBuffer soundBuffer;
+    soundBuffer.LoadFromFile("test.wav");
+    sf::Sound sound;
+    sound.SetBuffer(soundBuffer);
+    sound.Play();
+    while(sound.GetStatus() == sf::Sound::Playing);
+}
 
 #define S_FUNCTION_LEVEL 2
 #define S_FUNCTION_NAME  sfun_ssvp_interface
@@ -84,8 +89,6 @@ static void mdlInitializeSampleTimes(SimStruct *S)
   {
       int winW = 800;
 	  int winH = 600;
-	  m_interface = 0;
-      th = 0;
       freqLED1 = -1;
       freqLED2 = -1;
       freqLED3 = -1;
@@ -93,15 +96,6 @@ static void mdlInitializeSampleTimes(SimStruct *S)
       trainArrowIdx = -1;
       flashOn = true;
       crossOn = false;
-      m_interface = new ssvpinterface::SSVPInterface(winW, winH);
-	  m_interface->AddSquare(new ssvpinterface::FlickeringSquare(0,60, winW/2-50, 50, ssvpinterface::ArrowPosition::DOWN));
-      m_interface->AddSquare(new ssvpinterface::FlickeringSquare(0,60, winW-150, winH/2-50, ssvpinterface::ArrowPosition::LEFT));
-      m_interface->AddSquare(new ssvpinterface::FlickeringSquare(0,60, winW/2-50, winH-150, ssvpinterface::ArrowPosition::UP));
-      m_interface->AddSquare(new ssvpinterface::FlickeringSquare(0,60, 50, winH/2-50, ssvpinterface::ArrowPosition::RIGHT));
-	  m_interface->EnableCross(true);
-	  m_interface->EnableFlash(true);
-	  m_interface->EnableArrow(0);
-	  th = new boost::thread(boost::bind(&ssvpinterface::SSVPInterface::DisplayLoop, m_interface, false));
   }                                            
 #endif /*  MDL_START */
 
@@ -113,7 +107,6 @@ static void mdlOutputs(SimStruct *S, int_T tid)
 	if( freqLED1 != in_freqLED1)
 	{
 		freqLED1 = in_freqLED1;
-		m_interface->ChangeFrequency(1, freqLED1, 60);
 	}
 	
 	u  = ssGetInputPortRealSignal(S,1);
@@ -121,7 +114,6 @@ static void mdlOutputs(SimStruct *S, int_T tid)
 	if( freqLED2 != in_freqLED2)
 	{
 		freqLED2 = in_freqLED2;
-		m_interface->ChangeFrequency(2, freqLED2, 60);
 	}
 	
 	u  = ssGetInputPortRealSignal(S,2);
@@ -129,7 +121,6 @@ static void mdlOutputs(SimStruct *S, int_T tid)
 	if( freqLED3 != in_freqLED3)
 	{
 		freqLED3 = in_freqLED3;
-		m_interface->ChangeFrequency(3, freqLED3, 60);
 	}
 	
 	u  = ssGetInputPortRealSignal(S,3);
@@ -137,7 +128,6 @@ static void mdlOutputs(SimStruct *S, int_T tid)
 	if( freqLED4 != in_freqLED4)
 	{
 		freqLED4 = in_freqLED4;
-		m_interface->ChangeFrequency(4, freqLED4, 60);
 	}
 	
 	u = ssGetInputPortRealSignal(S,4);
@@ -145,7 +135,23 @@ static void mdlOutputs(SimStruct *S, int_T tid)
 	if( trainArrowIdx != in_trainArrowIdx )
 	{
 		trainArrowIdx = in_trainArrowIdx;
-		m_interface->EnableArrow(trainArrowIdx);
+        switch(trainArrowIdx)
+        {
+            case 1:
+                boost::thread th(boost::bind(&PlaySound, "data/up.wav"));
+                break;
+            case 2:
+                boost::thread th(boost::bind(&PlaySound, "data/right.wav"));
+                break;
+            case 3:
+                boost::thread th(boost::bind(&PlaySound, "data/down.wav"));
+                break;
+            case 4:
+                boost::thread th(boost::bind(&PlaySound, "data/left.wav"));
+                break;
+            default:
+                break;
+        }
 	}
 	
 	u = ssGetInputPortRealSignal(S,5);
@@ -153,10 +159,6 @@ static void mdlOutputs(SimStruct *S, int_T tid)
 	if( flashOn != in_flashOn )
 	{
 		flashOn = in_flashOn;
-		if(flashOn == 0)
-			m_interface->EnableFlash(false);
-		else
-			m_interface->EnableFlash(true);
 	}
 	
 	u = ssGetInputPortRealSignal(S,6);
@@ -164,15 +166,6 @@ static void mdlOutputs(SimStruct *S, int_T tid)
 	if( crossOn != in_crossOn )
 	{
 		crossOn = in_crossOn;
-		if(crossOn == 0)
-		{
-			m_interface->EnableCross(false);
-			m_interface->EnableArrow(trainArrowIdx);
-		}
-		else
-		{
-			m_interface->EnableCross(true);
-		}
 	}
 	
 	
@@ -183,10 +176,6 @@ static void mdlOutputs(SimStruct *S, int_T tid)
 
 static void mdlTerminate(SimStruct *S)
 {
-	m_interface->Close();
-	th->join();
-	delete(m_interface);
-	delete(th);
 }                                              
 
 #endif
