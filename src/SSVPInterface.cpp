@@ -113,21 +113,21 @@ struct SSVPInterfaceImpl
 
         void DisplayLoop(bool fullScreen)
         {
-            std::ofstream frameLog("frame.log");
             if(fullScreen)
                 app = new sf::RenderWindow(sf::VideoMode(m_width, m_height), "ssvp-interface", sf::Style::Fullscreen);
             else
                 app = new sf::RenderWindow(sf::VideoMode(m_width, m_height), "ssvp-interface");
+
+            app->UseVerticalSync(true);
 
             unsigned int frameCount = 0;
             sf::Clock clock;
 
             while(!closeRequest && app->IsOpened())
             {
-                frameCount = (int)floor(clock.GetElapsedTime()*60) % 60;
+                frameCount++;
                 for(int i = 0; i < m_squares.size(); ++i)
                 {
-                    frameLog << "Frame: " << frameCount << " ";
                     m_squares[i]->UpdateForNewFrame(frameCount);
                 }
                 app->Clear();
@@ -135,7 +135,6 @@ struct SSVPInterfaceImpl
                 sf::Event Event;
                 while (app->GetEvent(Event))
                 {
-                    // Close window : exit
                     if (Event.Type == sf::Event::Closed)
                         app->Close();
                     if( Event.Type == sf::Event::KeyPressed && ( Event.Key.Code == sf::Key::Escape || Event.Key.Code == sf::Key::Q ) )
@@ -145,7 +144,6 @@ struct SSVPInterfaceImpl
         
                 for(int i = 0; i < m_squares.size(); ++i)
                 {
-                    frameLog << "SquareDisplay : " << m_squares[i]->SquareDisplay() << std::endl;
                     if(m_squares[i]->SquareDisplay())
                     {
                         app->Draw(*(m_squares[i]->GetShape()));
@@ -160,7 +158,6 @@ struct SSVPInterfaceImpl
         
             }
             app->Close();
-            frameLog.close();
         }
         
         void Close()

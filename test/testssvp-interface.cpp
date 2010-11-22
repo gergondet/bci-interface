@@ -55,10 +55,10 @@ int main(int argc, char * argv[])
     int winH = 800;
     interface = new SSVPInterface(winW, winH);
 
-    interface->AddSquare(new FlickeringSquare(30,60, winW/2-50, 50, DOWN));
-    interface->AddSquare(new FlickeringSquare(30,60, winW-150, winH/2-50, LEFT));
-    interface->AddSquare(new FlickeringSquare(30,60, winW/2-50, winH-150, UP));
-    interface->AddSquare(new FlickeringSquare(30,60, 50, winH/2-50, RIGHT));
+    interface->AddSquare(new FlickeringSquare(5,60, winW/2-50, 50, DOWN));
+    interface->AddSquare(new FlickeringSquare(7,60, winW-150, winH/2-50, LEFT));
+    interface->AddSquare(new FlickeringSquare(9,60, winW/2-50, winH-150, UP));
+    interface->AddSquare(new FlickeringSquare(11,60, 50, winH/2-50, RIGHT));
 
     interface->DisplayLoop();
     
