@@ -9,6 +9,7 @@
 #include <unistd.h>
 #include <sys/select.h>
 #include <cerrno>
+#include <string.h>
 
 namespace ssvpinterface
 {
@@ -26,7 +27,7 @@ private:
     bool endLoop;
 public:
     BackgroundSpriteImpl(const std::string & visionName, unsigned short visionPort) : 
-        m_dataFromSocket(new unsigned char[50001]), m_dataImage(new sf::Uint8[640*480*4]),
+        m_dataFromSocket(new unsigned char[50001]), m_dataImage(new sf::Uint8[160*120*4]),
         m_image(new sf::Image), m_sprite(new sf::Sprite), endLoop(false)
     {
         struct hostent * hent;
@@ -39,7 +40,7 @@ public:
         }
         else
         {
-            std::cerr << std::strerror(errno) << std::endl;
+            std::cerr << strerror(errno) << std::endl;
         }
     }
     ~BackgroundSpriteImpl()
@@ -57,7 +58,7 @@ public:
         m_sockfd = socket(AF_INET, SOCK_DGRAM, 0);
         if(m_sockfd < 0)
         {
-                std::cerr << std::strerror(m_sockfd) << std::endl;
+                std::cerr << strerror(m_sockfd) << std::endl;
         }
         
         m_bindaddr.sin_family = AF_INET;
@@ -66,7 +67,7 @@ public:
         int err = bind(m_sockfd, (struct sockaddr *)&m_bindaddr, sizeof(m_bindaddr));
         if(err < 0)
         {
-                std::cerr << std::strerror(err) << std::endl;
+                std::cerr << strerror(err) << std::endl;
                 close(m_sockfd);
         }
     }
@@ -80,8 +81,8 @@ public:
 
             int receivedData = 0;
             unsigned char packetId = '\0';
-            memset(m_dataImage, 0, 640*480*4);
-            while(receivedData < 640*480 && receivedData != -1)
+            memset(m_dataImage, 0, 160*120*4);
+            while(receivedData < 160*120 && receivedData != -1)
             {
                 FD_ZERO(&recvset);
                 FD_SET(m_sockfd, &recvset);
@@ -122,7 +123,7 @@ public:
             if(receivedData != -1)
             {
                 /* m_dataImage has a full image worth of data, update the sprite */
-                m_image->LoadFromPixels(640, 480, m_dataImage);
+                m_image->LoadFromPixels(160, 120, m_dataImage);
                 m_sprite->SetImage(*m_image);
             }
         }

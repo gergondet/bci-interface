@@ -24,7 +24,7 @@ SET_TARGET_PROPERTIES(${LIB_NAME}
 IF(UNIX)
 SET_TARGET_PROPERTIES(${EXEC_NAME}
   PROPERTIES
-  LINK_FLAGS "-lsfml-graphics -lsfml-window -lsfml-system"
+  LINK_FLAGS "-L/usr/local/lib -lsfml-graphics -lsfml-window -lsfml-system"
 )
 ENDIF(UNIX)
 

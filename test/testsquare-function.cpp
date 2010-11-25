@@ -1,5 +1,6 @@
 #include <ssvp-interface/square-function.h>
 
+#include <stdlib.h>
 #include <iostream>
 
 using namespace ssvpinterface;
