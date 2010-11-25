@@ -42,6 +42,9 @@ public:
         {
             std::cerr << strerror(errno) << std::endl;
         }
+        memset(m_dataImage, 0, 160*120*4);
+        m_image->LoadFromPixels(160, 120, m_dataImage);
+        m_sprite->SetImage(*m_image);
     }
     ~BackgroundSpriteImpl()
     {
