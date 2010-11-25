@@ -3,6 +3,7 @@ SET(EXEC_NAME ssvp-interface)
 SET(${EXEC_NAME}_src
     ./square-function.cpp
     ./SSVPInterface.cpp
+    ./SSVPInterfaceConfig.cpp
     ./FlickeringSquare.cpp
     ./BackgroundSprite.cpp
 )
