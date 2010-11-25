@@ -34,7 +34,7 @@ class FlickeringSquare
 {
 public:
     /*! \brief Constructor */ 
-    SSVPINTERFACE_API FlickeringSquare(int frequency, int screenFrequency, float x = 0, float y = 0, ArrowPosition arrowPos = UP, float size = 100, int r = 255, int g = 0, int b = 0, int a = 255);
+    SSVPINTERFACE_API FlickeringSquare(int frequency, int screenFrequency, float x = 0, float y = 0, ArrowPosition arrowPos = UP, float size = 100, int r = 255, int g = 0, int b = 0, int a = 255, bool fill = true);
 
     /* \brief Change flickering frequency */
     bool ChangeFrequency(int frequency, int screenFrequency);

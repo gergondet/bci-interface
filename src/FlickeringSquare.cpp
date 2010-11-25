@@ -20,12 +20,18 @@ private:
     int screenFrequency;
     std::vector<bool> frameSeq;
 public:
-    FlickeringSquareImpl(int frequency, int screenFrequency, float x, float y, ArrowPosition arrowPos, float size, int r, int g, int b, int a) : 
-        square(sf::Shape::Rectangle(x, y, x+size, y+size, sf::Color(r, g, b, a))) , 
+    FlickeringSquareImpl(int frequency, int screenFrequency, float x, float y, ArrowPosition arrowPos, float size, int r, int g, int b, int a, bool fill) : 
+        square(sf::Shape::Rectangle(x, y, x+size, y+size, sf::Color(r, g, b, a), 0, sf::Color(r,g,b,a))) , 
         on(r,g,b,a), squareDisplay(true),
         arrowDisplay(false),
         frequency(frequency) , screenFrequency(screenFrequency)
     {
+        if(!fill)
+        {
+            square.EnableFill(false);
+            square.EnableOutline(true);
+            square.SetOutlineWidth(10);
+        }
         calibrationImage.LoadFromFile("data/arrow.png");
         calibrationArrow = sf::Sprite(calibrationImage);
         switch(arrowPos)
@@ -139,8 +145,8 @@ public:
     }
 }; //class FlickeringSquareImpl
 
-FlickeringSquare::FlickeringSquare(int frequency, int screenFrequency, float x, float y, ArrowPosition arrowPos, float size, int r, int g, int b, int a) :
-    m_flsqimpl(new FlickeringSquareImpl(frequency, screenFrequency, x, y, arrowPos, size, r, g, b, a))
+FlickeringSquare::FlickeringSquare(int frequency, int screenFrequency, float x, float y, ArrowPosition arrowPos, float size, int r, int g, int b, int a, bool fill) :
+    m_flsqimpl(new FlickeringSquareImpl(frequency, screenFrequency, x, y, arrowPos, size, r, g, b, a, fill))
 {
 }
 
