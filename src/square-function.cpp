@@ -31,7 +31,6 @@ bool squarefunction(int frequency, int screenFrequency, std::vector< std::pair<i
     // Frames per period
     double frameRate = (double)screenFrequency/(double)frequency;
     int lowBoundFrameRate = (int)floor(frameRate);
-    int highBoundFrameRate = (int)ceil(frameRate);
     double highFrameRateProbability = frameRate - (double)lowBoundFrameRate;
 
     int nbHighBoundFrame = (int)nearbyint((double)frequency*highFrameRateProbability);
@@ -43,15 +42,15 @@ bool squarefunction(int frequency, int screenFrequency, std::vector< std::pair<i
     if(lowBoundFrameRate % 2 == 0)
     {
         int demiFrame = lowBoundFrameRate/2;
-        for(unsigned int i = 0; i < nbLowBoundFrame; ++i)
+        for(int i = 0; i < nbLowBoundFrame; ++i)
         {
             lowBoundFrameVector.push_back(std::pair<int,int>(demiFrame,demiFrame));
         }
-        for(unsigned int i = 0; i < nbHighBoundFrame/2; ++i)
+        for(int i = 0; i < nbHighBoundFrame/2; ++i)
         {
             highBoundFrameVector.push_back(std::pair<int,int>(demiFrame,demiFrame+1));
         }
-        for(unsigned int i = nbHighBoundFrame/2; i < nbHighBoundFrame; ++i)
+        for(int i = nbHighBoundFrame/2; i < nbHighBoundFrame; ++i)
         {
             highBoundFrameVector.push_back(std::pair<int,int>(demiFrame+1,demiFrame));
         }
@@ -59,15 +58,15 @@ bool squarefunction(int frequency, int screenFrequency, std::vector< std::pair<i
     else
     {
         int demiFrame = (lowBoundFrameRate+1)/2;
-        for(unsigned int i = 0; i < nbLowBoundFrame/2; ++i)
+        for(int i = 0; i < nbLowBoundFrame/2; ++i)
         {
             lowBoundFrameVector.push_back(std::pair<int,int>(demiFrame-1,demiFrame));
         }
-        for(unsigned int i = nbLowBoundFrame/2; i < nbLowBoundFrame; ++i)
+        for(int i = nbLowBoundFrame/2; i < nbLowBoundFrame; ++i)
         {
             lowBoundFrameVector.push_back(std::pair<int,int>(demiFrame,demiFrame-1));
         }
-        for(unsigned int i = 0; i < nbHighBoundFrame; ++i)
+        for(int i = 0; i < nbHighBoundFrame; ++i)
         {
             highBoundFrameVector.push_back(std::pair<int,int>(demiFrame,demiFrame));
         }

@@ -1,7 +1,12 @@
 #include <ssvp-interface/SSVPInterface.h>
+#include <ssvp-interface/BackgroundSprite.h>
 
 #include <SFML/Graphics.hpp>
+#include <iostream>
 #include <fstream>
+#include <sstream>
+
+#include <boost/thread.hpp>
 
 namespace ssvpinterface
 {
@@ -9,31 +14,31 @@ namespace ssvpinterface
 struct SSVPInterfaceImpl
 {
     private:
+        BackgroundSprite m_backgroundsprite;
         std::vector<FlickeringSquare *> m_squares;
         unsigned int m_width;
         unsigned int m_height;
         bool closeRequest;
         bool crossEnable;
+        std::ofstream fpsLog;
         sf::RenderWindow * app;
     public:
-        SSVPInterfaceImpl(unsigned int width, unsigned int height) : m_width(width), m_height(height), closeRequest(false), crossEnable(false), app(0)
+        SSVPInterfaceImpl(unsigned int width, unsigned int height) : 
+            m_backgroundsprite("hrp2010v", 4242),
+            m_width(width), m_height(height), 
+            closeRequest(false), crossEnable(false), 
+            fpsLog("fps.log"), app(0)
         {
             m_squares.resize(0);
         }
 
         ~SSVPInterfaceImpl()
         {
-            for(int i = 0; i < m_squares.size(); ++i)
+            for(unsigned int i = 0; i < m_squares.size(); ++i)
             {
-                if(m_squares[i])
-                {
                     delete m_squares[i];
-                }
             }
-            if(app)
-            {
-                delete app;
-            }
+            delete app;
         }
 
         void AddSquare(FlickeringSquare * square)
@@ -63,14 +68,14 @@ struct SSVPInterfaceImpl
         {
             if(crossEnable)
             {
-                for(int i = 0; i < m_squares.size(); ++i)
+                for(unsigned int i = 0; i < m_squares.size(); ++i)
                 {
                     m_squares[i]->SetArrowDisplay(true);
                 }
             }
             else
             {
-                for(int i = 0; i < m_squares.size(); ++i)
+                for(unsigned int i = 0; i < m_squares.size(); ++i)
                 {
                     if( squareId - 1  == i)
                     {
@@ -86,7 +91,7 @@ struct SSVPInterfaceImpl
 
         void EnableFlash(bool enable)
         {
-            for(int i = 0; i < m_squares.size(); ++i)
+            for(unsigned int i = 0; i < m_squares.size(); ++i)
             {
                 m_squares[i]->SetSquareDisplay(enable);
             }
@@ -97,14 +102,14 @@ struct SSVPInterfaceImpl
             crossEnable = enable;
             if(!crossEnable)
             {
-                for(int i = 0; i < m_squares.size(); ++i)
+                for(unsigned int i = 0; i < m_squares.size(); ++i)
                 {
                     m_squares[i]->SetArrowDisplay(false);
                 }
             }
             else
             {
-                for(int i = 0; i < m_squares.size(); ++i)
+                for(unsigned int i = 0; i < m_squares.size(); ++i)
                 {
                     m_squares[i]->SetArrowDisplay(true);
                 }
@@ -119,18 +124,21 @@ struct SSVPInterfaceImpl
                 app = new sf::RenderWindow(sf::VideoMode(m_width, m_height), "ssvp-interface");
 
             app->UseVerticalSync(true);
+            app->ShowMouseCursor(false);
 
             unsigned int frameCount = 0;
             sf::Clock clock;
 
+            m_backgroundsprite.Initialize();
+            boost::thread th(boost::bind(&BackgroundSprite::UpdateLoop, &m_backgroundsprite));
+
             while(!closeRequest && app->IsOpened())
             {
-                #ifndef WIN32
-                frameCount++;
-                #else
-                frameCount = (int)floor(clock.GetElapsedTime()*60);
-                #endif
-                for(int i = 0; i < m_squares.size(); ++i)
+                unsigned int newFrameCount = (unsigned int)floor(clock.GetElapsedTime()*60);
+                /* cheat when missin frame */
+                frameCount = newFrameCount > frameCount +1?frameCount+1:newFrameCount;
+                
+                for(unsigned int i = 0; i < m_squares.size(); ++i)
                 {
                     m_squares[i]->UpdateForNewFrame(frameCount);
                 }
@@ -145,8 +153,14 @@ struct SSVPInterfaceImpl
                         app->Close();
                 }
         
-        
-                for(int i = 0; i < m_squares.size(); ++i)
+                sf::Sprite * sprite = m_backgroundsprite.GetSprite();
+                if(sprite)
+                {
+                    sprite->Resize(m_width, m_height);
+                    app->Draw(*sprite);
+                }
+
+                for(unsigned int i = 0; i < m_squares.size(); ++i)
                 {
                     if(m_squares[i]->SquareDisplay())
                     {
@@ -159,8 +173,16 @@ struct SSVPInterfaceImpl
                 }
         
                 app->Display();
+
+                if(frameCount % 60 == 0)
+                {
+                    fpsLog << 1/app->GetFrameTime() << " fps" << std::endl;
+                }
         
             }
+            fpsLog.close();
+            m_backgroundsprite.Close();
+            th.join();
             app->Close();
         }
         

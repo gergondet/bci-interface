@@ -28,9 +28,6 @@ public:
     {
         calibrationImage.LoadFromFile("data/arrow.png");
         calibrationArrow = sf::Sprite(calibrationImage);
-        float arrowRotation = 0;
-        float newArrowX = 0;
-        float newArrowY = 0;
         switch(arrowPos)
         {
             case RIGHT:
@@ -61,7 +58,7 @@ public:
         std::vector< std::pair<int, int> > tmpSeq;
         if(squarefunction(frequency, screenFrequency, tmpSeq))
         {
-            for(int i = 0; i < tmpSeq.size(); ++i)
+            for(unsigned int i = 0; i < tmpSeq.size(); ++i)
             {
                 for(int j = 0; j < tmpSeq[i].first; ++j)
                 {
@@ -84,7 +81,7 @@ public:
         std::vector<bool> newFrameSeq;
         if(squarefunction(frequency, screenFrequency, tmpSeq))
         {
-            for(int i = 0; i < tmpSeq.size(); ++i)
+            for(unsigned int i = 0; i < tmpSeq.size(); ++i)
             {
                 for(int j = 0; j < tmpSeq[i].first; ++j)
                 {

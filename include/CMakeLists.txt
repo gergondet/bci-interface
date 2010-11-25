@@ -2,6 +2,7 @@ SET(${PROJECT_NAME}_HEADERS
 	ssvp-interface/SSVPInterface.h
 	ssvp-interface/FlickeringSquare.h
 	ssvp-interface/square-function.h
+    ssvp-interface/BackgroundSprite.h
 )
 
 INSTALL(FILES ${${PROJECT_NAME}_HEADERS}

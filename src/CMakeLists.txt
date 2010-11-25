@@ -4,6 +4,7 @@ SET(${EXEC_NAME}_src
     ./square-function.cpp
     ./SSVPInterface.cpp
     ./FlickeringSquare.cpp
+    ./BackgroundSprite.cpp
 )
 
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include)
@@ -33,6 +34,8 @@ SET_TARGET_PROPERTIES(${EXEC_NAME}
   LINK_FLAGS "sfml-graphics.lib sfml-window.lib sfml-system.lib"
 )
 ENDIF(WIN32)
+
+TARGET_LINK_LIBRARIES(${EXEC_NAME} ${Boost_LIBRARIES})
 
 INSTALL(TARGETS ${EXEC_NAME}
     DESTINATION lib)

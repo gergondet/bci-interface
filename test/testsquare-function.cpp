@@ -17,7 +17,7 @@ int main(int argc, char * argv[])
     if(squarefunction(frequency, screenFrequency, seq))
     {
         std::cout << " [ ";
-        for(int i = 0; i < seq.size(); ++i)
+        for(unsigned int i = 0; i < seq.size(); ++i)
         {
             std::cout << " < " << seq[i].first << " , " << seq[i].second << " > ";
         }
