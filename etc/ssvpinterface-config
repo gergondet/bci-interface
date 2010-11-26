@@ -3,12 +3,15 @@
 
 # Square configs
 # Frequency ScreenFrequency X Y Size R G B Fill?
+# You can use winH and winW as aliases for width and height 
+# and do arithmetic operation for X and Y, beware,
+# no space is allowed in such operations
 
 # UP
-5    60    565    50     150    255    0    0    0
+5    60    winW/2-75    50     150    255    0    0    0
 # RIGHT
-7    60    930    350    150    255    0    0    0
+7    60    winW-350    winH/2-50    150    255    0    0    0
 # DOWN
-9    60    565    600    150    255    0    0    0
+9    60    winW/2-75    winH-200    150    255    0    0    0
 # LEFT
-11   60    200    350    150    255    0    0    0
+11   60    200    winH/2-50    150    255    0    0    0

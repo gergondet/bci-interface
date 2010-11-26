@@ -28,6 +28,57 @@ bool SSVPInterfaceConfig::ParseGeneralConfig(const std::string & configLine)
     return true;
 }
 
+float SSVPInterfaceConfig::ParseOperation(std::string & operationLine)
+{
+    size_t found;
+    while( (found = operationLine.find("winH")) != std::string::npos )
+    {
+        std::stringstream height;
+        height << m_height;
+        operationLine.replace(found, 4, height.str());
+    }
+    while( (found = operationLine.find("winW")) != std::string::npos )
+    {
+        std::stringstream width;
+        width << m_width;
+        operationLine.replace(found, 4, width.str());
+    }
+    
+    float result = 0;
+    float opN;
+    char  op;
+    std::stringstream operation;
+    operation << operationLine;
+
+    operation >> result;
+    while(operation.good())
+    {
+        operation >> op;
+        switch(op)
+        {
+            case '+':
+                operation >> opN;
+                result = result+opN;
+                break;
+            case '-':
+                operation >> opN;
+                result = result-opN;
+                break;
+            case '*':
+                operation >> opN;
+                result = result*opN;
+                break;
+            case '/':
+                operation >> opN;
+                result = result/opN;
+                break;
+            default:
+                break;
+        }
+    }
+    return result;
+}
+
 FlickeringSquare * SSVPInterfaceConfig::ParseSquareConfig(const std::string & configLine)
 {
     if(configLine.size() == 0) return false;
@@ -37,10 +88,19 @@ FlickeringSquare * SSVPInterfaceConfig::ParseSquareConfig(const std::string & co
     float x, y, size;
     int r,g,b;
     bool fill;
+    std::string opString;
     
     std::stringstream config;
     config << configLine;
-    config >> frequency >> screenFrequency >> x >> y >> size >> r >> g >> b >> fill;
+    config >> frequency >> screenFrequency;
+
+    config >> opString;
+    x = ParseOperation(opString);
+    config >> opString;
+    y = ParseOperation(opString);
+
+    config >> size >> r >> g >> b >> fill;
+
     return new FlickeringSquare(frequency, screenFrequency, x, y, UP, size, r, g, b, 255, fill);
 }
 

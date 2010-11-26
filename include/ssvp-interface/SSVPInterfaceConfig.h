@@ -30,6 +30,8 @@ public:
 private:
     bool ParseGeneralConfig(const std::string & configLine);
 
+    float ParseOperation(std::string & operationLine);
+
     FlickeringSquare * ParseSquareConfig(const std::string & configLine);
 
 private:
