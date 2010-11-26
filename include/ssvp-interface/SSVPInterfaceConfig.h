@@ -28,6 +28,11 @@ public:
     SSVPINTERFACE_API std::vector<FlickeringSquare *>  & GetSquares();
 
 private:
+    bool ParseGeneralConfig(const std::string & configLine);
+
+    FlickeringSquare * ParseSquareConfig(const std::string & configLine);
+
+private:
     int m_width;
     int m_height;
     bool m_fullscreen;

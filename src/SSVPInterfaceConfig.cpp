@@ -1,5 +1,6 @@
 #include <ssvp-interface/SSVPInterfaceConfig.h>
 
+#include <string>
 #include <cstdlib>
 #include <unistd.h>
 #include <iostream>
@@ -13,6 +14,34 @@ SSVPInterfaceConfig::SSVPInterfaceConfig() :
     m_width(1280), m_height(800), m_fullscreen(true)
 {
     m_squares.resize(0);
+}
+
+/* Return false if commentary or wrong line, true if succesfull parse */
+bool SSVPInterfaceConfig::ParseGeneralConfig(const std::string & configLine)
+{
+    if(configLine.size() == 0) return false;
+    if(configLine[0] == '#') return false;
+
+    std::stringstream config;
+    config << configLine;
+    config >> m_width >> m_height >> m_fullscreen;
+    return true;
+}
+
+FlickeringSquare * SSVPInterfaceConfig::ParseSquareConfig(const std::string & configLine)
+{
+    if(configLine.size() == 0) return false;
+    if(configLine[0] == '#') return false;
+
+    int frequency, screenFrequency;
+    float x, y, size;
+    int r,g,b;
+    bool fill;
+    
+    std::stringstream config;
+    config << configLine;
+    config >> frequency >> screenFrequency >> x >> y >> size >> r >> g >> b >> fill;
+    return new FlickeringSquare(frequency, screenFrequency, x, y, UP, size, r, g, b, 255, fill);
 }
 
 void SSVPInterfaceConfig::ReadFromFile(const std::string & fileName)
@@ -31,20 +60,21 @@ void SSVPInterfaceConfig::ReadFromFile(const std::string & fileName)
         std::cerr << "Config file does not exist!" << std::endl;
     }
 
-    /* First line:
-        width height fullscreen? */
-    config >> m_width >> m_height >> m_fullscreen;
+    std::string configLine;
+    getline(config, configLine);
+    while(!ParseGeneralConfig(configLine))
+    {
+        getline(config, configLine);
+    }
 
-    /* After that only lines for squares */
     while(config.good())
     {
-        int frequency, screenFrequency;
-        float x, y, size;
-        int r,g,b,a;
-        bool fill;
-
-        config >> frequency >> screenFrequency >> x >> y >> size >> r >> g >> b >> a >> fill;
-        m_squares.push_back(new FlickeringSquare(frequency, screenFrequency, x, y, UP, size, r, g, b, a, fill));
+        getline(config, configLine);
+        FlickeringSquare * square = ParseSquareConfig(configLine);
+        if(square)
+        {
+            m_squares.push_back(square);
+        }
     }
 
     config.close();

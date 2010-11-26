@@ -1,0 +1,14 @@
+# Width Height Fullscreen ?
+1280    800    1
+
+# Square configs
+# Frequency ScreenFrequency X Y Size R G B Fill?
+
+# UP
+5    60    565    50     150    255    0    0    0
+# RIGHT
+7    60    930    350    150    255    0    0    0
+# DOWN
+9    60    565    600    150    255    0    0    0
+# LEFT
+11   60    200    350    150    255    0    0    0
