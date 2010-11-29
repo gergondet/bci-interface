@@ -47,10 +47,10 @@ int main(int argc, char * argv[])
 
         interface = new SSVPInterface(winW, winH);
 
-        interface->AddSquare(new FlickeringSquare(5,60, winW/2-75, 50, DOWN, 150, 255, 0, 0, 255, false));
-        interface->AddSquare(new FlickeringSquare(7,60, winW-350, winH/2-50, LEFT, 150, 255, 0, 0, 255, false));
-        interface->AddSquare(new FlickeringSquare(9,60, winW/2-75, winH-200, UP, 150, 255, 0, 0, 255, false));
-        interface->AddSquare(new FlickeringSquare(11,60, 200, winH/2-50, RIGHT, 150, 255, 0, 0, 255, false));
+        interface->AddSquare(new FlickeringSquare(5,60, winW/2-75, 50, 150, 255, 0, 0, 255, false));
+        interface->AddSquare(new FlickeringSquare(7,60, winW-350, winH/2-50, 150, 255, 0, 0, 255, false));
+        interface->AddSquare(new FlickeringSquare(9,60, winW/2-75, winH-200, 150, 255, 0, 0, 255, false));
+        interface->AddSquare(new FlickeringSquare(11,60, 200, winH/2-50, 150, 255, 0, 0, 255, false));
     }
 
     boost::thread th(&SSVPInterface::DisplayLoop, interface, fullscreen);

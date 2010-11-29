@@ -13,17 +13,13 @@ private:
     sf::Shape square;
     sf::Color on;
     bool squareDisplay;
-    sf::Image calibrationImage;
-    sf::Sprite calibrationArrow;
-    bool arrowDisplay;
     int frequency;
     int screenFrequency;
     std::vector<bool> frameSeq;
 public:
-    FlickeringSquareImpl(int frequency, int screenFrequency, float x, float y, ArrowPosition arrowPos, float size, int r, int g, int b, int a, bool fill) : 
+    FlickeringSquareImpl(int frequency, int screenFrequency, float x, float y, float size, int r, int g, int b, int a, bool fill) : 
         square(sf::Shape::Rectangle(x, y, x+size, y+size, sf::Color(r, g, b, a), 0, sf::Color(r,g,b,a))) , 
         on(r,g,b,a), squareDisplay(true),
-        arrowDisplay(false),
         frequency(frequency) , screenFrequency(screenFrequency)
     {
         if(!fill)
@@ -31,34 +27,6 @@ public:
             square.EnableFill(false);
             square.EnableOutline(true);
             square.SetOutlineWidth(10);
-        }
-        calibrationImage.LoadFromFile("data/arrow.png");
-        calibrationArrow = sf::Sprite(calibrationImage);
-        switch(arrowPos)
-        {
-            case RIGHT:
-                calibrationArrow.Rotate(90);
-                calibrationArrow.SetCenter(calibrationArrow.GetSize().x/2, calibrationArrow.GetSize().y/2);
-                calibrationArrow.SetX(x+size+calibrationArrow.GetSize().x);
-                calibrationArrow.SetY(y+size/2);
-                break;
-            case DOWN:
-                calibrationArrow.SetCenter(calibrationArrow.GetSize().x/2, calibrationArrow.GetSize().y/2);
-                calibrationArrow.SetX(x+size/2);
-                calibrationArrow.SetY(y+size+calibrationArrow.GetSize().y);
-                break;
-            case LEFT:
-                calibrationArrow.Rotate(270);
-                calibrationArrow.SetCenter(calibrationArrow.GetSize().x/2, calibrationArrow.GetSize().y/2);
-                calibrationArrow.SetX(x-calibrationArrow.GetSize().x);
-                calibrationArrow.SetY(y+size/2);
-                break;
-            default:
-                calibrationArrow.Rotate(180);
-                calibrationArrow.SetCenter(calibrationArrow.GetSize().x/2, calibrationArrow.GetSize().y/2);
-                calibrationArrow.SetX(x+size/2);
-                calibrationArrow.SetY(y-calibrationArrow.GetSize().y);
-                break;
         }
 
         std::vector< std::pair<int, int> > tmpSeq;
@@ -129,24 +97,10 @@ public:
         return &square;
     }
 
-    void SetArrowDisplay(bool const arrowDisplay)
-    {
-        this->arrowDisplay = arrowDisplay;
-    }
-
-    bool ArrowDisplay()
-    {
-        return arrowDisplay;
-    }
-
-    sf::Sprite * GetArrow()
-    {
-        return &calibrationArrow;
-    }
 }; //class FlickeringSquareImpl
 
-FlickeringSquare::FlickeringSquare(int frequency, int screenFrequency, float x, float y, ArrowPosition arrowPos, float size, int r, int g, int b, int a, bool fill) :
-    m_flsqimpl(new FlickeringSquareImpl(frequency, screenFrequency, x, y, arrowPos, size, r, g, b, a, fill))
+FlickeringSquare::FlickeringSquare(int frequency, int screenFrequency, float x, float y, float size, int r, int g, int b, int a, bool fill) :
+    m_flsqimpl(new FlickeringSquareImpl(frequency, screenFrequency, x, y, size, r, g, b, a, fill))
 {
 }
 
@@ -175,19 +129,5 @@ sf::Shape * FlickeringSquare::GetShape()
     return m_flsqimpl->GetShape();
 }
 
-void FlickeringSquare::SetArrowDisplay(bool const arrowDisplay)
-{
-    m_flsqimpl->SetArrowDisplay(arrowDisplay);
-}
-
-bool FlickeringSquare::ArrowDisplay()
-{
-    return m_flsqimpl->ArrowDisplay();
-}
-
-sf::Sprite * FlickeringSquare::GetArrow()
-{
-    return m_flsqimpl->GetArrow();
-}
-
 } // namespace ssvpinterface
+

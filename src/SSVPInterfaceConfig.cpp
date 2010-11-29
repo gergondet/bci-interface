@@ -101,7 +101,7 @@ FlickeringSquare * SSVPInterfaceConfig::ParseSquareConfig(const std::string & co
 
     config >> size >> r >> g >> b >> fill;
 
-    return new FlickeringSquare(frequency, screenFrequency, x, y, UP, size, r, g, b, 255, fill);
+    return new FlickeringSquare(frequency, screenFrequency, x, y, size, r, g, b, 255, fill);
 }
 
 void SSVPInterfaceConfig::ReadFromFile(const std::string & fileName)

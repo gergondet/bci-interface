@@ -8,10 +8,10 @@
 # no space is allowed in such operations
 
 # UP
-5    60    winW/2-75    50     150    255    0    0    0
+7    60    winW/2-75    50     150    255    0    0    0
 # RIGHT
-7    60    winW-350    winH/2-50    150    255    0    0    0
+11    60    winW-350    winH/2-50    150    255    0    0    0
 # DOWN
-9    60    winW/2-75    winH-200    150    255    0    0    0
+13    60    winW/2-75    winH-200    150    255    0    0    0
 # LEFT
-11   60    200    winH/2-50    150    255    0    0    0
+17   60    200    winH/2-50    150    255    0    0    0
