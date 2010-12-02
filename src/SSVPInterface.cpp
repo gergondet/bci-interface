@@ -74,12 +74,16 @@ struct SSVPInterfaceImpl
         void DisplayLoop(bool fullScreen)
         {
             if(fullScreen)
+            {
                 app = new sf::RenderWindow(sf::VideoMode(m_width, m_height), "ssvp-interface", sf::Style::Fullscreen);
+                app->ShowMouseCursor(false);
+            }
             else
+            {
                 app = new sf::RenderWindow(sf::VideoMode(m_width, m_height), "ssvp-interface");
+            }
 
             app->UseVerticalSync(true);
-            app->ShowMouseCursor(false);
 
             unsigned int frameCount = 0;
             sf::Clock clock;
