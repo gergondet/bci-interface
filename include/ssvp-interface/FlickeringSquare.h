@@ -41,6 +41,8 @@ public:
     /*! \brief Get the actual shape */
     sf::Shape * GetShape();
 
+    sf::Shape * GetBlackShape();
+
 private:
     boost::shared_ptr<FlickeringSquareImpl> m_flsqimpl;
 };

@@ -11,7 +11,9 @@ struct FlickeringSquareImpl
 {
 private:
     sf::Shape square;
+    sf::Shape blackSquare;
     sf::Color on;
+    sf::Color off;
     bool squareDisplay;
     int frequency;
     int screenFrequency;
@@ -19,13 +21,18 @@ private:
 public:
     FlickeringSquareImpl(int frequency, int screenFrequency, float x, float y, float size, int r, int g, int b, int a, bool fill) : 
         square(sf::Shape::Rectangle(x, y, x+size, y+size, sf::Color(r, g, b, a), 0, sf::Color(r,g,b,a))) , 
-        on(r,g,b,a), squareDisplay(true),
+        blackSquare(sf::Shape::Rectangle(x, y, x+size, y+size, sf::Color(0, 0, 0, 255))) ,
+        on(r,g,b,a), off(0,0,0,255), squareDisplay(true),
         frequency(frequency) , screenFrequency(screenFrequency)
     {
+        blackSquare.EnableOutline(true);
+        blackSquare.SetOutlineWidth(3);
         if(!fill)
         {
             square.EnableFill(false);
+            blackSquare.EnableFill(false);
             square.EnableOutline(true);
+            blackSquare.SetOutlineWidth(15);
             square.SetOutlineWidth(10);
         }
 
@@ -97,6 +104,11 @@ public:
         return &square;
     }
 
+    sf::Shape * GetBlackShape()
+    {
+        return &blackSquare;
+    }
+
 }; //class FlickeringSquareImpl
 
 FlickeringSquare::FlickeringSquare(int frequency, int screenFrequency, float x, float y, float size, int r, int g, int b, int a, bool fill) :
@@ -127,6 +139,11 @@ bool FlickeringSquare::SquareDisplay()
 sf::Shape * FlickeringSquare::GetShape()
 {
     return m_flsqimpl->GetShape();
+}
+
+sf::Shape * FlickeringSquare::GetBlackShape()
+{
+    return m_flsqimpl->GetBlackShape();
 }
 
 } // namespace ssvpinterface
