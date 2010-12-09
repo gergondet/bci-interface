@@ -1,6 +1,8 @@
 #include <ssvp-interface/SSVPInterface.h>
 #include <ssvp-interface/BackgroundSprite.h>
 
+#include <coshell-bci/CoshellBCI.h>
+
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <fstream>
@@ -21,12 +23,16 @@ struct SSVPInterfaceImpl
         bool closeRequest;
         std::ofstream fpsLog;
         sf::RenderWindow * app;
+        coshellbci::CoshellBCI * m_coshellBCI;
+        bool m_coshellrunning;
     public:
         SSVPInterfaceImpl(unsigned int width, unsigned int height) : 
             m_backgroundsprite("hrp2010v", 4242),
             m_width(width), m_height(height), 
             closeRequest(false), 
-            fpsLog("fps.log"), app(0)
+            fpsLog("fps.log"), app(0),
+            m_coshellBCI(new coshellbci::CoshellBCI("localhost", 2809, 1111)), 
+            m_coshellrunning(false)
         {
             m_squares.resize(0);
         }
@@ -38,6 +44,7 @@ struct SSVPInterfaceImpl
                     delete m_squares[i];
             }
             delete app;
+            delete m_coshellBCI;
         }
 
         void AddSquare(FlickeringSquare * square)
@@ -91,6 +98,9 @@ struct SSVPInterfaceImpl
             m_backgroundsprite.Initialize();
             boost::thread th(boost::bind(&BackgroundSprite::UpdateLoop, &m_backgroundsprite));
 
+            m_coshellBCI->Initialize();
+            boost::thread * coshellTh = 0;
+
             while(!closeRequest && app->IsOpened())
             {
                 unsigned int newFrameCount = (unsigned int)floor(clock.GetElapsedTime()*60);
@@ -110,6 +120,10 @@ struct SSVPInterfaceImpl
                         app->Close();
                     if( Event.Type == sf::Event::KeyPressed && ( Event.Key.Code == sf::Key::Escape || Event.Key.Code == sf::Key::Q ) )
                         app->Close();
+                    if( not m_coshellrunning && Event.Type == sf::Event::KeyPressed && Event.Key.Code == sf::Key::Space)
+                    {
+                        coshellTh = new boost::thread(boost::bind(&coshellbci::CoshellBCI::CommandLoop, m_coshellBCI));
+                    }
                 }
         
                 sf::Sprite * sprite = m_backgroundsprite.GetSprite();
@@ -139,6 +153,9 @@ struct SSVPInterfaceImpl
             fpsLog.close();
             m_backgroundsprite.Close();
             th.join();
+            m_coshellBCI->Close();
+            coshellTh->join();
+            delete coshellTh;
             app->Close();
         }
         
