@@ -11,9 +11,11 @@ struct FlickeringSquareImpl
 {
 private:
     sf::Shape square;
-    sf::Shape blackSquare;
-    sf::Color on;
-    sf::Color off;
+    sf::Color highlightOn;
+    sf::Color highlightOff;
+    sf::Shape highlightedBlackSquare;
+    sf::Shape unhighlightedBlackSquare;
+    sf::Shape * blackSquare;
     bool squareDisplay;
     int frequency;
     int screenFrequency;
@@ -21,18 +23,24 @@ private:
 public:
     FlickeringSquareImpl(int frequency, int screenFrequency, float x, float y, float size, int r, int g, int b, int a, bool fill) : 
         square(sf::Shape::Rectangle(x, y, x+size, y+size, sf::Color(r, g, b, a), 0, sf::Color(r,g,b,a))) , 
-        blackSquare(sf::Shape::Rectangle(x, y, x+size, y+size, sf::Color(0, 0, 0, 255))) ,
-        on(r,g,b,a), off(0,0,0,255), squareDisplay(true),
+        highlightOn(0,255,0,255), highlightOff(0,0,0,255), 
+        highlightedBlackSquare(sf::Shape::Rectangle(x, y, x+size, y+size, highlightOff, 6, highlightOn)) ,
+        unhighlightedBlackSquare(sf::Shape::Rectangle(x, y, x+size, y+size, highlightOff, 6, highlightOff)) ,
+        blackSquare(0) ,
+        squareDisplay(true),
         frequency(frequency) , screenFrequency(screenFrequency)
     {
-        blackSquare.EnableOutline(true);
-        blackSquare.SetOutlineWidth(3);
+        highlightedBlackSquare.EnableOutline(true);
+        unhighlightedBlackSquare.EnableOutline(true);
+        blackSquare = &highlightedBlackSquare;
         if(!fill)
         {
             square.EnableFill(false);
-            blackSquare.EnableFill(false);
+            highlightedBlackSquare.EnableFill(false);
+            unhighlightedBlackSquare.EnableFill(false);
             square.EnableOutline(true);
-            blackSquare.SetOutlineWidth(15);
+            highlightedBlackSquare.SetOutlineWidth(15);
+            unhighlightedBlackSquare.SetOutlineWidth(15);
             square.SetOutlineWidth(10);
         }
 
@@ -106,7 +114,17 @@ public:
 
     sf::Shape * GetBlackShape()
     {
-        return &blackSquare;
+        return blackSquare;
+    }
+
+    void Highlight()
+    {
+        blackSquare = &highlightedBlackSquare;
+    }
+
+    void Unhighlight()
+    {
+        blackSquare = &unhighlightedBlackSquare;
     }
 
 }; //class FlickeringSquareImpl
@@ -144,6 +162,16 @@ sf::Shape * FlickeringSquare::GetShape()
 sf::Shape * FlickeringSquare::GetBlackShape()
 {
     return m_flsqimpl->GetBlackShape();
+}
+
+void FlickeringSquare::Highlight()
+{
+    m_flsqimpl->Highlight();
+}
+
+void FlickeringSquare::Unhighlight()
+{
+    m_flsqimpl->Unhighlight();
 }
 
 } // namespace ssvpinterface

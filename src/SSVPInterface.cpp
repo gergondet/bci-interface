@@ -2,6 +2,7 @@
 #include <ssvp-interface/BackgroundSprite.h>
 
 #include <coshell-bci/CoshellBCI.h>
+#include <bci-middleware/SSVPReceiver.h>
 
 #include <SFML/Graphics.hpp>
 #include <iostream>
@@ -101,6 +102,8 @@ struct SSVPInterfaceImpl
             m_coshellBCI->Initialize();
             boost::thread * coshellTh = 0;
 
+            bcimw::SSVP_COMMAND bcicmd = bcimw::NONE;
+
             while(!closeRequest && app->IsOpened())
             {
                 unsigned int newFrameCount = (unsigned int)floor(clock.GetElapsedTime()*60);
@@ -126,6 +129,8 @@ struct SSVPInterfaceImpl
                     }
                 }
         
+                bcicmd = m_coshellBCI->GetCurrentCommand();
+
                 sf::Sprite * sprite = m_backgroundsprite.GetSprite();
                 if(sprite)
                 {
@@ -135,6 +140,14 @@ struct SSVPInterfaceImpl
 
                 for(unsigned int i = 0; i < m_squares.size(); ++i)
                 {
+                    if((unsigned int)bcicmd == i+1)
+                    {
+                        m_squares[i]->Highlight();
+                    }
+                    else
+                    {
+                        m_squares[i]->Unhighlight();
+                    }
                     app->Draw(*(m_squares[i]->GetBlackShape()));
                     if(m_squares[i]->SquareDisplay())
                     {
@@ -154,8 +167,11 @@ struct SSVPInterfaceImpl
             m_backgroundsprite.Close();
             th.join();
             m_coshellBCI->Close();
-            coshellTh->join();
-            delete coshellTh;
+            if(coshellTh)
+            {
+                coshellTh->join();
+                delete coshellTh;
+            }
             app->Close();
         }
         

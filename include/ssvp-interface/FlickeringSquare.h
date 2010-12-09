@@ -43,6 +43,12 @@ public:
 
     sf::Shape * GetBlackShape();
 
+    /*! \brief Hight the square by changing outline color */
+    void Highlight();
+
+    /*! \brief Change outline color back to normal */
+    void Unhighlight();
+
 private:
     boost::shared_ptr<FlickeringSquareImpl> m_flsqimpl;
 };
