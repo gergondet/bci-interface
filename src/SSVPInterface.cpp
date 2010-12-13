@@ -123,9 +123,18 @@ struct SSVPInterfaceImpl
                         app->Close();
                     if( Event.Type == sf::Event::KeyPressed && ( Event.Key.Code == sf::Key::Escape || Event.Key.Code == sf::Key::Q ) )
                         app->Close();
-                    if( not m_coshellrunning && Event.Type == sf::Event::KeyPressed && Event.Key.Code == sf::Key::Space)
+                    if( Event.Type == sf::Event::KeyPressed && Event.Key.Code == sf::Key::Space)
                     {
-                        coshellTh = new boost::thread(boost::bind(&coshellbci::CoshellBCI::CommandLoop, m_coshellBCI));
+                        if(not m_coshellrunning)
+                        {
+                            coshellTh = new boost::thread(boost::bind(&coshellbci::CoshellBCI::CommandLoop, m_coshellBCI));
+                            m_coshellrunning = true;
+                        }
+                        else
+                        {
+                            m_coshellBCI->Close();
+                            /* do not set m_coshellrunning back to false because we cannot relaunch the walking for now */
+                        }
                     }
                 }
         
