@@ -51,6 +51,22 @@ public:
         }
         delete m_app;
     }
+    void SetNbTrials(const unsigned int nbTrials)
+    {   
+        m_nbtrials = nbTrials;
+    }
+    void SetFlashTime(const float flashTime)
+    {   
+        m_flashtime = flashTime;
+    }
+    void SetInterFlashTime(const float interFlashTime)
+    {   
+        m_interflashtime = interFlashTime;
+    }
+    void SetInterCycleTime(const float interCycleTime)
+    {   
+        m_intercycletime = interCycleTime;
+    }
     void AddObject(P300Object * object)
     {
         Pause();
@@ -312,6 +328,26 @@ void P300Interface::Resume()
 void P300Interface::Close()
 {
     m_impl->Close();
+}
+
+void P300Interface::SetNbTrials(const unsigned int nbTrials)
+{   
+    m_impl->SetNbTrials(nbTrials);
+}
+
+void P300Interface::SetFlashTime(const float flashTime)
+{
+    m_impl->SetFlashTime(flashTime);
+}
+
+void P300Interface::SetInterFlashTime(const float interFlashTime)
+{
+    m_impl->SetInterFlashTime(interFlashTime);
+}
+
+void P300Interface::SetInterCycleTime(const float interCycleTime)
+{
+    m_impl->SetInterCycleTime(interCycleTime);
 }
 
 } //namespace bcinterface

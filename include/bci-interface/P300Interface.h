@@ -37,6 +37,15 @@ class P300Interface
 public:
     P300INTERFACE_API P300Interface(unsigned int width, unsigned int height);
 
+    /* P300 timing related functions */
+    P300INTERFACE_API void SetNbTrials(const unsigned int nbTrials);
+    
+    P300INTERFACE_API void SetFlashTime(const float flashTime);
+    
+    P300INTERFACE_API void SetInterFlashTime(const float interFlashTime);
+    
+    P300INTERFACE_API void SetInterCycleTime(const float interCycleTime);
+
     /* Objects related functions */
 
     P300INTERFACE_API void AddObject(P300Object * object);
