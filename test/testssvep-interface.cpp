@@ -1,5 +1,5 @@
-#include <ssvp-interface/SSVPInterface.h>
-#include <ssvp-interface/SSVPInterfaceConfig.h>
+#include <bci-interface/SSVEPInterface.h>
+#include <bci-interface/SSVEPInterfaceConfig.h>
 
 #include <SFML/Graphics.hpp>
 
@@ -17,9 +17,9 @@ void sleep(DWORD t)
 #include <boost/thread.hpp>
 #include <boost/bind.hpp>
 
-using namespace ssvpinterface;
+using namespace bciinterface;
 
-SSVPInterface * interface = 0;
+SSVEPInterface * interface = 0;
 
 int main(int argc, char * argv[])
 {
@@ -27,10 +27,10 @@ int main(int argc, char * argv[])
     if(argc > 1)
     {
         std::string configName = argv[1];
-        SSVPInterfaceConfig config;
+        SSVEPInterfaceConfig config;
         config.ReadFromFile(configName);
 
-        interface = new SSVPInterface(config.GetWidth(), config.GetHeight());
+        interface = new SSVEPInterface(config.GetWidth(), config.GetHeight());
 
         fullscreen = config.IsFullScreen();
 
@@ -45,7 +45,7 @@ int main(int argc, char * argv[])
         int winW = 1280;
         int winH = 800;
 
-        interface = new SSVPInterface(winW, winH);
+        interface = new SSVEPInterface(winW, winH);
 
         interface->AddSquare(new FlickeringSquare(5,60, winW/2-75, 50, 150, 255, 0, 0, 255, false));
         interface->AddSquare(new FlickeringSquare(7,60, winW-350, winH/2-50, 150, 255, 0, 0, 255, false));
@@ -53,7 +53,7 @@ int main(int argc, char * argv[])
         interface->AddSquare(new FlickeringSquare(11,60, 200, winH/2-50, 150, 255, 0, 0, 255, false));
     }
 
-    boost::thread th(&SSVPInterface::DisplayLoop, interface, fullscreen);
+    boost::thread th(&SSVEPInterface::DisplayLoop, interface, fullscreen);
     
     th.join();
 

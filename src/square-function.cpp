@@ -1,4 +1,4 @@
-#include <ssvp-interface/square-function.h>
+#include <bci-interface/square-function.h>
 
 #include <cmath>
 #include <cstdlib>
@@ -6,7 +6,7 @@
 
 #include <iostream>
 
-namespace ssvpinterface
+namespace bciinterface
 {
 
 #ifdef WIN32
@@ -113,5 +113,5 @@ bool squarefunction(int frequency, int screenFrequency, std::vector< std::pair<i
     return true;
 }
 
-} // namespace ssvpinterface
+} // namespace bciinterface
 

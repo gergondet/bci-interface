@@ -1,9 +1,9 @@
-#include <ssvp-interface/square-function.h>
+#include <bci-interface/square-function.h>
 
 #include <stdlib.h>
 #include <iostream>
 
-using namespace ssvpinterface;
+using namespace bciinterface;
 
 int main(int argc, char * argv[])
 {

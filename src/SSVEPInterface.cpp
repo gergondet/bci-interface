@@ -1,8 +1,8 @@
-#include <ssvp-interface/SSVPInterface.h>
-#include <ssvp-interface/BackgroundSprite.h>
+#include <bci-interface/SSVEPInterface.h>
+#include <bci-interface/BackgroundSprite.h>
 
 #include <coshell-bci/CoshellBCI.h>
-#include <bci-middleware/SSVPReceiver.h>
+#include <bci-middleware/SSVEPReceiver.h>
 
 #include <SFML/Graphics.hpp>
 #include <iostream>
@@ -11,10 +11,10 @@
 
 #include <boost/thread.hpp>
 
-namespace ssvpinterface
+namespace bciinterface
 {
 
-struct SSVPInterfaceImpl
+struct SSVEPInterfaceImpl
 {
     private:
         BackgroundSprite m_backgroundsprite;
@@ -27,7 +27,7 @@ struct SSVPInterfaceImpl
         coshellbci::CoshellBCI * m_coshellBCI;
         bool m_coshellrunning;
     public:
-        SSVPInterfaceImpl(unsigned int width, unsigned int height) : 
+        SSVEPInterfaceImpl(unsigned int width, unsigned int height) : 
             m_backgroundsprite("hrp2010v", 4242),
             m_width(width), m_height(height), 
             closeRequest(false), 
@@ -38,7 +38,7 @@ struct SSVPInterfaceImpl
             m_squares.resize(0);
         }
 
-        ~SSVPInterfaceImpl()
+        ~SSVEPInterfaceImpl()
         {
             for(unsigned int i = 0; i < m_squares.size(); ++i)
             {
@@ -83,12 +83,12 @@ struct SSVPInterfaceImpl
         {
             if(fullScreen)
             {
-                app = new sf::RenderWindow(sf::VideoMode(m_width, m_height), "ssvp-interface", sf::Style::Fullscreen);
+                app = new sf::RenderWindow(sf::VideoMode(m_width, m_height), "bci-interface", sf::Style::Fullscreen);
                 app->ShowMouseCursor(false);
             }
             else
             {
-                app = new sf::RenderWindow(sf::VideoMode(m_width, m_height), "ssvp-interface");
+                app = new sf::RenderWindow(sf::VideoMode(m_width, m_height), "bci-interface");
             }
 
             app->UseVerticalSync(true);
@@ -102,7 +102,7 @@ struct SSVPInterfaceImpl
             m_coshellBCI->Initialize();
             boost::thread * coshellTh = 0;
 
-            bcimw::SSVP_COMMAND bcicmd = bcimw::NONE;
+            bcimw::SSVEP_COMMAND bcicmd = bcimw::NONE;
 
             while(!closeRequest && app->IsOpened())
             {
@@ -190,39 +190,39 @@ struct SSVPInterfaceImpl
         }
 };
 
-SSVPInterface::SSVPInterface(unsigned int width, unsigned height) : m_impl(new SSVPInterfaceImpl(width, height))
+SSVEPInterface::SSVEPInterface(unsigned int width, unsigned height) : m_impl(new SSVEPInterfaceImpl(width, height))
 {
 }
 
-void SSVPInterface::AddSquare(FlickeringSquare * square)
+void SSVEPInterface::AddSquare(FlickeringSquare * square)
 {
     m_impl->AddSquare(square);
 }
 
-void SSVPInterface::AddSquare(int frequency, int screenFrequency, float x, float y, float size, int r, int g, int b, int a)
+void SSVEPInterface::AddSquare(int frequency, int screenFrequency, float x, float y, float size, int r, int g, int b, int a)
 {
     m_impl->AddSquare(frequency, screenFrequency, x, y, size, r, g, b, a);
 }
 
-void SSVPInterface::ChangeFrequency(unsigned int squareId, int frequency, int screenFrequency)
+void SSVEPInterface::ChangeFrequency(unsigned int squareId, int frequency, int screenFrequency)
 {
     m_impl->ChangeFrequency(squareId, frequency, screenFrequency);
 }
 
-void SSVPInterface::EnableFlash(bool enable)
+void SSVEPInterface::EnableFlash(bool enable)
 {
     m_impl->EnableFlash(enable);
 }
 
-void SSVPInterface::DisplayLoop(bool fullScreen)
+void SSVEPInterface::DisplayLoop(bool fullScreen)
 {
     m_impl->DisplayLoop(fullScreen);
 }
 
-void SSVPInterface::Close()
+void SSVEPInterface::Close()
 {
     m_impl->Close();
 }
 
-} // namespace ssvpinterface
+} // namespace bciinterface
 

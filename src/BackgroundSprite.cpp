@@ -1,4 +1,4 @@
-#include <ssvp-interface/BackgroundSprite.h>
+#include <bci-interface/BackgroundSprite.h>
 
 #include <iostream>
 
@@ -11,7 +11,7 @@
 #include <cerrno>
 #include <string.h>
 
-namespace ssvpinterface
+namespace bciinterface
 {
 
 struct BackgroundSpriteImpl
@@ -169,4 +169,4 @@ sf::Sprite * BackgroundSprite::GetSprite()
     return m_bsimpl->GetSprite();
 }
 
-} // namespace ssvpinterface
+} // namespace bciinterface

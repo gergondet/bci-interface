@@ -1,10 +1,10 @@
 SET(${PROJECT_NAME}_HEADERS
-	ssvp-interface/SSVPInterface.h
-	ssvp-interface/SSVPInterfaceConfig.h
-	ssvp-interface/FlickeringSquare.h
-	ssvp-interface/square-function.h
-    ssvp-interface/BackgroundSprite.h
-    ssvp-interface/P300Interface.h
+	bci-interface/SSVEPInterface.h
+	bci-interface/SSVEPInterfaceConfig.h
+	bci-interface/FlickeringSquare.h
+	bci-interface/square-function.h
+    bci-interface/BackgroundSprite.h
+    bci-interface/P300Interface.h
 )
 
 INSTALL(FILES ${${PROJECT_NAME}_HEADERS}

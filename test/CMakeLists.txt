@@ -29,10 +29,10 @@ TARGET_LINK_LIBRARIES(${EXEC_NAME} "p300-interface.lib sfml-graphics.lib sfml-wi
 ENDIF(UNIX)
 TARGET_LINK_LIBRARIES(${EXEC_NAME} ${Boost_LIBRARIES})
 
-SET(EXEC_NAME testssvp-interface)
+SET(EXEC_NAME testssvep-interface)
 
 SET(${EXEC_NAME}_src
-    testssvp-interface.cpp
+    testssvep-interface.cpp
 )
 
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include)
@@ -52,7 +52,7 @@ SET_TARGET_PROPERTIES(${PROJECT_NAME_LIB}
 IF(UNIX)
 TARGET_LINK_LIBRARIES(${EXEC_NAME} "${PROJECT_NAME} -lsfml-graphics -lsfml-window -lsfml-system")
 ELSE(UNIX)
-TARGET_LINK_LIBRARIES(${EXEC_NAME} "ssvp-interface.lib sfml-graphics.lib sfml-window.lib sfml-system.lib")
+TARGET_LINK_LIBRARIES(${EXEC_NAME} "bci-interface.lib sfml-graphics.lib sfml-window.lib sfml-system.lib")
 ENDIF(UNIX)
 TARGET_LINK_LIBRARIES(${EXEC_NAME} ${Boost_LIBRARIES})
 
@@ -79,6 +79,6 @@ SET_TARGET_PROPERTIES(${PROJECT_NAME_LIB}
 IF(UNIX)
 TARGET_LINK_LIBRARIES(${EXEC_NAME} "${PROJECT_NAME} -lsfml-graphics -lsfml-window -lsfml-system")
 ELSE(UNIX)
-TARGET_LINK_LIBRARIES(${EXEC_NAME} "ssvp-interface.lib sfml-graphics.lib sfml-window.lib sfml-system.lib")
+TARGET_LINK_LIBRARIES(${EXEC_NAME} "bci-interface.lib sfml-graphics.lib sfml-window.lib sfml-system.lib")
 ENDIF(UNIX)
 TARGET_LINK_LIBRARIES(${EXEC_NAME} ${Boost_LIBRARIES})

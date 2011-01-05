@@ -1,9 +1,9 @@
-SET(EXEC_NAME ssvp-interface)
+SET(EXEC_NAME bci-interface)
 
 SET(${EXEC_NAME}_src
     ./square-function.cpp
-    ./SSVPInterface.cpp
-    ./SSVPInterfaceConfig.cpp
+    ./SSVEPInterface.cpp
+    ./SSVEPInterfaceConfig.cpp
     ./FlickeringSquare.cpp
     ./BackgroundSprite.cpp
     ./P300Interface.cpp

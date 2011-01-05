@@ -1,31 +1,31 @@
-#ifndef _H_SSVPINTERFACECONFIG_H_
-#define _H_SSVPINTERFACECONFIG_H_
+#ifndef _H_SSVEPINTERFACECONFIG_H_
+#define _H_SSVEPINTERFACECONFIG_H_
 
-#include <ssvp-interface/FlickeringSquare.h>
+#include <bci-interface/FlickeringSquare.h>
 
 #ifdef WIN32
-#define SSVPINTERFACE_API __declspec(dllexport)
+#define SSVEPINTERFACE_API __declspec(dllexport)
 #else
-#define SSVPINTERFACE_API 
+#define SSVEPINTERFACE_API 
 #endif
 
-namespace ssvpinterface
+namespace bciinterface
 {
 
-class SSVPInterfaceConfig
+class SSVEPInterfaceConfig
 {
 public:
-    SSVPINTERFACE_API SSVPInterfaceConfig();
+    SSVEPINTERFACE_API SSVEPInterfaceConfig();
 
-    SSVPINTERFACE_API void ReadFromFile(const std::string & fileName);
+    SSVEPINTERFACE_API void ReadFromFile(const std::string & fileName);
 
-    SSVPINTERFACE_API int GetWidth();
+    SSVEPINTERFACE_API int GetWidth();
 
-    SSVPINTERFACE_API int GetHeight();
+    SSVEPINTERFACE_API int GetHeight();
 
-    SSVPINTERFACE_API bool IsFullScreen();
+    SSVEPINTERFACE_API bool IsFullScreen();
 
-    SSVPINTERFACE_API std::vector<FlickeringSquare *>  & GetSquares();
+    SSVEPINTERFACE_API std::vector<FlickeringSquare *>  & GetSquares();
 
 private:
     bool ParseGeneralConfig(const std::string & configLine);
@@ -41,7 +41,7 @@ private:
     std::vector<FlickeringSquare *> m_squares;
 };
 
-} // namespace ssvpinterface
+} // namespace bciinterface
 
 #endif
 

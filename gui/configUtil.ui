@@ -10,7 +10,7 @@
    </rect>
   </property>
   <property name="windowTitle" >
-   <string>SSVPInterface Config Utility</string>
+   <string>SSVEPInterface Config Utility</string>
   </property>
   <layout class="QVBoxLayout" >
    <item>

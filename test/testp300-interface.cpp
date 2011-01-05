@@ -1,4 +1,4 @@
-#include <ssvp-interface/P300Interface.h>
+#include <bci-interface/P300Interface.h>
 
 #include <SFML/Graphics.hpp>
 
@@ -16,7 +16,7 @@ void sleep(DWORD t)
 #include <boost/thread.hpp>
 #include <boost/bind.hpp>
 
-using namespace p300interface;
+using namespace bciinterface;
 
 P300Interface * interface = 0;
 

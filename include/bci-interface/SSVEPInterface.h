@@ -1,40 +1,40 @@
-#ifndef _H_SSVPINTERFACE_H_
-#define _H_SSVPINTERFACE_H_
+#ifndef _H_SSVEPINTERFACE_H_
+#define _H_SSVEPINTERFACE_H_
 
-#include <ssvp-interface/FlickeringSquare.h>
+#include <bci-interface/FlickeringSquare.h>
 
 #ifdef WIN32
-#define SSVPINTERFACE_API __declspec(dllexport)
+#define SSVEPINTERFACE_API __declspec(dllexport)
 #else
-#define SSVPINTERFACE_API 
+#define SSVEPINTERFACE_API 
 #endif
 
-namespace ssvpinterface
+namespace bciinterface
 {
 
-struct SSVPInterfaceImpl;
+struct SSVEPInterfaceImpl;
 
-class SSVPInterface
+class SSVEPInterface
 {
 public:
-    SSVPINTERFACE_API SSVPInterface(unsigned int width, unsigned int height);
+    SSVEPINTERFACE_API SSVEPInterface(unsigned int width, unsigned int height);
 
-    SSVPINTERFACE_API void AddSquare(FlickeringSquare * square);
+    SSVEPINTERFACE_API void AddSquare(FlickeringSquare * square);
 
-    SSVPINTERFACE_API void AddSquare(int frequency, int screenFrequency, float x, float y, float size = 100, int r = 255, int g = 0, int b = 0, int a = 255);
+    SSVEPINTERFACE_API void AddSquare(int frequency, int screenFrequency, float x, float y, float size = 100, int r = 255, int g = 0, int b = 0, int a = 255);
 
-    SSVPINTERFACE_API void ChangeFrequency(unsigned int squareId, int frequency, int screenFrequency);
+    SSVEPINTERFACE_API void ChangeFrequency(unsigned int squareId, int frequency, int screenFrequency);
 
-    SSVPINTERFACE_API void EnableFlash(bool enable);
+    SSVEPINTERFACE_API void EnableFlash(bool enable);
 
-    SSVPINTERFACE_API void DisplayLoop(bool fullScreen = true);
+    SSVEPINTERFACE_API void DisplayLoop(bool fullScreen = true);
 
-    SSVPINTERFACE_API void Close();
+    SSVEPINTERFACE_API void Close();
 private:
-    boost::shared_ptr<SSVPInterfaceImpl> m_impl;
+    boost::shared_ptr<SSVEPInterfaceImpl> m_impl;
 };
 
-} // namespace ssvpinterface
+} // namespace bciinterface
 
 #endif
 

@@ -1,6 +1,6 @@
-#include "ssvp-interface/P300Interface.h"
+#include "bci-interface/P300Interface.h"
 
-#include "ssvp-interface/BackgroundSprite.h"
+#include "bci-interface/BackgroundSprite.h"
 
 #include <boost/thread.hpp>
 
@@ -8,7 +8,7 @@
 #include <iostream>
 #include <vector>
 
-namespace p300interface
+namespace bciinterface
 {
 
 struct NamedShape
@@ -23,7 +23,7 @@ struct P300InterfaceImpl
 {
 
 private:
-    ssvpinterface::BackgroundSprite m_backgroundSprite;
+    BackgroundSprite m_backgroundSprite;
     unsigned m_width, m_height;
     bool m_pausable, m_pause, m_close;
     std::vector<NamedShape> m_objectsActive;
@@ -127,7 +127,7 @@ public:
         unsigned int frameCount = 0;
 
         m_backgroundSprite.Initialize();
-        boost::thread th(boost::bind(&ssvpinterface::BackgroundSprite::UpdateLoop, &m_backgroundSprite));
+        boost::thread th(boost::bind(&BackgroundSprite::UpdateLoop, &m_backgroundSprite));
 
         time(&t1);
         while(!m_close && m_app->IsOpened())
@@ -314,5 +314,5 @@ void P300Interface::Close()
     m_impl->Close();
 }
 
-} //namespace p300interface
+} //namespace bcinterface
 

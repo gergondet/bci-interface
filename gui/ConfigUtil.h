@@ -5,7 +5,7 @@ class ConfigUtil : public QWidget, private Ui::configUtil
     Q_OBJECT
 
     public:
-        ConfigUtil(QWidget * parent = 0, const char * configFile = "ssvpinterface-config");
+        ConfigUtil(QWidget * parent = 0, const char * configFile = "ssvepinterface-config");
     
     private slots:
         void on_exitButton_clicked();

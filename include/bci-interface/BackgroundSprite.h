@@ -11,12 +11,12 @@
 #include <SFML/Graphics.hpp>
 
 #ifdef WIN32
-#define SSVPINTERFACE_API __declspec(dllexport)
+#define SSVEPINTERFACE_API __declspec(dllexport)
 #else
-#define SSVPINTERFACE_API 
+#define SSVEPINTERFACE_API 
 #endif
 
-namespace ssvpinterface
+namespace bciinterface
 {
 
 struct BackgroundSpriteImpl;
@@ -25,19 +25,19 @@ class BackgroundSprite
 {
 public:
     /*! \brief Constructor */ 
-    SSVPINTERFACE_API BackgroundSprite(const std::string & visionName, unsigned short visionPort);
+    SSVEPINTERFACE_API BackgroundSprite(const std::string & visionName, unsigned short visionPort);
 
     /*! \brief Initialize */
-    SSVPINTERFACE_API void Initialize();
+    SSVEPINTERFACE_API void Initialize();
 
     /*! \brief Update loop */
-    SSVPINTERFACE_API void UpdateLoop();
+    SSVEPINTERFACE_API void UpdateLoop();
 
     /*! \brief Close */
-    SSVPINTERFACE_API void Close();
+    SSVEPINTERFACE_API void Close();
 
     /*! \brief Sprite accessor */
-    SSVPINTERFACE_API sf::Sprite * GetSprite();
+    SSVEPINTERFACE_API sf::Sprite * GetSprite();
 
 private:
     boost::shared_ptr<BackgroundSpriteImpl> m_bsimpl;

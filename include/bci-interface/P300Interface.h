@@ -10,7 +10,7 @@
 #include <boost/shared_ptr.hpp>
 #include <string>
 
-namespace p300interface
+namespace bciinterface
 {
 
 struct P300InterfaceImpl;

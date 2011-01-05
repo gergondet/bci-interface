@@ -11,12 +11,12 @@
 #include <SFML/Graphics.hpp>
 
 #ifdef WIN32
-#define SSVPINTERFACE_API __declspec(dllexport)
+#define SSVEPINTERFACE_API __declspec(dllexport)
 #else
-#define SSVPINTERFACE_API 
+#define SSVEPINTERFACE_API 
 #endif
 
-namespace ssvpinterface
+namespace bciinterface
 {
 
 struct FlickeringSquareImpl;
@@ -25,7 +25,7 @@ class FlickeringSquare
 {
 public:
     /*! \brief Constructor */ 
-    SSVPINTERFACE_API FlickeringSquare(int frequency, int screenFrequency, float x = 0, float y = 0, float size = 100, int r = 255, int g = 0, int b = 0, int a = 255, bool fill = true);
+    SSVEPINTERFACE_API FlickeringSquare(int frequency, int screenFrequency, float x = 0, float y = 0, float size = 100, int r = 255, int g = 0, int b = 0, int a = 255, bool fill = true);
 
     /* \brief Change flickering frequency */
     bool ChangeFrequency(int frequency, int screenFrequency);

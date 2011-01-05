@@ -1,10 +1,10 @@
-#include <ssvp-interface/FlickeringSquare.h>
+#include <bci-interface/FlickeringSquare.h>
 
-#include <ssvp-interface/square-function.h>
+#include <bci-interface/square-function.h>
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
-namespace ssvpinterface
+namespace bciinterface
 {
 
 struct FlickeringSquareImpl
@@ -174,5 +174,5 @@ void FlickeringSquare::Unhighlight()
     m_flsqimpl->Unhighlight();
 }
 
-} // namespace ssvpinterface
+} // namespace bciinterface
 
