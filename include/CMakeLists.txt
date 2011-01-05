@@ -4,6 +4,7 @@ SET(${PROJECT_NAME}_HEADERS
 	ssvp-interface/FlickeringSquare.h
 	ssvp-interface/square-function.h
     ssvp-interface/BackgroundSprite.h
+    ssvp-interface/P300Interface.h
 )
 
 INSTALL(FILES ${${PROJECT_NAME}_HEADERS}

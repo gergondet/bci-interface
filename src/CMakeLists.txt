@@ -6,6 +6,7 @@ SET(${EXEC_NAME}_src
     ./SSVPInterfaceConfig.cpp
     ./FlickeringSquare.cpp
     ./BackgroundSprite.cpp
+    ./P300Interface.cpp
 )
 
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include)
