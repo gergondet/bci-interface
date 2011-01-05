@@ -24,17 +24,19 @@ struct P300InterfaceImpl
 
 private:
     BackgroundSprite m_backgroundSprite;
-    unsigned m_width, m_height;
+    unsigned int m_width, m_height;
     bool m_pausable, m_pause, m_close;
+    unsigned int m_nbtrials;
+    float m_flashtime, m_interflashtime, m_intercycletime;
     std::vector<NamedShape> m_objectsActive;
     std::vector<NamedShape> m_objectsInactive;
     sf::RenderWindow * m_app;
-    //FIXME add timing parameters
     //FIXME Write a synchronizing class to synchronize with BCI system
 public:
     P300InterfaceImpl(unsigned int width, unsigned int height) :
         m_backgroundSprite("hrp2010v", 4242),
         m_width(width), m_height(height), m_pausable(true), m_pause(false), m_close(false),
+        m_nbtrials(5), m_flashtime(0.200), m_interflashtime(0.300), m_intercycletime(1.0),
         m_app(0)
     {
         m_objectsActive.resize(0);
@@ -150,19 +152,18 @@ public:
                 m_pausable = false;
                 unsigned int nbObjects = m_objectsActive.size();
                 unsigned int finishedObjects = 0;
-                unsigned int nb_minrepeat = 3;
                 std::vector<unsigned int> apparitionCount(nbObjects, 0);
                 while(finishedObjects < nbObjects)
                 {
                     /* Randomly select a new object to highlight */
                     unsigned int idx = sf::Randomizer::Random(0, nbObjects-1);
                     apparitionCount[idx]++;
-                    if(apparitionCount[idx] == nb_minrepeat)
+                    if(apparitionCount[idx] == m_nbtrials)
                     {
                         finishedObjects++;
                     }
                     clock.Reset();
-                    while(!m_close && m_app->IsOpened() && clock.GetElapsedTime() < 0.200)
+                    while(!m_close && m_app->IsOpened() && clock.GetElapsedTime() < m_flashtime)
                     {
                         m_app->Clear();
 
@@ -187,7 +188,7 @@ public:
                     }
 
                     clock.Reset();
-                    while(!m_close && m_app->IsOpened() && clock.GetElapsedTime() < 0.300)
+                    while(!m_close && m_app->IsOpened() && clock.GetElapsedTime() < m_interflashtime) 
                     {
                         m_app->Clear();
 
@@ -208,9 +209,8 @@ public:
 
                 /* P300 cycle finished, can be paused until the next one */
                 m_pausable = true;
-                unsigned int inter_cycle_pause = 1; // express in seconds
                 clock.Reset();
-                while(!m_close && m_app->IsOpened() && clock.GetElapsedTime() < inter_cycle_pause)
+                while(!m_close && m_app->IsOpened() && clock.GetElapsedTime() < m_intercycletime)
                 {
                         m_app->Clear();
 
