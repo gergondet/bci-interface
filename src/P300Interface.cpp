@@ -28,6 +28,7 @@ private:
     bool m_pausable, m_pause, m_close;
     unsigned int m_nbtrials;
     float m_flashtime, m_interflashtime, m_intercycletime;
+    unsigned int m_nbObjects;
     std::vector<NamedShape> m_objectsActive;
     std::vector<NamedShape> m_objectsInactive;
     sf::RenderWindow * m_app;
@@ -37,7 +38,7 @@ public:
         m_backgroundSprite("hrp2010v", 4242),
         m_width(width), m_height(height), m_pausable(true), m_pause(false), m_close(false),
         m_nbtrials(5), m_flashtime(0.200), m_interflashtime(0.300), m_intercycletime(1.0),
-        m_app(0)
+        m_nbObjects(0), m_app(0)
     {
         m_objectsActive.resize(0);
         m_objectsInactive.resize(0);
@@ -96,6 +97,9 @@ public:
 
         m_objectsActive.push_back(NamedShape(object->name, shapeActive));
         m_objectsInactive.push_back(NamedShape(object->name, shapeInactive));
+
+        m_nbObjects++;
+
         Resume();
     }
     void RemoveObject(const std::string & name)
@@ -121,11 +125,20 @@ public:
                 }
             }
         }
+        m_nbObjects--;
         Resume();
     }
     void ClearObjects()
     {
         Pause();
+        for(size_t i = 0; i < m_nbObjects; ++i)
+        {
+            delete m_objectsInactive[i].shape;
+            delete m_objectsActive[i].shape;
+        }
+        m_objectsInactive.resize(0);
+        m_objectsActive.resize(0);
+        m_nbObjects = 0;
         Resume();
     }
     void DisplayLoop(bool fullscreen)
@@ -153,26 +166,19 @@ public:
             if(m_pause)
             {
                 /* Just draw the background when in pause */
-                m_app->Clear();
-
-                ProcessEvents();
-
-                DrawBackground();
-
                 frameCount++;
-                m_app->Display();
+                Display(-1);
             }
             else
             {
                 /* Enter a P300 cycle, can not be paused now */
                 m_pausable = false;
-                unsigned int nbObjects = m_objectsActive.size();
                 unsigned int finishedObjects = 0;
-                std::vector<unsigned int> apparitionCount(nbObjects, 0);
-                while(finishedObjects < nbObjects)
+                std::vector<unsigned int> apparitionCount(m_nbObjects, 0);
+                while(finishedObjects < m_nbObjects)
                 {
                     /* Randomly select a new object to highlight */
-                    unsigned int idx = sf::Randomizer::Random(0, nbObjects-1);
+                    unsigned int idx = sf::Randomizer::Random(0, m_nbObjects-1);
                     apparitionCount[idx]++;
                     if(apparitionCount[idx] == m_nbtrials)
                     {
@@ -181,45 +187,15 @@ public:
                     clock.Reset();
                     while(!m_close && m_app->IsOpened() && clock.GetElapsedTime() < m_flashtime)
                     {
-                        m_app->Clear();
-
-                        ProcessEvents();
-
-                        DrawBackground();
-
-                        for(size_t i = 0; i < nbObjects; ++i)
-                        {
-                            if(i != idx)
-                            {
-                                m_app->Draw(*(m_objectsInactive[i].shape));
-                            }
-                            else
-                            {
-                                m_app->Draw(*(m_objectsActive[i].shape));
-                            }
-                        }
-
                         frameCount++;
-                        m_app->Display();
+                        Display(idx);
                     }
 
                     clock.Reset();
                     while(!m_close && m_app->IsOpened() && clock.GetElapsedTime() < m_interflashtime) 
                     {
-                        m_app->Clear();
-
-                        ProcessEvents();
-
-                        DrawBackground();
-
-                        for(size_t i = 0; i < nbObjects; ++i)
-                        {
-                            m_app->Draw(*(m_objectsInactive[i].shape));
-                        }
-
                         frameCount++;
-                        m_app->Display();
-
+                        Display(-1);
                     }
                 }
 
@@ -228,19 +204,8 @@ public:
                 clock.Reset();
                 while(!m_close && m_app->IsOpened() && clock.GetElapsedTime() < m_intercycletime)
                 {
-                        m_app->Clear();
-
-                        ProcessEvents();
-
-                        DrawBackground();
-
-                        for(size_t i = 0; i < nbObjects; ++i)
-                        {
-                            m_app->Draw(*(m_objectsInactive[i].shape));
-                        }
-
                         frameCount++;
-                        m_app->Display();
+                        Display(-1);
                 }
             }
         }
@@ -265,7 +230,7 @@ public:
     }
 
 private:
-    void ProcessEvents()
+    inline void ProcessEvents()
     {
         sf::Event Event;
         while (m_app->GetEvent(Event))
@@ -277,7 +242,7 @@ private:
         }
     }
 
-    void DrawBackground()
+    inline void DrawBackground()
     {
         sf::Sprite * sprite = m_backgroundSprite.GetSprite();
 
@@ -287,6 +252,28 @@ private:
             m_app->Draw(*sprite);
         }
     }
+    inline void Display(int activeObject)
+    {
+        m_app->Clear();
+        
+        ProcessEvents();
+        
+        DrawBackground();
+        
+        for(size_t i = 0; i < m_nbObjects; ++i)
+        {
+            if(i != activeObject)
+            {
+                m_app->Draw(*(m_objectsInactive[i].shape));
+            }
+            else
+            {
+                m_app->Draw(*(m_objectsActive[i].shape));
+            }
+        }
+        m_app->Display();
+    }
+    
 
 }; // struct P300InterfaceImpl 
 
