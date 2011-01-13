@@ -37,8 +37,8 @@ public:
     P300InterfaceImpl(unsigned int width, unsigned int height) :
         m_backgroundSprite("hrp2010v", 4242),
         m_width(width), m_height(height), m_pausable(true), m_pause(false), m_close(false),
-        m_nbtrials(5), m_flashtime(0.200), m_interflashtime(0.300), m_intercycletime(1.0),
-        m_nbObjects(0), m_app(0)
+        m_nbtrials(5), m_flashtime(0.060), m_interflashtime(0.010), m_intercycletime(1.0),
+        m_nbObjects(36), m_app(0)
     {
         m_objectsActive.resize(0);
         m_objectsInactive.resize(0);
@@ -98,7 +98,7 @@ public:
         m_objectsActive.push_back(NamedShape(object->name, shapeActive));
         m_objectsInactive.push_back(NamedShape(object->name, shapeInactive));
 
-        m_nbObjects++;
+        /* m_nbObjects++; */
 
         Resume();
     }
@@ -125,20 +125,20 @@ public:
                 }
             }
         }
-        m_nbObjects--;
+        /* m_nbObjects--; */
         Resume();
     }
     void ClearObjects()
     {
         Pause();
-        for(size_t i = 0; i < m_nbObjects; ++i)
+        for(size_t i = 0; i < m_objectsInactive.size(); ++i)
         {
             delete m_objectsInactive[i].shape;
             delete m_objectsActive[i].shape;
         }
         m_objectsInactive.resize(0);
         m_objectsActive.resize(0);
-        m_nbObjects = 0;
+        /* m_nbObjects = 0; */
         Resume();
     }
     void DisplayLoop(bool fullscreen)
@@ -174,7 +174,7 @@ public:
                 /* Enter a P300 cycle, can not be paused now */
                 m_pausable = false;
                 unsigned int finishedObjects = 0;
-                std::vector<unsigned int> apparitionCount(m_nbObjects, 0);
+                std::vector<unsigned int> apparitionCount(36, 0);
                 while(finishedObjects < m_nbObjects)
                 {
                     /* Randomly select a new object to highlight */
@@ -260,7 +260,7 @@ private:
         
         DrawBackground();
         
-        for(size_t i = 0; i < m_nbObjects; ++i)
+        for(size_t i = 0; i < m_objectsInactive.size(); ++i)
         {
             if(i != activeObject)
             {
