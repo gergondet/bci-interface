@@ -54,6 +54,10 @@ public:
 
     P300INTERFACE_API void ClearObjects();
 
+    /* Interface with the BCI system related */
+
+    P300INTERFACE_API void StartP300Client(const std::string & serverName, unsigned short serverPort);
+
     /* Interface related functions */
 
     P300INTERFACE_API void DisplayLoop(bool fullscreen = true);

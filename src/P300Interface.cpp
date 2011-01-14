@@ -8,6 +8,8 @@
 #include <iostream>
 #include <vector>
 
+#include <bci-middleware/P300Client.h>
+
 namespace bciinterface
 {
 
@@ -31,14 +33,15 @@ private:
     unsigned int m_nbObjects;
     std::vector<NamedShape> m_objectsActive;
     std::vector<NamedShape> m_objectsInactive;
+    bcimw::P300Client * m_p300client;
     sf::RenderWindow * m_app;
-    //FIXME Write a synchronizing class to synchronize with BCI system
 public:
     P300InterfaceImpl(unsigned int width, unsigned int height) :
         m_backgroundSprite("hrp2010v", 4242),
         m_width(width), m_height(height), m_pausable(true), m_pause(false), m_close(false),
         m_nbtrials(5), m_flashtime(0.060), m_interflashtime(0.010), m_intercycletime(1.0),
-        m_nbObjects(36), m_app(0)
+        m_nbObjects(36), m_p300client(0),
+        m_app(0)
     {
         m_objectsActive.resize(0);
         m_objectsInactive.resize(0);
@@ -141,8 +144,21 @@ public:
         /* m_nbObjects = 0; */
         Resume();
     }
+
+    void StartP300Client(const std::string & serverName, unsigned short serverPort)
+    {
+        delete m_p300client;
+        m_p300client = new bcimw::P300Client(serverName, serverPort);
+    }
+
     void DisplayLoop(bool fullscreen)
     {
+        if(!m_p300client)
+        {
+            std::cerr << "Call StartP300Client before launching interface display loop" << std::endl;
+            return;
+        }
+
         if(fullscreen)
         {
             m_app = new sf::RenderWindow(sf::VideoMode(m_width, m_height), "p300-interface", sf::Style::Fullscreen);
@@ -167,7 +183,7 @@ public:
             {
                 /* Just draw the background when in pause */
                 frameCount++;
-                Display(-1);
+                Display();
             }
             else
             {
@@ -195,17 +211,19 @@ public:
                     while(!m_close && m_app->IsOpened() && clock.GetElapsedTime() < m_interflashtime) 
                     {
                         frameCount++;
-                        Display(-1);
+                        Display();
                     }
                 }
 
-                /* P300 cycle finished, can be paused until the next one */
+                /* P300 cycle finished, get the command and then wait go for next cycle */
+                /* FIXME THREAD ME I'M FAMOUS */
+                unsigned int cmd = m_p300client->GetID();
                 m_pausable = true;
                 clock.Reset();
                 while(!m_close && m_app->IsOpened() && clock.GetElapsedTime() < m_intercycletime)
                 {
                         frameCount++;
-                        Display(-1);
+                        Display();
                 }
             }
         }
@@ -252,7 +270,22 @@ private:
             m_app->Draw(*sprite);
         }
     }
-    inline void Display(int activeObject)
+    inline void Display()
+    {
+        m_app->Clear();
+        
+        ProcessEvents();
+        
+        DrawBackground();
+        
+        for(size_t i = 0; i < m_objectsInactive.size(); ++i)
+        {
+            m_app->Draw(*(m_objectsInactive[i].shape));
+        }
+
+        m_app->Display();
+    }
+    inline void Display(unsigned int activeObject)
     {
         m_app->Clear();
         
@@ -271,7 +304,9 @@ private:
                 m_app->Draw(*(m_objectsActive[i].shape));
             }
         }
+
         m_app->Display();
+        m_p300client->SendFlashID(activeObject);
     }
     
 
@@ -295,6 +330,11 @@ void P300Interface::RemoveObject(const std::string & name)
 void P300Interface::ClearObjects()
 {
     m_impl->ClearObjects();
+}
+
+void P300Interface::StartP300Client(const std::string & serverName, unsigned short serverPort)
+{
+    m_impl->StartP300Client(serverName, serverPort);
 }
 
 void P300Interface::DisplayLoop(bool fullscreen)

@@ -33,6 +33,8 @@ int main(int argc, char * argv[])
     interface->AddObject(new P300Object("3", winW/2-75, winH-200, 150, 150, 255, 0, 0));
     interface->AddObject(new P300Object("4", 200, winH/2-50, 150, 150, 255, 0, 0));
 
+    interface->StartP300Client("127.0.0.1", 4242);
+
     boost::thread th(&P300Interface::DisplayLoop, interface, fullscreen);
     
     th.join();
