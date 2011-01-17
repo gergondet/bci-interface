@@ -14,8 +14,8 @@
 #include <winsock.h>
 #include <boost/thread.hpp>
 
-#pragma comment (lib, "boost_thread-mt.lib")
-#pragma comment (lib, "winsock2.lib")
+#pragma comment (lib, "boost_thread-vc90-mt.lib")
+#pragma comment (lib, "ws2_32.lib")
 
 #define S_FUNCTION_LEVEL 2
 #define S_FUNCTION_NAME  sfun_ssvp_interface
@@ -53,7 +53,7 @@ public:
         WSACleanup();
     }
 
-    GetFlashIDThread()
+    void GetFlashIDThread()
     {
         char buffer[100];
         cSocket =  accept(sSocket, 0, 0);
@@ -146,7 +146,7 @@ static void mdlStart(SimStruct *S)
     m_p300server = new P300Server(4242);
     th = new boost::thread(boost::bind(&P300Server::GetFlashIDThread, m_p300server));
 
-    IN_mode = mxGetPr(ssGetSFcnParam(S, 0)[0]);
+    IN_mode = mxGetPr(ssGetSFcnParam(S,0))[0];
 
     IN_result = 0;
     IN_flash  = 0;
