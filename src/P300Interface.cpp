@@ -42,8 +42,8 @@ public:
     P300InterfaceImpl(unsigned int width, unsigned int height) :
         m_backgroundSprite("hrp2010v", 4242),
         m_width(width), m_height(height), m_pausable(true), m_pause(false), m_close(false),
-        m_nbtrials(4), m_flashtime(0.060), m_interflashtime(0.060), m_intercycletime(1.0),
-        m_nbObjects(36), m_p300client(0),
+        m_nbtrials(4), m_flashtime(0.060), m_interflashtime(0.010), m_intercycletime(1.0),
+        m_nbObjects(36) , m_p300client(0),
         m_app(0)
     {
         m_objectsActive.resize(0);
@@ -192,18 +192,19 @@ public:
             {
                 /* Enter a P300 cycle, can not be paused now */
                 m_pausable = false;
-                unsigned int apparitionCount = m_nbObjects*m_nbtrials + 1; /* first send is init send */
+                unsigned int apparitionCount = m_nbObjects*m_nbtrials;
                 while(apparitionCount > 0 )
                 {
                     /* Randomly select a new object to highlight */
-                    unsigned int idx = sf::Randomizer::Random(0, m_nbObjects-1);
                     apparitionCount--;
+                    std::cout << "IS STUCK ? " << apparitionCount << std::endl;
+                    unsigned int idx = m_p300client->GetID();
+                    std::cout << "NO STUCK!" << std::endl;
                     clock.Reset();
-                    m_p300client->SendFlashID(idx+1);
                     while(!m_close && m_app->IsOpened() && clock.GetElapsedTime() < m_flashtime)
                     {
                         frameCount++;
-                        Display(idx);
+                        Display(idx - 1);
                     }
 
                     clock.Reset();
@@ -217,6 +218,7 @@ public:
                 /* P300 cycle finished, get the command and then wait go for next cycle */
                 /* FIXME THREAD ME I'M FAMOUS */
                 unsigned int cmd = m_p300client->GetID();
+                std::cerr << "Got cmd " << cmd << std::endl;
                 m_pausable = true;
                 clock.Reset();
                 while(!m_close && m_app->IsOpened() && clock.GetElapsedTime() < m_intercycletime)
@@ -227,7 +229,7 @@ public:
             }
         }
         time(&t2);
-        std::cout << frameCount << " frames in " << (t2-t1) << "s so roughly: " << frameCount/(t2-t1) << " fps" << std::endl;
+        std::cerr << frameCount << " frames in " << (t2-t1) << "s so roughly: " << frameCount/(t2-t1) << " fps" << std::endl;
         m_backgroundSprite.Close();
         th.join();
         m_app->Close();
