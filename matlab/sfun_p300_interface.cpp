@@ -18,18 +18,22 @@
 #pragma comment (lib, "ws2_32.lib")
 
 #define S_FUNCTION_LEVEL 2
-#define S_FUNCTION_NAME  sfun_ssvp_interface
+#define S_FUNCTION_NAME  sfun_p300_interface
 
 unsigned int IN_result = 0;
+bool IN_stop = false;
 unsigned int IN_flash = 0;
+bool IN_flashing = false;
 
-double IN_mode = 0; /* 0 : training mode ,  1 : free mode */
+double IN_mode = 1; /* 1 : training mode ,  2 : free mode */
 
 unsigned int currTarget = 0;
 unsigned int currTargetIdx = 0;
 unsigned int targets[6] = {1,4,2,3,4,1};
 
 boost::thread * th = 0;
+
+std::ofstream debug("debug.log");
 
 class P300Server
 {
@@ -42,7 +46,6 @@ public:
         addr.sin_addr.s_addr = htonl (INADDR_ANY);
         sSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
         bind(sSocket, (LPSOCKADDR)&addr, sizeof(addr));
-        listen(sSocket, 1);
     }
 
     ~P300Server()
@@ -55,6 +58,7 @@ public:
 
     void GetFlashIDThread()
     {
+		listen(sSocket, 1);
         char buffer[100];
         cSocket =  accept(sSocket, 0, 0);
         while(!m_close)
@@ -108,12 +112,9 @@ static void mdlInitializeSizes(SimStruct *S)
     ssSetNumDiscStates(S, 0);
 
     if (!ssSetNumInputPorts(S, 1)) return;
-	for(int i = 0; i < 1; ++i)
-	{
-		ssSetInputPortWidth(S, i, 1);
-		ssSetInputPortDirectFeedThrough(S, i, 1);
-		ssSetInputPortRequiredContiguous(S,i,1);
-	}
+	ssSetInputPortWidth(S, 0, 2);
+	ssSetInputPortDirectFeedThrough(S, 0, 1);
+	ssSetInputPortRequiredContiguous(S,0,1);
     
     if (!ssSetNumOutputPorts(S, 1)) return;
     ssSetOutputPortWidth(S, 0, 4);
@@ -147,11 +148,15 @@ static void mdlStart(SimStruct *S)
     th = new boost::thread(boost::bind(&P300Server::GetFlashIDThread, m_p300server));
 
     IN_mode = mxGetPr(ssGetSFcnParam(S,0))[0];
+	debug << "MODE " << IN_mode << std::endl;
 
+	IN_stop = false;
+	
     IN_result = 0;
     IN_flash  = 0;
+	IN_flashing = false;
 
-    if(IN_mode == 0)
+    if(IN_mode == 1)
     {
         currTargetIdx = 0;
         currTarget = targets[currTargetIdx];
@@ -163,9 +168,10 @@ static void mdlStart(SimStruct *S)
 static void mdlOutputs(SimStruct *S, int_T tid)
 {
 	const real_T* u  = ssGetInputPortRealSignal(S,0);
-	unsigned int result = (unsigned int)u[0];
+	unsigned int result = (unsigned int)u[1];
 	if( result != IN_result )
 	{
+		debug << "NEW RESULT " << result << std::endl;
 		IN_result = result;
         if(IN_result != 0)
         {
@@ -180,17 +186,37 @@ static void mdlOutputs(SimStruct *S, int_T tid)
             }
         }
 	}
+	
+	bool stop = (bool)u[0];
+	if(stop != IN_stop)
+	{
+		IN_stop = stop;
+		debug << "STOP  " << stop << std::endl;
+	}
 
     if(IN_flash != 0)
     {
         real_T * y = ssGetOutputPortRealSignal(S, 0);
-        y[0] = 0; /* flash X */
-        y[1] = IN_flash; /* flash Y */
-        y[2] = IN_flash; /* flash */
-        if(IN_mode == 0 && IN_flash == currTarget)
-        {
-            y[3] = 1;
-        }
+		if(!IN_flashing)
+		{
+			y[0] = 36;
+			for(int i = 1; i < 4; ++i)
+			{
+				y[i] = 0;
+			}
+			IN_flashing = true;
+		}
+		else
+		{
+			y[0] = 0; /* flash X */
+			y[1] = IN_flash; /* flash Y */
+			y[2] = IN_flash; /* flash */
+			if(IN_mode == 1 && IN_flash == currTarget)
+			{
+				y[3] = 1;
+			}
+			debug << "FLASH " << IN_flash << std::endl;
+		}
         IN_flash = 0;
     }
     else
