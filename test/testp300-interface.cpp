@@ -22,9 +22,9 @@ P300Interface * interface = 0;
 
 int main(int argc, char * argv[])
 {
-    bool fullscreen = true;
-    int winW = 1280;
-    int winH = 800;
+    bool fullscreen = false; 
+    int winW = 800;
+    int winH = 600;
 
     interface = new P300Interface(winW, winH);
 
@@ -33,7 +33,7 @@ int main(int argc, char * argv[])
     interface->AddObject(new P300Object("3", winW/2-75, winH-200, 150, 150, 255, 0, 0));
     interface->AddObject(new P300Object("4", 200, winH/2-50, 150, 150, 255, 0, 0));
 
-    interface->StartP300Client("127.0.0.1", 4242);
+    interface->StartP300Client("150.29.145.150", 4242);
 
     boost::thread th(&P300Interface::DisplayLoop, interface, fullscreen);
     

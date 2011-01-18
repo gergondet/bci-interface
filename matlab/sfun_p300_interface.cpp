@@ -21,15 +21,9 @@
 #define S_FUNCTION_NAME  sfun_p300_interface
 
 unsigned int IN_result = 0;
-bool IN_stop = false;
 unsigned int IN_flash = 0;
-bool IN_flashing = false;
 
 double IN_mode = 1; /* 1 : training mode ,  2 : free mode */
-
-unsigned int currTarget = 0;
-unsigned int currTargetIdx = 0;
-unsigned int targets[6] = {1,4,2,3,4,1};
 
 boost::thread * th = 0;
 
@@ -52,35 +46,29 @@ public:
     {
         m_close = true;
         if(th) { th->join(); }
+        closesocket(cSocket);
         closesocket(sSocket);
         WSACleanup();
     }
 
-    void GetFlashIDThread()
+    void SendFlashID(unsigned int flashID)
+    {
+        std::stringstream ss;
+        ss << flashID;
+        send(cSocket, ss.str().c_str(), ss.str().size() + 1, 0);
+    }
+
+    void SendResult(unsigned int result)
+    {
+        std::stringstream ss;
+        ss << result;
+        send(cSocket, ss.str().c_str(), ss.str().size() + 1, 0);
+    }
+
+    void GetClient()
     {
 		listen(sSocket, 1);
-        char buffer[100];
         cSocket =  accept(sSocket, 0, 0);
-        while(!m_close)
-        {
-            if(recv(cSocket, buffer, 100, MSG_PEEK))
-            {
-                recv(cSocket, buffer, 100, 0);
-                std::stringstream ss;
-                ss << buffer;
-                ss >> IN_flash;
-            } 
-            if(m_result != IN_result)
-            {
-                m_result = IN_result;
-                if(m_result != 0)
-                {
-                    std::stringstream ss;
-                    ss << m_result;
-                    send(cSocket, ss.str().c_str(), ss.str().size() + 1, 0); 
-                }
-            }
-        }
     }
 
 private:
@@ -111,13 +99,15 @@ static void mdlInitializeSizes(SimStruct *S)
     ssSetNumContStates(S, 0);
     ssSetNumDiscStates(S, 0);
 
-    if (!ssSetNumInputPorts(S, 1)) return;
-	ssSetInputPortWidth(S, 0, 2);
-	ssSetInputPortDirectFeedThrough(S, 0, 1);
-	ssSetInputPortRequiredContiguous(S,0,1);
+    if (!ssSetNumInputPorts(S, 2)) return;
+    for(int i = 0; i < 2; ++i)
+    {
+    	ssSetInputPortWidth(S, i, 1);
+	    ssSetInputPortDirectFeedThrough(S, i, 1);
+    	ssSetInputPortRequiredContiguous(S,i,1);
+    }
     
-    if (!ssSetNumOutputPorts(S, 1)) return;
-    ssSetOutputPortWidth(S, 0, 4);
+    if (!ssSetNumOutputPorts(S, 0)) return;
 
     ssSetNumSampleTimes(S, 1);
     ssSetNumRWork(S, 0);
@@ -145,16 +135,13 @@ static void mdlStart(SimStruct *S)
 {
     delete m_p300server;
     m_p300server = new P300Server(4242);
-    th = new boost::thread(boost::bind(&P300Server::GetFlashIDThread, m_p300server));
+    th = new boost::thread(boost::bind(&P300Server::GetClient, m_p300server));
 
     IN_mode = mxGetPr(ssGetSFcnParam(S,0))[0];
 	debug << "MODE " << IN_mode << std::endl;
 
-	IN_stop = false;
-	
     IN_result = 0;
     IN_flash  = 0;
-	IN_flashing = false;
 
     if(IN_mode == 1)
     {
@@ -168,66 +155,28 @@ static void mdlStart(SimStruct *S)
 static void mdlOutputs(SimStruct *S, int_T tid)
 {
 	const real_T* u  = ssGetInputPortRealSignal(S,0);
-	unsigned int result = (unsigned int)u[1];
+	unsigned int result = (unsigned int)u[0];
 	if( result != IN_result )
 	{
 		debug << "NEW RESULT " << result << std::endl;
 		IN_result = result;
         if(IN_result != 0)
         {
-            currTargetIdx++;
-            if(currTargetIdx < 6)
-            {
-                currTarget = targets[currTargetIdx];
-            }
-            else
-            {
-                currTarget = 0;
-            }
+            m_p300server->SendResult(IN_result);
         }
 	}
 	
-	bool stop = (bool)u[0];
-	if(stop != IN_stop)
-	{
-		IN_stop = stop;
-		debug << "STOP  " << stop << std::endl;
-	}
-
-    if(IN_flash != 0)
+    u = ssGetInputPortRealSignal(S, 1);
+    unsigned int flash = (unsigned int)u[0];
+    if( flash != IN_flash )
     {
-        real_T * y = ssGetOutputPortRealSignal(S, 0);
-		if(!IN_flashing)
-		{
-			y[0] = 36;
-			for(int i = 1; i < 4; ++i)
-			{
-				y[i] = 0;
-			}
-			IN_flashing = true;
-		}
-		else
-		{
-			y[0] = 0; /* flash X */
-			y[1] = IN_flash; /* flash Y */
-			y[2] = IN_flash; /* flash */
-			if(IN_mode == 1 && IN_flash == currTarget)
-			{
-				y[3] = 1;
-			}
-			debug << "FLASH " << IN_flash << std::endl;
-		}
-        IN_flash = 0;
-    }
-    else
-    {
-        real_T * y = ssGetOutputPortRealSignal(S, 0);
-        for(int i = 0; i < 4; ++i)
+        IN_flash = flash;
+        if( flash != 0 )
         {
-            y[i] = 0;
+            debug << "FLASH " << flash << std::endl;
+            m_p300server->SendFlashID(flash);
         }
     }
-	
 	
     UNUSED_ARG(tid);                             
 }                                                

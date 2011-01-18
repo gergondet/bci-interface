@@ -7,11 +7,14 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <vector>
+#include <fstream>
 
 #include <bci-middleware/P300Client.h>
 
 namespace bciinterface
 {
+
+std::ofstream debug("debug.log");
 
 struct NamedShape
 {
@@ -39,7 +42,7 @@ public:
     P300InterfaceImpl(unsigned int width, unsigned int height) :
         m_backgroundSprite("hrp2010v", 4242),
         m_width(width), m_height(height), m_pausable(true), m_pause(false), m_close(false),
-        m_nbtrials(5), m_flashtime(0.060), m_interflashtime(0.010), m_intercycletime(1.0),
+        m_nbtrials(4), m_flashtime(0.060), m_interflashtime(0.060), m_intercycletime(1.0),
         m_nbObjects(36), m_p300client(0),
         m_app(0)
     {
@@ -189,18 +192,14 @@ public:
             {
                 /* Enter a P300 cycle, can not be paused now */
                 m_pausable = false;
-                unsigned int finishedObjects = 0;
-                std::vector<unsigned int> apparitionCount(36, 0);
-                while(finishedObjects < m_nbObjects)
+                unsigned int apparitionCount = m_nbObjects*m_nbtrials + 1; /* first send is init send */
+                while(apparitionCount > 0 )
                 {
                     /* Randomly select a new object to highlight */
                     unsigned int idx = sf::Randomizer::Random(0, m_nbObjects-1);
-                    apparitionCount[idx]++;
-                    if(apparitionCount[idx] == m_nbtrials)
-                    {
-                        finishedObjects++;
-                    }
+                    apparitionCount--;
                     clock.Reset();
+                    m_p300client->SendFlashID(idx+1);
                     while(!m_close && m_app->IsOpened() && clock.GetElapsedTime() < m_flashtime)
                     {
                         frameCount++;
@@ -306,7 +305,6 @@ private:
         }
 
         m_app->Display();
-        m_p300client->SendFlashID(activeObject);
     }
     
 
