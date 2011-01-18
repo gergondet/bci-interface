@@ -35,7 +35,8 @@ class P300Interface
 {
 
 public:
-    P300INTERFACE_API P300Interface(unsigned int width, unsigned int height);
+    /* Constructor, mode 1 for training, 2 free spell */
+    P300INTERFACE_API P300Interface(unsigned int width, unsigned int height, unsigned int mode);
 
     /* P300 timing related functions */
     P300INTERFACE_API void SetNbTrials(const unsigned int nbTrials);

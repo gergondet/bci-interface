@@ -36,16 +36,26 @@ private:
     unsigned int m_nbObjects;
     std::vector<NamedShape> m_objectsActive;
     std::vector<NamedShape> m_objectsInactive;
+    bool m_training;
+    std::vector<int> m_trainingset;
     bcimw::P300Client * m_p300client;
     sf::RenderWindow * m_app;
 public:
-    P300InterfaceImpl(unsigned int width, unsigned int height) :
+    P300InterfaceImpl(unsigned int width, unsigned int height, unsigned int mode) :
         m_backgroundSprite("hrp2010v", 4242),
         m_width(width), m_height(height), m_pausable(true), m_pause(false), m_close(false),
         m_nbtrials(4), m_flashtime(0.060), m_interflashtime(0.010), m_intercycletime(1.0),
-        m_nbObjects(36) , m_p300client(0),
+        m_nbObjects(36) , m_training(false) , m_p300client(0),
         m_app(0)
     {
+        if(mode == 1)
+        {
+            m_training = true;
+            for(int i = 0; i < 4; ++i)
+            {
+                m_trainingset.push_back(i+1);
+            }
+        }
         m_objectsActive.resize(0);
         m_objectsInactive.resize(0);
     }
@@ -182,49 +192,99 @@ public:
         time(&t1);
         while(!m_close && m_app->IsOpened())
         {
-            if(m_pause)
+            if(m_training)
             {
-                /* Just draw the background when in pause */
-                frameCount++;
-                Display();
+                m_pausable = false;
+                for(int i = 0; i < m_trainingset.size(); ++i)
+                { 
+                    clock.Reset();
+                    while(clock.GetElapsedTime() < m_intercycletime)
+                    {
+                            frameCount++;
+                            Display(m_trainingset[i] - 1);
+                    }
+                    while(clock.GetElapsedTime() < 2*m_intercycletime)
+                    {
+                            frameCount++;
+                            Display();
+                    }
+                    
+                    unsigned int apparitionCount = m_nbObjects*m_nbtrials;
+                    while(apparitionCount > 0 )
+                    {
+                        /* Randomly select a new object to highlight */
+                        apparitionCount--;
+                        unsigned int idx = m_p300client->GetID();
+                        clock.Reset();
+                        while(!m_close && m_app->IsOpened() && clock.GetElapsedTime() < m_flashtime)
+                        {
+                            frameCount++;
+                            Display(idx - 1);
+                        }
+
+                        clock.Reset();
+                        while(!m_close && m_app->IsOpened() && clock.GetElapsedTime() < m_interflashtime) 
+                        {
+                            frameCount++;
+                            Display();
+                        }
+                    }
+
+                    unsigned int cmd = m_p300client->GetID();
+                    std::cerr << "Got cmd " << cmd << std::endl;
+
+                    clock.Reset();
+                    while(clock.GetElapsedTime() < m_intercycletime)
+                    {
+                            frameCount++;
+                            NoDisplay();
+                    }
+                }
+                m_close = true;
             }
             else
             {
-                /* Enter a P300 cycle, can not be paused now */
-                m_pausable = false;
-                unsigned int apparitionCount = m_nbObjects*m_nbtrials;
-                while(apparitionCount > 0 )
+                if(frameCount < 100 || m_pause)
                 {
-                    /* Randomly select a new object to highlight */
-                    apparitionCount--;
-                    std::cout << "IS STUCK ? " << apparitionCount << std::endl;
-                    unsigned int idx = m_p300client->GetID();
-                    std::cout << "NO STUCK!" << std::endl;
-                    clock.Reset();
-                    while(!m_close && m_app->IsOpened() && clock.GetElapsedTime() < m_flashtime)
-                    {
-                        frameCount++;
-                        Display(idx - 1);
-                    }
-
-                    clock.Reset();
-                    while(!m_close && m_app->IsOpened() && clock.GetElapsedTime() < m_interflashtime) 
-                    {
-                        frameCount++;
-                        Display();
-                    }
+                    /* Just draw the background when in pause */
+                    frameCount++;
+                    Display();
                 }
-
-                /* P300 cycle finished, get the command and then wait go for next cycle */
-                /* FIXME THREAD ME I'M FAMOUS */
-                unsigned int cmd = m_p300client->GetID();
-                std::cerr << "Got cmd " << cmd << std::endl;
-                m_pausable = true;
-                clock.Reset();
-                while(!m_close && m_app->IsOpened() && clock.GetElapsedTime() < m_intercycletime)
+                else
                 {
-                        frameCount++;
-                        Display();
+                    /* Enter a P300 cycle, can not be paused now */
+                    m_pausable = false;
+                    unsigned int apparitionCount = m_nbObjects*m_nbtrials;
+                    while(apparitionCount > 0 )
+                    {
+                        /* Randomly select a new object to highlight */
+                        apparitionCount--;
+                        unsigned int idx = m_p300client->GetID();
+                        clock.Reset();
+                        while(!m_close && m_app->IsOpened() && clock.GetElapsedTime() < m_flashtime)
+                        {
+                            frameCount++;
+                            Display(idx - 1);
+                        }
+
+                        clock.Reset();
+                        while(!m_close && m_app->IsOpened() && clock.GetElapsedTime() < m_interflashtime) 
+                        {
+                            frameCount++;
+                            Display();
+                        }
+                    }
+
+                    /* P300 cycle finished, get the command and then wait go for next cycle */
+                    unsigned int cmd = m_p300client->GetID();
+                    std::cerr << "Got cmd " << cmd << std::endl;
+                    m_pausable = true;
+                    clock.Reset();
+                    while(!m_close && m_app->IsOpened() && clock.GetElapsedTime() < 2*m_intercycletime)
+                    {
+                            frameCount++;
+                            Display(cmd - 1);
+                    }
                 }
             }
         }
@@ -271,6 +331,18 @@ private:
             m_app->Draw(*sprite);
         }
     }
+
+    inline void NoDisplay()
+    {
+        m_app->Clear();
+        
+        ProcessEvents();
+        
+        DrawBackground();
+        
+        m_app->Display();
+    }
+
     inline void Display()
     {
         m_app->Clear();
@@ -312,8 +384,8 @@ private:
 
 }; // struct P300InterfaceImpl 
 
-P300Interface::P300Interface(unsigned int width, unsigned int height)
-: m_impl(new P300InterfaceImpl(width, height))
+P300Interface::P300Interface(unsigned int width, unsigned int height, unsigned int mode)
+: m_impl(new P300InterfaceImpl(width, height, mode))
 {
 }
 
