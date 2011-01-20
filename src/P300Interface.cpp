@@ -42,7 +42,7 @@ private:
     sf::RenderWindow * m_app;
 public:
     P300InterfaceImpl(unsigned int width, unsigned int height, unsigned int mode) :
-        m_backgroundSprite("hrp2010v", 4242),
+        m_backgroundSprite("hrp2010v", 4242, 640, 480),
         m_width(width), m_height(height), m_pausable(true), m_pause(false), m_close(false),
         m_nbtrials(4), m_flashtime(0.060), m_interflashtime(0.010), m_intercycletime(1.0),
         m_nbObjects(36) , m_training(false) , m_p300client(0),
@@ -51,10 +51,12 @@ public:
         if(mode == 1)
         {
             m_training = true;
-            for(int i = 0; i < 4; ++i)
-            {
-                m_trainingset.push_back(i+1);
-            }
+            m_trainingset.push_back(3);
+            m_trainingset.push_back(14);
+            m_trainingset.push_back(18);
+            m_trainingset.push_back(19);
+            m_trainingset.push_back(27);
+            m_trainingset.push_back(1);
         }
         m_objectsActive.resize(0);
         m_objectsInactive.resize(0);
@@ -99,7 +101,7 @@ public:
         sf::Shape * shapeActive = new sf::Shape();
         sf::Shape * shapeInactive = new sf::Shape();
         sf::Color colorActive(object->r, object->g, object->b, 255);
-        sf::Color colorInactive(object->r, object->g, object->b, 120);
+        sf::Color colorInactive(object->r, object->g, object->b, 60);
 
         shapeActive->AddPoint(object->x, object->y, colorActive);
         shapeActive->AddPoint(object->x+object->size_x, object->y, colorActive);
@@ -198,12 +200,12 @@ public:
                 for(int i = 0; i < m_trainingset.size(); ++i)
                 { 
                     clock.Reset();
-                    while(clock.GetElapsedTime() < m_intercycletime)
+                    while(clock.GetElapsedTime() < 2*m_intercycletime)
                     {
                             frameCount++;
                             Display(m_trainingset[i] - 1);
                     }
-                    while(clock.GetElapsedTime() < 2*m_intercycletime)
+                    while(clock.GetElapsedTime() < m_intercycletime)
                     {
                             frameCount++;
                             Display();
@@ -232,12 +234,12 @@ public:
 
                     unsigned int cmd = m_p300client->GetID();
                     std::cerr << "Got cmd " << cmd << std::endl;
-
+                    
                     clock.Reset();
-                    while(clock.GetElapsedTime() < m_intercycletime)
+                    while(clock.GetElapsedTime() < 2*m_intercycletime)
                     {
-                            frameCount++;
-                            NoDisplay();
+                        frameCount++;
+                        Display(cmd - 1);
                     }
                 }
                 m_close = true;

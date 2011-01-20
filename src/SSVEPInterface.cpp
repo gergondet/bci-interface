@@ -28,7 +28,7 @@ struct SSVEPInterfaceImpl
         bool m_coshellrunning;
     public:
         SSVEPInterfaceImpl(unsigned int width, unsigned int height) : 
-            m_backgroundsprite("hrp2010v", 4242),
+            m_backgroundsprite("hrp2010v", 4242, 640, 480),
             m_width(width), m_height(height), 
             closeRequest(false), 
             fpsLog("fps.log"), app(0),

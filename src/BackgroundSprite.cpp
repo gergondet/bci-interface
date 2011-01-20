@@ -25,10 +25,11 @@ private:
     sf::Image * m_image;
     sf::Sprite * m_sprite;
     bool endLoop;
+    unsigned int m_width, m_height;
 public:
-    BackgroundSpriteImpl(const std::string & visionName, unsigned short visionPort) : 
-        m_dataFromSocket(new unsigned char[50001]), m_dataImage(new sf::Uint8[160*120*4]),
-        m_image(new sf::Image), m_sprite(new sf::Sprite), endLoop(false)
+    BackgroundSpriteImpl(const std::string & visionName, unsigned short visionPort, unsigned int width, unsigned int height) : 
+        m_dataFromSocket(new unsigned char[50001]), m_dataImage(new sf::Uint8[width*height*4]),
+        m_image(new sf::Image), m_sprite(new sf::Sprite), endLoop(false), m_width(width), m_height(height)
     {
         struct hostent * hent;
         hent = gethostbyname(visionName.c_str());
@@ -42,8 +43,8 @@ public:
         {
             std::cerr << strerror(errno) << std::endl;
         }
-        memset(m_dataImage, 0, 160*120*4);
-        m_image->LoadFromPixels(160, 120, m_dataImage);
+        memset(m_dataImage, 0, width*height*4);
+        m_image->LoadFromPixels(width, height, m_dataImage);
         m_sprite->SetImage(*m_image);
     }
     ~BackgroundSpriteImpl()
@@ -84,8 +85,8 @@ public:
 
             int receivedData = 0;
             unsigned char packetId = '\0';
-            memset(m_dataImage, 0, 160*120*4);
-            while(receivedData < 160*120 && receivedData != -1)
+            memset(m_dataImage, 0, m_width*m_height*4);
+            while(receivedData < m_width*m_height && receivedData != -1)
             {
                 FD_ZERO(&recvset);
                 FD_SET(m_sockfd, &recvset);
@@ -126,7 +127,7 @@ public:
             if(receivedData != -1)
             {
                 /* m_dataImage has a full image worth of data, update the sprite */
-                m_image->LoadFromPixels(160, 120, m_dataImage);
+                m_image->LoadFromPixels(m_width, m_height, m_dataImage);
                 m_sprite->SetImage(*m_image);
             }
         }
@@ -144,8 +145,8 @@ public:
 
 }; //class BackgroundSpriteImpl
 
-BackgroundSprite::BackgroundSprite(const std::string & visionName, unsigned short visionPort) :
-    m_bsimpl(new BackgroundSpriteImpl(visionName, visionPort))
+BackgroundSprite::BackgroundSprite(const std::string & visionName, unsigned short visionPort, unsigned int width, unsigned int height) :
+    m_bsimpl(new BackgroundSpriteImpl(visionName, visionPort, width, height))
 {
 }
 

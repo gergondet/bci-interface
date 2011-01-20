@@ -25,7 +25,7 @@ class BackgroundSprite
 {
 public:
     /*! \brief Constructor */ 
-    SSVEPINTERFACE_API BackgroundSprite(const std::string & visionName, unsigned short visionPort);
+    SSVEPINTERFACE_API BackgroundSprite(const std::string & visionName, unsigned short visionPort, unsigned int width, unsigned int height);
 
     /*! \brief Initialize */
     SSVEPINTERFACE_API void Initialize();
