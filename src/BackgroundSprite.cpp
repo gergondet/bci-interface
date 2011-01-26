@@ -133,6 +133,19 @@ public:
         }
     }
 
+    void UpdateFromBuffer(unsigned char * img)
+    {
+        for(int i = 0; i < m_width*m_height; ++i)
+        {
+            m_dataImage[4*i] = img[i];
+            m_dataImage[4*i+1] = img[i];
+            m_dataImage[4*i+2] = img[i];
+            m_dataImage[4*i+3] = 255;
+        }
+        m_image->LoadFromPixels(m_width, m_height, m_dataImage);
+        m_sprite->SetImage(*m_image);
+    }
+
     void Close()
     {
         endLoop = true;
@@ -158,6 +171,11 @@ void BackgroundSprite::Initialize()
 void BackgroundSprite::UpdateLoop()
 {
     m_bsimpl->UpdateLoop();
+}
+
+void BackgroundSprite::UpdateFromBuffer(unsigned char * img)
+{
+    m_bsimpl->UpdateFromBuffer(img);
 }
 
 void BackgroundSprite::Close()

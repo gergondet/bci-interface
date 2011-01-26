@@ -32,6 +32,9 @@ public:
 
     /*! \brief Update loop */
     SSVEPINTERFACE_API void UpdateLoop();
+    
+    /*! \brief Update the background from a buffer */
+    SSVEPINTERFACE_API void UpdateFromBuffer(unsigned char * img);
 
     /*! \brief Close */
     SSVEPINTERFACE_API void Close();

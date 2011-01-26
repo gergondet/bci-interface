@@ -61,6 +61,12 @@ public:
 
     /* Interface related functions */
 
+    /* If true you will have to update the background by hand */
+    P300INTERFACE_API void SetUpdateBackgroundManually(bool enable);
+
+    /* Expect a w*h grayscale buffer */
+    P300INTERFACE_API void UpdateBackground(unsigned char * img);
+
     P300INTERFACE_API void DisplayLoop(bool fullscreen = true);
 
     P300INTERFACE_API void Pause();
@@ -75,5 +81,10 @@ private:
 }; 
 
 } // namespace p300interface
+
+extern "C"
+{
+    void has_P300Interface() {}
+}
 
 #endif
