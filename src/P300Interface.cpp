@@ -117,6 +117,22 @@ public:
         }
     }
 
+    void DisplayLoop(sf::RenderWindow * app)
+    {
+        if(!m_p300client)
+        {
+            std::cerr << "Call StartP300Client before launching interface display loop" << std::endl;
+            return;
+        }
+
+        m_app = app;
+
+        DisplayLoop();
+
+        m_app = 0;
+        
+    }
+    
     void DisplayLoop(bool fullscreen)
     {
         if(!m_p300client)
@@ -135,6 +151,13 @@ public:
             m_app = new sf::RenderWindow(sf::VideoMode(m_width, m_height), "p300-interface");
         }
 
+        DisplayLoop();
+
+        m_app->Close();
+    }
+
+    void DisplayLoop()
+    {
         sf::Clock clock;
         time_t t1,t2;
         unsigned int frameCount = 0;
@@ -256,7 +279,6 @@ public:
                 delete th;
             }
         }
-        m_app->Close();
     }
     void Pause()
     {
@@ -356,6 +378,11 @@ void P300Interface::SetUpdateBackgroundManually(bool enable)
 void P300Interface::UpdateBackground(unsigned char * img)
 {
     m_impl->UpdateBackground(img);
+}
+
+void P300Interface::DisplayLoop(sf::RenderWindow * app)
+{
+    m_impl->DisplayLoop(app);
 }
 
 void P300Interface::DisplayLoop(bool fullscreen)

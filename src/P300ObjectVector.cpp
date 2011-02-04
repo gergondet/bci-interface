@@ -58,7 +58,7 @@ void P300ObjectVector::ClearObjects()
     m_objects.resize(0);
 }
 
-inline void P300ObjectVector::DrawObjects(sf::RenderWindow * app, int activeObject)
+void P300ObjectVector::DrawObjects(sf::RenderWindow * app, int activeObject)
 {
     for(size_t i = 0; i < m_objects.size(); ++i)
     {

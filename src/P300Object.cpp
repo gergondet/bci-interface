@@ -40,12 +40,12 @@ bool P300Object::operator==(const P300Object * object)
     return this->name == object->name;
 }
 
-inline void P300Object::DrawActive(sf::RenderWindow * app)
+void P300Object::DrawActive(sf::RenderWindow * app)
 {
     app->Draw(*shapeActive);
 }
 
-inline void P300Object::DrawInactive(sf::RenderWindow * app)
+void P300Object::DrawInactive(sf::RenderWindow * app)
 {
     app->Draw(*shapeInactive);
 }
