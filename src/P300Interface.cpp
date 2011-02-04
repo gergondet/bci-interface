@@ -1,7 +1,5 @@
 #include "bci-interface/P300Interface.h"
 
-#include "bci-interface/BackgroundSprite.h"
-
 #include <boost/thread.hpp>
 
 #include <SFML/Graphics.hpp>
@@ -19,7 +17,7 @@ struct P300InterfaceImpl
 {
 
 private:
-    BackgroundSprite m_backgroundSprite;
+    BackgroundSprite * m_backgroundSprite;
     bool m_updateBackgroundManually;
     unsigned int m_width, m_height;
     bool m_pausable, m_pause, m_close;
@@ -33,7 +31,7 @@ private:
     sf::RenderWindow * m_app;
 public:
     P300InterfaceImpl(unsigned int width, unsigned int height, unsigned int mode) :
-        m_backgroundSprite("hrp2010v", 4242, 640, 480), m_updateBackgroundManually(false),
+        m_backgroundSprite(0), m_updateBackgroundManually(false),
         m_width(width), m_height(height), m_pausable(true), m_pause(false), m_close(false),
         m_nbtrials(4), m_flashtime(0.060), m_interflashtime(0.010), m_intercycletime(1.0),
         m_nbObjects(36), m_training(false) , m_p300client(0),
@@ -101,6 +99,12 @@ public:
         m_p300client = new bcimw::P300Client(serverName, serverPort);
     }
 
+    void SetBackgroundSprite(BackgroundSprite * sprite)
+    {
+        delete m_backgroundSprite;
+        m_backgroundSprite = sprite;
+    }
+
     void SetUpdateBackgroundManually(bool enable)
     {
         if(!m_app) /* no more change after interface launch */
@@ -111,14 +115,19 @@ public:
 
     void UpdateBackground(unsigned char * img)
     {
-        if(m_updateBackgroundManually)
+        if(m_updateBackgroundManually && m_backgroundSprite)
         {
-            m_backgroundSprite.UpdateFromBuffer(img);
+            m_backgroundSprite->UpdateFromBuffer(img);
         }
     }
 
     void DisplayLoop(sf::RenderWindow * app)
     {
+        if(!m_backgroundSprite)
+        {
+            std::cerr << "Call SetBackgroundSprite before launching interface display loop" << std::endl;
+            return;
+        }
         if(!m_p300client)
         {
             std::cerr << "Call StartP300Client before launching interface display loop" << std::endl;
@@ -135,6 +144,11 @@ public:
     
     void DisplayLoop(bool fullscreen)
     {
+        if(!m_backgroundSprite)
+        {
+            std::cerr << "Call SetBackgroundSprite before launching interface display loop" << std::endl;
+            return;
+        }
         if(!m_p300client)
         {
             std::cerr << "Call StartP300Client before launching interface display loop" << std::endl;
@@ -165,8 +179,8 @@ public:
         boost::thread * th;
         if(!m_updateBackgroundManually)
         {
-            m_backgroundSprite.Initialize();
-            th = new boost::thread(boost::bind(&BackgroundSprite::UpdateLoop, &m_backgroundSprite));
+            m_backgroundSprite->Initialize();
+            th = new boost::thread(boost::bind(&BackgroundSprite::UpdateLoop, m_backgroundSprite));
         }
 
         time(&t1);
@@ -272,7 +286,7 @@ public:
         std::cerr << frameCount << " frames in " << (t2-t1) << "s so roughly: " << frameCount/(t2-t1) << " fps" << std::endl;
         if(!m_updateBackgroundManually)
         {
-            m_backgroundSprite.Close();
+            m_backgroundSprite->Close();
             if(th)
             {
                 th->join();
@@ -309,7 +323,7 @@ private:
 
     inline void DrawBackground()
     {
-        sf::Sprite * sprite = m_backgroundSprite.GetSprite();
+        sf::Sprite * sprite = m_backgroundSprite->GetSprite();
 
         if(sprite)
         {
@@ -368,6 +382,11 @@ void P300Interface::ClearObjects()
 void P300Interface::StartP300Client(const std::string & serverName, unsigned short serverPort)
 {
     m_impl->StartP300Client(serverName, serverPort);
+}
+
+void P300Interface::SetBackgroundSprite(BackgroundSprite * sprite)
+{
+    m_impl->SetBackgroundSprite(sprite);
 }
 
 void P300Interface::SetUpdateBackgroundManually(bool enable)

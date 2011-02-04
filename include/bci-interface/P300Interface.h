@@ -11,6 +11,7 @@
 #include <string>
 
 #include <bci-interface/P300Object.h>
+#include <bci-interface/BackgroundSprite.h>
 
 namespace bciinterface
 {
@@ -46,6 +47,8 @@ public:
     P300INTERFACE_API void StartP300Client(const std::string & serverName, unsigned short serverPort);
 
     /* Interface related functions */
+
+    P300INTERFACE_API void SetBackgroundSprite(BackgroundSprite * sprite);
 
     /* If true you will have to update the background by hand */
     P300INTERFACE_API void SetUpdateBackgroundManually(bool enable);

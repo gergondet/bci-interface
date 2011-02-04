@@ -58,7 +58,6 @@ public:
 
     void Initialize()
     {
-        /* Initialize socket stuff */
         m_sockfd = socket(AF_INET, SOCK_DGRAM, 0);
         if(m_sockfd < 0)
         {
