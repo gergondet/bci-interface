@@ -1,7 +1,9 @@
 #include <bci-interface/SSVEPInterface.h>
 #include <bci-interface/BackgroundSprite.h>
 
+#ifdef WITH_COSHELL
 #include <coshell-bci/CoshellBCI.h>
+#endif
 #include <bci-middleware/SSVEPReceiver.h>
 
 #include <SFML/Graphics.hpp>
@@ -24,16 +26,20 @@ struct SSVEPInterfaceImpl
         bool closeRequest;
         std::ofstream fpsLog;
         sf::RenderWindow * app;
+        #ifdef WITH_COSHELL
         coshellbci::CoshellBCI * m_coshellBCI;
         bool m_coshellrunning;
+        #endif
     public:
         SSVEPInterfaceImpl(unsigned int width, unsigned int height) : 
             m_backgroundsprite("hrp2010v", 4242, 640, 480),
             m_width(width), m_height(height), 
             closeRequest(false), 
-            fpsLog("fps.log"), app(0),
-            m_coshellBCI(new coshellbci::CoshellBCI("localhost", 2809, 1111)), 
+            fpsLog("fps.log"), app(0)
+            #ifdef WITH_COSHELL
+            , m_coshellBCI(new coshellbci::CoshellBCI("hrp2010c", 2809, 1111)), 
             m_coshellrunning(false)
+            #endif
         {
             m_squares.resize(0);
         }
@@ -45,7 +51,9 @@ struct SSVEPInterfaceImpl
                     delete m_squares[i];
             }
             delete app;
+            #ifdef WITH_COSHELL
             delete m_coshellBCI;
+            #endif
         }
 
         void AddSquare(FlickeringSquare * square)
@@ -99,8 +107,10 @@ struct SSVEPInterfaceImpl
             m_backgroundsprite.Initialize();
             boost::thread th(boost::bind(&BackgroundSprite::UpdateLoop, &m_backgroundsprite));
 
+            #ifdef WITH_COSHELL
             m_coshellBCI->Initialize();
             boost::thread * coshellTh = 0;
+            #endif
 
             bcimw::SSVEP_COMMAND bcicmd = bcimw::NONE;
 
@@ -123,6 +133,7 @@ struct SSVEPInterfaceImpl
                         app->Close();
                     if( Event.Type == sf::Event::KeyPressed && ( Event.Key.Code == sf::Key::Escape || Event.Key.Code == sf::Key::Q ) )
                         app->Close();
+                    #ifdef WITH_COSHELL
                     if( Event.Type == sf::Event::KeyPressed && Event.Key.Code == sf::Key::Space)
                     {
                         if(not m_coshellrunning)
@@ -136,9 +147,12 @@ struct SSVEPInterfaceImpl
                             /* do not set m_coshellrunning back to false because we cannot relaunch the walking for now */
                         }
                     }
+                    #endif
                 }
         
+                #ifdef WITH_COSHELL
                 bcicmd = m_coshellBCI->GetCurrentCommand();
+                #endif
 
                 sf::Sprite * sprite = m_backgroundsprite.GetSprite();
                 if(sprite)
@@ -175,12 +189,14 @@ struct SSVEPInterfaceImpl
             fpsLog.close();
             m_backgroundsprite.Close();
             th.join();
+            #ifdef WITH_COSHELL
             m_coshellBCI->Close();
             if(coshellTh)
             {
                 coshellTh->join();
                 delete coshellTh;
             }
+            #endif
             app->Close();
         }
         
