@@ -10,19 +10,10 @@
 #include <fstream>
 
 #include <bci-middleware/P300Client.h>
+#include <bci-interface/P300ObjectVector.h>
 
 namespace bciinterface
 {
-
-std::ofstream debug("debug.log");
-
-struct NamedShape
-{
-    NamedShape() : name(""), shape(0) {}
-    NamedShape(const std::string & name, sf::Shape * shape) : name(name), shape(shape) {}
-    std::string name;
-    sf::Shape * shape;
-};
 
 struct P300InterfaceImpl
 {
@@ -35,10 +26,9 @@ private:
     unsigned int m_nbtrials;
     float m_flashtime, m_interflashtime, m_intercycletime;
     unsigned int m_nbObjects;
-    std::vector<NamedShape> m_objectsActive;
-    std::vector<NamedShape> m_objectsInactive;
     bool m_training;
     std::vector<int> m_trainingset;
+    P300ObjectVector m_p300objects;
     bcimw::P300Client * m_p300client;
     sf::RenderWindow * m_app;
 public:
@@ -46,7 +36,7 @@ public:
         m_backgroundSprite("hrp2010v", 4242, 640, 480), m_updateBackgroundManually(false),
         m_width(width), m_height(height), m_pausable(true), m_pause(false), m_close(false),
         m_nbtrials(4), m_flashtime(0.060), m_interflashtime(0.010), m_intercycletime(1.0),
-        m_nbObjects(36) , m_training(false) , m_p300client(0),
+        m_nbObjects(36), m_training(false) , m_p300client(0),
         m_app(0)
     {
         if(mode == 1)
@@ -59,16 +49,9 @@ public:
             m_trainingset.push_back(27);
             m_trainingset.push_back(1);
         }
-        m_objectsActive.resize(0);
-        m_objectsInactive.resize(0);
     }
     ~P300InterfaceImpl()
     {
-        for(size_t i = 0; i < m_objectsActive.size(); ++i)
-        {
-            delete m_objectsActive[i].shape;
-            delete m_objectsInactive[i].shape;
-        }
         delete m_app;
     }
     void SetNbTrials(const unsigned int nbTrials)
@@ -90,74 +73,25 @@ public:
     void AddObject(P300Object * object)
     {
         Pause();
-        for(size_t i = 0; i < m_objectsActive.size(); ++i)
-        {
-            if(m_objectsActive[i].name == object->name)
-            {
-                    std::cerr << "Cannot add object with name " << object->name << ", object already exists" << std::endl;
-                    Resume();
-                    return;
-            }
-        }
-        sf::Shape * shapeActive = new sf::Shape();
-        sf::Shape * shapeInactive = new sf::Shape();
-        sf::Color colorActive(object->r, object->g, object->b, 255);
-        sf::Color colorInactive(object->r, object->g, object->b, 60);
 
-        shapeActive->AddPoint(object->x, object->y, colorActive);
-        shapeActive->AddPoint(object->x+object->size_x, object->y, colorActive);
-        shapeActive->AddPoint(object->x+object->size_x, object->y+object->size_y, colorActive);
-        shapeActive->AddPoint(object->x, object->y+object->size_y, colorActive);
-
-        shapeInactive->AddPoint(object->x, object->y, colorInactive);
-        shapeInactive->AddPoint(object->x+object->size_x, object->y, colorInactive);
-        shapeInactive->AddPoint(object->x+object->size_x, object->y+object->size_y, colorInactive);
-        shapeInactive->AddPoint(object->x, object->y+object->size_y, colorInactive);
-
-        m_objectsActive.push_back(NamedShape(object->name, shapeActive));
-        m_objectsInactive.push_back(NamedShape(object->name, shapeInactive));
-
-        /* m_nbObjects++; */
+        m_p300objects.AddObject(object);
 
         Resume();
     }
     void RemoveObject(const std::string & name)
     {
         Pause();
-        {
-            for(std::vector<NamedShape>::iterator it = m_objectsActive.begin(); it != m_objectsActive.end(); ++it)
-            {
-                if((*it).name == name)
-                {
-                    delete (*it).shape;
-                    m_objectsActive.erase(it);
-                }
-            }
-        }
-        {
-            for(std::vector<NamedShape>::iterator it = m_objectsInactive.begin(); it != m_objectsInactive.end(); ++it)
-            {
-                if((*it).name == name)
-                {
-                    delete (*it).shape;
-                    m_objectsInactive.erase(it);
-                }
-            }
-        }
-        /* m_nbObjects--; */
+
+        m_p300objects.RemoveObject(name);
+
         Resume();
     }
     void ClearObjects()
     {
         Pause();
-        for(size_t i = 0; i < m_objectsInactive.size(); ++i)
-        {
-            delete m_objectsInactive[i].shape;
-            delete m_objectsActive[i].shape;
-        }
-        m_objectsInactive.resize(0);
-        m_objectsActive.resize(0);
-        /* m_nbObjects = 0; */
+
+        m_p300objects.ClearObjects();
+
         Resume();
     }
 
@@ -229,7 +163,7 @@ public:
                     while(clock.GetElapsedTime() < m_intercycletime)
                     {
                             frameCount++;
-                            Display();
+                            Display(-1);
                     }
                     
                     unsigned int apparitionCount = m_nbObjects*m_nbtrials;
@@ -249,7 +183,7 @@ public:
                         while(!m_close && m_app->IsOpened() && clock.GetElapsedTime() < m_interflashtime) 
                         {
                             frameCount++;
-                            Display();
+                            Display(-1);
                         }
                     }
 
@@ -271,7 +205,7 @@ public:
                 {
                     /* Just draw the background when in pause */
                     frameCount++;
-                    Display();
+                    Display(-1);
                 }
                 else
                 {
@@ -294,7 +228,7 @@ public:
                         while(!m_close && m_app->IsOpened() && clock.GetElapsedTime() < m_interflashtime) 
                         {
                             frameCount++;
-                            Display();
+                            Display(-1);
                         }
                     }
 
@@ -373,7 +307,7 @@ private:
         m_app->Display();
     }
 
-    inline void Display()
+    inline void Display(int activeObject)
     {
         m_app->Clear();
         
@@ -381,32 +315,7 @@ private:
         
         DrawBackground();
         
-        for(size_t i = 0; i < m_objectsInactive.size(); ++i)
-        {
-            m_app->Draw(*(m_objectsInactive[i].shape));
-        }
-
-        m_app->Display();
-    }
-    inline void Display(unsigned int activeObject)
-    {
-        m_app->Clear();
-        
-        ProcessEvents();
-        
-        DrawBackground();
-        
-        for(size_t i = 0; i < m_objectsInactive.size(); ++i)
-        {
-            if(i != activeObject)
-            {
-                m_app->Draw(*(m_objectsInactive[i].shape));
-            }
-            else
-            {
-                m_app->Draw(*(m_objectsActive[i].shape));
-            }
-        }
+        m_p300objects.DrawObjects(m_app, activeObject);
 
         m_app->Display();
     }

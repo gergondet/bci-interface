@@ -6,6 +6,8 @@ SET(${EXEC_NAME}_src
     ./SSVEPInterfaceConfig.cpp
     ./FlickeringSquare.cpp
     ./BackgroundSprite.cpp
+    ./P300Object.cpp
+    ./P300ObjectVector.cpp
     ./P300Interface.cpp
 )
 
