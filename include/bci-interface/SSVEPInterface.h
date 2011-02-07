@@ -2,6 +2,7 @@
 #define _H_SSVEPINTERFACE_H_
 
 #include <bci-interface/FlickeringSquare.h>
+#include <bci-interface/BackgroundSprite.h>
 
 #ifdef WIN32
 #define SSVEPINTERFACE_API __declspec(dllexport)
@@ -24,6 +25,12 @@ public:
     SSVEPINTERFACE_API void AddSquare(int frequency, int screenFrequency, float x, float y, float size = 100, int r = 255, int g = 0, int b = 0, int a = 255);
 
     SSVEPINTERFACE_API void ChangeFrequency(unsigned int squareId, int frequency, int screenFrequency);
+
+    SSVEPINTERFACE_API void SetBackgroundSprite(BackgroundSprite * sprite);
+
+    SSVEPINTERFACE_API void SetUpdateBackgroundManually(bool enable);
+
+    SSVEPINTERFACE_API void UpdateBackground(unsigned char * img);
 
     SSVEPINTERFACE_API void EnableFlash(bool enable);
 

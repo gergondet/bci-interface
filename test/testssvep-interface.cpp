@@ -53,6 +53,9 @@ int main(int argc, char * argv[])
         interface->AddSquare(new FlickeringSquare(11,60, 200, winH/2-50, 150, 255, 0, 0, 255, false));
     }
 
+    BackgroundSprite * background = new BackgroundSprite("hrp2010v", 4242, 640, 480);
+    interface->SetBackgroundSprite(background);
+
     void (SSVEPInterface::*fn)(bool) = &SSVEPInterface::DisplayLoop;
     boost::thread th(fn, interface, fullscreen);
 

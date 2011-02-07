@@ -19,7 +19,8 @@ namespace bciinterface
 struct SSVEPInterfaceImpl
 {
     private:
-        BackgroundSprite m_backgroundsprite;
+        BackgroundSprite * m_backgroundsprite;
+        bool m_updatebackgroundmanually;
         std::vector<FlickeringSquare *> m_squares;
         unsigned int m_width;
         unsigned int m_height;
@@ -32,7 +33,7 @@ struct SSVEPInterfaceImpl
         #endif
     public:
         SSVEPInterfaceImpl(unsigned int width, unsigned int height) : 
-            m_backgroundsprite("hrp2010v", 4242, 640, 480),
+            m_backgroundsprite(0), m_updatebackgroundmanually(false),
             m_width(width), m_height(height), 
             closeRequest(false), 
             fpsLog("fps.log"), app(0)
@@ -79,6 +80,28 @@ struct SSVEPInterfaceImpl
             }
         }
 
+        void SetBackgroundSprite(BackgroundSprite * sprite)
+        {
+            delete m_backgroundsprite;
+            m_backgroundsprite = sprite;
+        }
+
+        void SetUpdateBackgroundManually(bool enable)
+        {
+            if(!app)
+            {
+                m_updatebackgroundmanually = enable;
+            }
+        }
+
+        void UpdateBackground(unsigned char * img)
+        {
+            if(m_updatebackgroundmanually && m_backgroundsprite)
+            {
+                m_backgroundsprite->UpdateFromBuffer(img);
+            }
+        }
+
         void EnableFlash(bool enable)
         {
             for(unsigned int i = 0; i < m_squares.size(); ++i)
@@ -89,6 +112,12 @@ struct SSVEPInterfaceImpl
 
         void DisplayLoop(sf::RenderWindow * appin)
         {
+            if(!m_backgroundsprite)
+            {
+                std::cerr << "Call SetBackgroundSprite before launching interface display loop" << std::endl;
+                return;
+            }
+
             app = appin;
 
             DisplayLoop();
@@ -98,6 +127,12 @@ struct SSVEPInterfaceImpl
 
         void DisplayLoop(bool fullScreen)
         {
+            if(!m_backgroundsprite)
+            {
+                std::cerr << "Call SetBackgroundSprite before launching interface display loop" << std::endl;
+                return;
+            }
+
             if(fullScreen)
             {
                 app = new sf::RenderWindow(sf::VideoMode(m_width, m_height), "bci-interface", sf::Style::Fullscreen);
@@ -120,8 +155,12 @@ struct SSVEPInterfaceImpl
             unsigned int frameCount = 0;
             sf::Clock clock;
 
-            m_backgroundsprite.Initialize();
-            boost::thread th(boost::bind(&BackgroundSprite::UpdateLoop, &m_backgroundsprite));
+            boost::thread * th = 0;
+            if(!m_updatebackgroundmanually)
+            {
+                m_backgroundsprite->Initialize();
+                th = new boost::thread(boost::bind(&BackgroundSprite::UpdateLoop, m_backgroundsprite));
+            }
 
             #ifdef WITH_COSHELL
             m_coshellBCI->Initialize();
@@ -170,7 +209,7 @@ struct SSVEPInterfaceImpl
                 bcicmd = m_coshellBCI->GetCurrentCommand();
                 #endif
 
-                sf::Sprite * sprite = m_backgroundsprite.GetSprite();
+                sf::Sprite * sprite = m_backgroundsprite->GetSprite();
                 if(sprite)
                 {
                     sprite->Resize(m_width, m_height);
@@ -203,8 +242,15 @@ struct SSVEPInterfaceImpl
         
             }
             fpsLog.close();
-            m_backgroundsprite.Close();
-            th.join();
+            if(!m_updatebackgroundmanually)
+            {
+                m_backgroundsprite->Close();
+                if(th)
+                {
+                    th->join();
+                    delete th;
+                }
+            }
             #ifdef WITH_COSHELL
             m_coshellBCI->Close();
             if(coshellTh)
@@ -239,6 +285,21 @@ void SSVEPInterface::AddSquare(int frequency, int screenFrequency, float x, floa
 void SSVEPInterface::ChangeFrequency(unsigned int squareId, int frequency, int screenFrequency)
 {
     m_impl->ChangeFrequency(squareId, frequency, screenFrequency);
+}
+
+void SSVEPInterface::SetBackgroundSprite(BackgroundSprite * sprite)
+{
+    m_impl->SetBackgroundSprite(sprite);
+}
+
+void SSVEPInterface::SetUpdateBackgroundManually(bool enable)
+{
+    m_impl->SetUpdateBackgroundManually(enable);
+}
+
+void SSVEPInterface::UpdateBackground(unsigned char * img)
+{
+    m_impl->UpdateBackground(img);
 }
 
 void SSVEPInterface::EnableFlash(bool enable)
