@@ -101,7 +101,6 @@ public:
 
     void SetBackgroundSprite(BackgroundSprite * sprite)
     {
-        delete m_backgroundSprite;
         m_backgroundSprite = sprite;
     }
 
@@ -175,6 +174,7 @@ public:
         sf::Clock clock;
         time_t t1,t2;
         unsigned int frameCount = 0;
+        m_close = false;
 
         boost::thread * th;
         if(!m_updateBackgroundManually)
@@ -318,6 +318,8 @@ private:
                 m_app->Close();
             if( Event.Type == sf::Event::KeyPressed && ( Event.Key.Code == sf::Key::Escape || Event.Key.Code == sf::Key::Q ) )
                 m_app->Close();
+            if( Event.Type == sf::Event::KeyPressed && ( Event.Key.Code == sf::Key::S ) )
+                m_close = true;
         }
     }
 
@@ -445,4 +447,7 @@ void P300Interface::SetInterCycleTime(const float interCycleTime)
 }
 
 } //namespace bcinterface
+
+void has_P300Interface()
+{}
 

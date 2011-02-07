@@ -82,7 +82,6 @@ struct SSVEPInterfaceImpl
 
         void SetBackgroundSprite(BackgroundSprite * sprite)
         {
-            delete m_backgroundsprite;
             m_backgroundsprite = sprite;
         }
 
@@ -154,6 +153,7 @@ struct SSVEPInterfaceImpl
         {
             unsigned int frameCount = 0;
             sf::Clock clock;
+            closeRequest = false;
 
             boost::thread * th = 0;
             if(!m_updatebackgroundmanually)
@@ -188,6 +188,8 @@ struct SSVEPInterfaceImpl
                         app->Close();
                     if( Event.Type == sf::Event::KeyPressed && ( Event.Key.Code == sf::Key::Escape || Event.Key.Code == sf::Key::Q ) )
                         app->Close();
+                    if( Event.Type == sf::Event::KeyPressed && ( Event.Key.Code == sf::Key::S ) )
+                        closeRequest = true;
                     #ifdef WITH_COSHELL
                     if( Event.Type == sf::Event::KeyPressed && Event.Key.Code == sf::Key::Space)
                     {

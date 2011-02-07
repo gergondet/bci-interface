@@ -75,7 +75,7 @@ private:
 
 extern "C"
 {
-    void has_P300Interface() {}
+    void has_P300Interface();
 }
 
 #endif

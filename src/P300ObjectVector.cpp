@@ -28,12 +28,10 @@ void P300ObjectVector::AddObject(P300Object * object)
             if( m_objects[i] == object )
             {
                 std::cerr << "Could not add object " << object->GetName() << ", an object with the same name already exists!" << std::endl;
-            }
-            else
-            {
-                m_objects.push_back(object);
+                return;
             }
         }
+        m_objects.push_back(object);
     }
 }
 

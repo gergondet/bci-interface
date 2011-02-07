@@ -9,6 +9,7 @@ SET(${EXEC_NAME}_src
     ./P300Object.cpp
     ./P300ObjectVector.cpp
     ./P300Interface.cpp
+    ./HybridInterface.cpp
 )
 
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include)
