@@ -27,6 +27,8 @@ public:
 
     SSVEPINTERFACE_API void EnableFlash(bool enable);
 
+    SSVEPINTERFACE_API void DisplayLoop(sf::RenderWindow * app);
+
     SSVEPINTERFACE_API void DisplayLoop(bool fullScreen = true);
 
     SSVEPINTERFACE_API void Close();

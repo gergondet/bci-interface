@@ -87,6 +87,15 @@ struct SSVEPInterfaceImpl
             }
         }
 
+        void DisplayLoop(sf::RenderWindow * appin)
+        {
+            app = appin;
+
+            DisplayLoop();
+
+            app = 0;
+        }
+
         void DisplayLoop(bool fullScreen)
         {
             if(fullScreen)
@@ -101,6 +110,13 @@ struct SSVEPInterfaceImpl
 
             app->UseVerticalSync(true);
 
+            DisplayLoop();
+
+            app->Close();
+        }
+
+        void DisplayLoop()
+        {
             unsigned int frameCount = 0;
             sf::Clock clock;
 
@@ -197,7 +213,7 @@ struct SSVEPInterfaceImpl
                 delete coshellTh;
             }
             #endif
-            app->Close();
+
         }
         
         void Close()
@@ -228,6 +244,11 @@ void SSVEPInterface::ChangeFrequency(unsigned int squareId, int frequency, int s
 void SSVEPInterface::EnableFlash(bool enable)
 {
     m_impl->EnableFlash(enable);
+}
+
+void SSVEPInterface::DisplayLoop(sf::RenderWindow * app)
+{
+    m_impl->DisplayLoop(app);
 }
 
 void SSVEPInterface::DisplayLoop(bool fullScreen)

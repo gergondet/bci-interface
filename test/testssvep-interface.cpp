@@ -23,7 +23,7 @@ SSVEPInterface * interface = 0;
 
 int main(int argc, char * argv[])
 {
-    bool fullscreen = true;
+    bool fullscreen = false;
     if(argc > 1)
     {
         std::string configName = argv[1];
@@ -42,8 +42,8 @@ int main(int argc, char * argv[])
     }
     else
     {
-        int winW = 1280;
-        int winH = 800;
+        int winW = 640;
+        int winH = 480;
 
         interface = new SSVEPInterface(winW, winH);
 
@@ -53,7 +53,9 @@ int main(int argc, char * argv[])
         interface->AddSquare(new FlickeringSquare(11,60, 200, winH/2-50, 150, 255, 0, 0, 255, false));
     }
 
-    boost::thread th(&SSVEPInterface::DisplayLoop, interface, fullscreen);
+    void (SSVEPInterface::*fn)(bool) = &SSVEPInterface::DisplayLoop;
+    boost::thread th(fn, interface, fullscreen);
+
     
     th.join();
 
