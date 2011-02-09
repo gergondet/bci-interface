@@ -1,7 +1,9 @@
 #include <bci-interface/SSVEPInterface.h>
 #include <bci-interface/BackgroundSprite.h>
 
-// #include <coshell-bci/CoshellBCI.h>
+#ifdef WITH_COSHELL
+#include <coshell-bci/CoshellBCI.h>
+#endif
 #include <bci-middleware/SSVEPReceiver.h>
 
 #include <SFML/Graphics.hpp>
@@ -17,7 +19,8 @@ namespace bciinterface
 struct SSVEPInterfaceImpl
 {
     private:
-        BackgroundSprite m_backgroundsprite;
+        BackgroundSprite * m_backgroundsprite;
+        bool m_updatebackgroundmanually;
         std::vector<FlickeringSquare *> m_squares;
         std::vector<MoovingCursor *> m_cursors;
         float currentPos;
@@ -28,16 +31,20 @@ struct SSVEPInterfaceImpl
         bool closeRequest;
         std::ofstream fpsLog;
         sf::RenderWindow * app;
-//        coshellbci::CoshellBCI * m_coshellBCI;
+        #ifdef WITH_COSHELL
+        coshellbci::CoshellBCI * m_coshellBCI;
         bool m_coshellrunning;
+        #endif
     public:
         SSVEPInterfaceImpl(unsigned int width, unsigned int height) : 
-            m_backgroundsprite("hrp2010v", 4242, 640, 480),
+            m_backgroundsprite(0), m_updatebackgroundmanually(false),
             m_width(width), m_height(height), 
             closeRequest(false), 
-            fpsLog("fps.log"), app(0), compt_begin(0),
-//            m_coshellBCI(new coshellbci::CoshellBCI("localhost", 2809, 1111)), 
+            fpsLog("fps.log"), app(0), compt_begin(0)
+            #ifdef WITH_COSHELL
+            , m_coshellBCI(new coshellbci::CoshellBCI("hrp2010c", 2809, 1111)), 
             m_coshellrunning(false)
+            #endif
         {
             m_squares.resize(0);
         }
@@ -49,8 +56,9 @@ struct SSVEPInterfaceImpl
                     delete m_squares[i];
             }
             delete app;
-
-//            delete m_coshellBCI;
+            #ifdef WITH_COSHELL
+            delete m_coshellBCI;
+            #endif
         }
 
         void AddSquare(FlickeringSquare * square)
@@ -87,6 +95,27 @@ struct SSVEPInterfaceImpl
             }
         }
 
+        void SetBackgroundSprite(BackgroundSprite * sprite)
+        {
+            m_backgroundsprite = sprite;
+        }
+
+        void SetUpdateBackgroundManually(bool enable)
+        {
+            if(!app)
+            {
+                m_updatebackgroundmanually = enable;
+            }
+        }
+
+        void UpdateBackground(unsigned char * img)
+        {
+            if(m_updatebackgroundmanually && m_backgroundsprite)
+            {
+                m_backgroundsprite->UpdateFromBuffer(img);
+            }
+        }
+
         void EnableFlash(bool enable)
         {
             for(unsigned int i = 0; i < m_squares.size(); ++i)
@@ -95,8 +124,29 @@ struct SSVEPInterfaceImpl
             }
         }
 
+        void DisplayLoop(sf::RenderWindow * appin)
+        {
+            if(!m_backgroundsprite)
+            {
+                std::cerr << "Call SetBackgroundSprite before launching interface display loop" << std::endl;
+                return;
+            }
+
+            app = appin;
+
+            DisplayLoop();
+
+            app = 0;
+        }
+
         void DisplayLoop(bool fullScreen)
         {
+            if(!m_backgroundsprite)
+            {
+                std::cerr << "Call SetBackgroundSprite before launching interface display loop" << std::endl;
+                return;
+            }
+
             if(fullScreen)
             {
                 app = new sf::RenderWindow(sf::VideoMode(m_width, m_height), "bci-interface", sf::Style::Fullscreen);
@@ -109,14 +159,28 @@ struct SSVEPInterfaceImpl
 
             app->UseVerticalSync(true);
 
+            DisplayLoop();
+
+            app->Close();
+        }
+
+        void DisplayLoop()
+        {
             unsigned int frameCount = 0;
             sf::Clock clock;
+            closeRequest = false;
 
-            m_backgroundsprite.Initialize();
-            boost::thread th(boost::bind(&BackgroundSprite::UpdateLoop, &m_backgroundsprite));
+            boost::thread * th = 0;
+            if(!m_updatebackgroundmanually)
+            {
+                m_backgroundsprite->Initialize();
+                th = new boost::thread(boost::bind(&BackgroundSprite::UpdateLoop, m_backgroundsprite));
+            }
 
-//            m_coshellBCI->Initialize();
-//            boost::thread * coshellTh = 0;
+            #ifdef WITH_COSHELL
+            m_coshellBCI->Initialize();
+            boost::thread * coshellTh = 0;
+            #endif
 
             bcimw::SSVEP_COMMAND bcicmd = bcimw::NONE;
 
@@ -139,24 +203,30 @@ struct SSVEPInterfaceImpl
                         app->Close();
                     if( Event.Type == sf::Event::KeyPressed && ( Event.Key.Code == sf::Key::Escape || Event.Key.Code == sf::Key::Q ) )
                         app->Close();
+                    if( Event.Type == sf::Event::KeyPressed && ( Event.Key.Code == sf::Key::S ) )
+                        closeRequest = true;
+                    #ifdef WITH_COSHELL
                     if( Event.Type == sf::Event::KeyPressed && Event.Key.Code == sf::Key::Space)
                     {
                         if(not m_coshellrunning)
                         {
-//                            coshellTh = new boost::thread(boost::bind(&coshellbci::CoshellBCI::CommandLoop, m_coshellBCI));
-//                            m_coshellrunning = true;
+                            coshellTh = new boost::thread(boost::bind(&coshellbci::CoshellBCI::CommandLoop, m_coshellBCI));
+                            m_coshellrunning = true;
                         }
                         else
                         {
-//                            m_coshellBCI->Close();
+                            m_coshellBCI->Close();
                             /* do not set m_coshellrunning back to false because we cannot relaunch the walking for now */
                         }
                     }
+                    #endif
                 }
         
-//                bcicmd = m_coshellBCI->GetCurrentCommand();
+                #ifdef WITH_COSHELL
+                bcicmd = m_coshellBCI->GetCurrentCommand();
+                #endif
 
-                sf::Sprite * sprite = m_backgroundsprite.GetSprite();
+                sf::Sprite * sprite = m_backgroundsprite->GetSprite();
                 if(sprite)
                 {
                     sprite->Resize(m_width, m_height);
@@ -211,15 +281,23 @@ struct SSVEPInterfaceImpl
         
             }
             fpsLog.close();
-            m_backgroundsprite.Close();
-            th.join();
-//            m_coshellBCI->Close();
-//            if(coshellTh)
-//            {
-//                coshellTh->join();
-//                delete coshellTh;
-//            }
-            app->Close();
+            if(!m_updatebackgroundmanually)
+            {
+                m_backgroundsprite->Close();
+                if(th)
+                {
+                    th->join();
+                    delete th;
+                }
+            }
+            #ifdef WITH_COSHELL
+            m_coshellBCI->Close();
+            if(coshellTh)
+            {
+                coshellTh->join();
+                delete coshellTh;
+            }
+            #endif
         }
         
         void Close()
@@ -257,9 +335,29 @@ void SSVEPInterface::ChangeFrequency(unsigned int squareId, int frequency, int s
     m_impl->ChangeFrequency(squareId, frequency, screenFrequency);
 }
 
+void SSVEPInterface::SetBackgroundSprite(BackgroundSprite * sprite)
+{
+    m_impl->SetBackgroundSprite(sprite);
+}
+
+void SSVEPInterface::SetUpdateBackgroundManually(bool enable)
+{
+    m_impl->SetUpdateBackgroundManually(enable);
+}
+
+void SSVEPInterface::UpdateBackground(unsigned char * img)
+{
+    m_impl->UpdateBackground(img);
+}
+
 void SSVEPInterface::EnableFlash(bool enable)
 {
     m_impl->EnableFlash(enable);
+}
+
+void SSVEPInterface::DisplayLoop(sf::RenderWindow * app)
+{
+    m_impl->DisplayLoop(app);
 }
 
 void SSVEPInterface::DisplayLoop(bool fullScreen)

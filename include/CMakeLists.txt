@@ -5,6 +5,7 @@ SET(${PROJECT_NAME}_HEADERS
 	bci-interface/square-function.h
     bci-interface/BackgroundSprite.h
     bci-interface/P300Interface.h
+    bci-interface/HybridInterface.h
 )
 
 INSTALL(FILES ${${PROJECT_NAME}_HEADERS}

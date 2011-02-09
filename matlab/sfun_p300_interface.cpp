@@ -55,20 +55,23 @@ public:
     {
         std::stringstream ss;
         ss << flashID;
-        send(cSocket, ss.str().c_str(), ss.str().size() + 1, 0);
+        int err = send(cSocket, ss.str().c_str(), ss.str().size() + 1, 0);
+		debug << "send return " << err << " for flashID " << flashID << std::endl;
     }
 
     void SendResult(unsigned int result)
     {
         std::stringstream ss;
         ss << result;
-        send(cSocket, ss.str().c_str(), ss.str().size() + 1, 0);
+        int err = send(cSocket, ss.str().c_str(), ss.str().size() + 1, 0);
+		debug << "send return " << err << " for result " << result << std::endl;
     }
 
     void GetClient()
     {
 		listen(sSocket, 1);
         cSocket =  accept(sSocket, 0, 0);
+		debug << "Got a client" << std::endl;
     }
 
 private:
@@ -143,11 +146,6 @@ static void mdlStart(SimStruct *S)
     IN_result = 0;
     IN_flash  = 0;
 
-    if(IN_mode == 1)
-    {
-        currTargetIdx = 0;
-        currTarget = targets[currTargetIdx];
-    }
 }                                            
 #endif /*  MDL_START */
 

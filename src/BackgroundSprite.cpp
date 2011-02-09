@@ -25,11 +25,12 @@ private:
     sf::Image * m_image;
     sf::Sprite * m_sprite;
     bool endLoop;
+    bool m_initialized;
     unsigned int m_width, m_height;
 public:
     BackgroundSpriteImpl(const std::string & visionName, unsigned short visionPort, unsigned int width, unsigned int height) : 
         m_dataFromSocket(new unsigned char[50001]), m_dataImage(new sf::Uint8[width*height*4]),
-        m_image(new sf::Image), m_sprite(new sf::Sprite), endLoop(false), m_width(width), m_height(height)
+        m_image(new sf::Image), m_sprite(new sf::Sprite), endLoop(false), m_initialized(false), m_width(width), m_height(height)
     {
         struct hostent * hent;
         hent = gethostbyname(visionName.c_str());
@@ -58,7 +59,7 @@ public:
 
     void Initialize()
     {
-        /* Initialize socket stuff */
+        if(m_initialized) { return; }
         m_sockfd = socket(AF_INET, SOCK_DGRAM, 0);
         if(m_sockfd < 0)
         {
@@ -74,6 +75,7 @@ public:
                 std::cerr << strerror(err) << std::endl;
                 close(m_sockfd);
         }
+        m_initialized = true;
     }
 
     void UpdateLoop()

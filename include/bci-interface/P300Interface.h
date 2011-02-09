@@ -10,26 +10,13 @@
 #include <boost/shared_ptr.hpp>
 #include <string>
 
+#include <bci-interface/P300Object.h>
+#include <bci-interface/BackgroundSprite.h>
+
 namespace bciinterface
 {
 
 struct P300InterfaceImpl;
-
-struct P300Object
-{
-public:
-    P300Object(const std::string & name, unsigned int x, unsigned int y, 
-                unsigned int size_x, unsigned int size_y, 
-                unsigned char r, unsigned g, unsigned char b)
-    :   name(name), x(x), y(y), size_x(size_x), size_y(size_y), r(r), g(g), b(b)
-    {}
-public:
-    std::string name;
-    unsigned int x, y;
-    unsigned int size_x, size_y;
-    unsigned char r,g,b;
-    bool operator==(const std::string & foo) { return name == foo; }
-};
 
 class P300Interface
 {
@@ -61,11 +48,15 @@ public:
 
     /* Interface related functions */
 
+    P300INTERFACE_API void SetBackgroundSprite(BackgroundSprite * sprite);
+
     /* If true you will have to update the background by hand */
     P300INTERFACE_API void SetUpdateBackgroundManually(bool enable);
 
     /* Expect a w*h grayscale buffer */
     P300INTERFACE_API void UpdateBackground(unsigned char * img);
+
+    P300INTERFACE_API void DisplayLoop(sf::RenderWindow * app);
 
     P300INTERFACE_API void DisplayLoop(bool fullscreen = true);
 
@@ -84,7 +75,7 @@ private:
 
 extern "C"
 {
-    void has_P300Interface() {}
+    void has_P300Interface();
 }
 
 #endif

@@ -3,6 +3,7 @@
 
 #include <bci-interface/FlickeringSquare.h>
 #include <bci-interface/MoovingCursor.h>
+#include <bci-interface/BackgroundSprite.h>
 
 #ifdef WIN32
 #define SSVEPINTERFACE_API __declspec(dllexport)
@@ -30,7 +31,15 @@ public:
 
     SSVEPINTERFACE_API void ChangeFrequency(unsigned int squareId, int frequency, int screenFrequency);
 
+    SSVEPINTERFACE_API void SetBackgroundSprite(BackgroundSprite * sprite);
+
+    SSVEPINTERFACE_API void SetUpdateBackgroundManually(bool enable);
+
+    SSVEPINTERFACE_API void UpdateBackground(unsigned char * img);
+
     SSVEPINTERFACE_API void EnableFlash(bool enable);
+
+    SSVEPINTERFACE_API void DisplayLoop(sf::RenderWindow * app);
 
     SSVEPINTERFACE_API void DisplayLoop(bool fullScreen = true);
 

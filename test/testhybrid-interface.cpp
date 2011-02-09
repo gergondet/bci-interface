@@ -1,4 +1,4 @@
-#include <bci-interface/SSVEPInterface.h>
+#include <bci-interface/HybridInterface.h>
 #include <bci-interface/SSVEPInterfaceConfig.h>
 
 #include <SFML/Graphics.hpp>
@@ -19,18 +19,22 @@ void sleep(DWORD t)
 
 using namespace bciinterface;
 
-SSVEPInterface * interface = 0;
+HybridInterface * interface = 0;
 
 int main(int argc, char * argv[])
 {
     bool fullscreen = false;
+    int winW = 640;
+    int winH = 480;
     if(argc > 1)
     {
         std::string configName = argv[1];
         SSVEPInterfaceConfig config;
         config.ReadFromFile(configName);
+        winW = config.GetWidth(); 
+        winH = config.GetHeight();
 
-        interface = new SSVEPInterface(config.GetWidth(), config.GetHeight());
+        interface = new HybridInterface(config.GetWidth(), config.GetHeight(), 1);
 
         fullscreen = config.IsFullScreen();
 
@@ -42,10 +46,7 @@ int main(int argc, char * argv[])
     }
     else
     {
-        int winW = 640;
-        int winH = 480;
-
-        interface = new SSVEPInterface(winW, winH);
+        interface = new HybridInterface(winW, winH, 1);
 
         interface->AddSquare(new FlickeringSquare(5,60, winW/2-75, 50, 150, 255, 0, 0, 255, false));
         interface->AddSquare(new FlickeringSquare(7,60, winW-350, winH/2-50, 150, 255, 0, 0, 255, false));
@@ -53,10 +54,12 @@ int main(int argc, char * argv[])
         interface->AddSquare(new FlickeringSquare(11,60, 200, winH/2-50, 150, 255, 0, 0, 255, false));
     }
 
-    BackgroundSprite * background = new BackgroundSprite("hrp2010v", 4242, 640, 480);
-    interface->SetBackgroundSprite(background);
+    interface->AddObject(new P300Object("1", winW/2-75, 50, 150, 150, 255, 0, 0));
+    interface->AddObject(new P300Object("2", winW-350, winH/2-50, 150, 150, 255, 0, 0));
+    interface->AddObject(new P300Object("3", winW/2-75, winH-200, 150, 150, 255, 0, 0));
+    interface->AddObject(new P300Object("4", 200, winH/2-50, 150, 150, 255, 0, 0));
 
-    void (SSVEPInterface::*fn)(bool) = &SSVEPInterface::DisplayLoop;
+    void (HybridInterface::*fn)(bool) = &HybridInterface::DisplayLoop;
     boost::thread th(fn, interface, fullscreen);
 
     
