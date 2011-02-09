@@ -7,6 +7,7 @@ SET(${EXEC_NAME}_src
     ./FlickeringSquare.cpp
     ./BackgroundSprite.cpp
     ./P300Interface.cpp
+    ./MoovingCursor.cpp
 )
 
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include)
