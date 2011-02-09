@@ -23,7 +23,7 @@ SSVEPInterface * interface = 0;
 
 int main(int argc, char * argv[])
 {
-    bool fullscreen = false;
+    bool fullscreen = true;
     if(argc > 1)
     {
         std::string configName = argv[1];
@@ -42,23 +42,24 @@ int main(int argc, char * argv[])
     }
     else
     {
-        int winW = 640;
-        int winH = 480;
+        int winW = 1600;
+        int winH = 1200;
 
         interface = new SSVEPInterface(winW, winH);
 
-        interface->AddSquare(new FlickeringSquare(5,60, winW/2-75, 50, 150, 255, 0, 0, 255, false));
-        interface->AddSquare(new FlickeringSquare(7,60, winW-350, winH/2-50, 150, 255, 0, 0, 255, false));
-        interface->AddSquare(new FlickeringSquare(9,60, winW/2-75, winH-200, 150, 255, 0, 0, 255, false));
-        interface->AddSquare(new FlickeringSquare(11,60, 200, winH/2-50, 150, 255, 0, 0, 255, false));
+        interface->AddSquare(new FlickeringSquare(5,60, winW/2-75, 50, 150, 255, 0, 0, 255, true));
+        interface->AddSquare(new FlickeringSquare(7,60, winW-350, winH/2-50, 150, 255, 0, 0, 255, true));
+        interface->AddSquare(new FlickeringSquare(9,60, winW/2-75, winH-200, 150, 255, 0, 0, 255, true));
+        interface->AddSquare(new FlickeringSquare(11,60, 200, winH/2-50, 150, 255, 0, 0, 255, true));
+
+        interface->AddCursor(new MoovingCursor(320, winH/2-50, 150, winW/3, 0, 255, 0, 255));
+
     }
 
     BackgroundSprite * background = new BackgroundSprite("hrp2010v", 4242, 640, 480);
     interface->SetBackgroundSprite(background);
-
     void (SSVEPInterface::*fn)(bool) = &SSVEPInterface::DisplayLoop;
     boost::thread th(fn, interface, fullscreen);
-
     
     th.join();
 
