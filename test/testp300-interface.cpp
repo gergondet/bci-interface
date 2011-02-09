@@ -23,10 +23,11 @@ P300Interface * interface = 0;
 int main(int argc, char * argv[])
 {
     bool fullscreen = false; 
-    int winW = 800;
-    int winH = 600;
+    unsigned int winW = 800;
+    unsigned int winH = 600;
+    unsigned int mode = 2;
 
-    interface = new P300Interface(winW, winH);
+    interface = new P300Interface(winW, winH, mode);
 
     interface->AddObject(new P300Object("1", winW/2-75, 50, 150, 150, 255, 0, 0));
     interface->AddObject(new P300Object("2", winW-350, winH/2-50, 150, 150, 255, 0, 0));
