@@ -2,6 +2,7 @@
 #define _H_SSVEPINTERFACE_H_
 
 #include <bci-interface/FlickeringSquare.h>
+#include <bci-interface/MoovingCursor.h>
 #include <bci-interface/BackgroundSprite.h>
 
 #ifdef WIN32
@@ -25,6 +26,10 @@ public:
     SSVEPINTERFACE_API void AddSquare(int frequency, int screenFrequency, float x, float y, float size = 100, int r = 255, int g = 0, int b = 0, int a = 255);
 
     SSVEPINTERFACE_API void CleanUpSquares();
+
+    SSVEPINTERFACE_API void AddCursor(MoovingCursor * moovingCursor);
+
+    SSVEPINTERFACE_API void AddCursor(float x_init=0, float y_init=0, float size=100, float x_fin=500, int r=0, int g=0, int b=0, int a=255);
 
     SSVEPINTERFACE_API void ChangeFrequency(unsigned int squareId, int frequency, int screenFrequency);
 

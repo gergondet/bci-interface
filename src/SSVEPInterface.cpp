@@ -22,6 +22,10 @@ struct SSVEPInterfaceImpl
         BackgroundSprite * m_backgroundsprite;
         bool m_updatebackgroundmanually;
         std::vector<FlickeringSquare *> m_squares;
+        std::vector<MoovingCursor *> m_cursors;
+        float currentPos;
+        sf::Shape currentCursor;
+        int compt_begin;
         unsigned int m_width;
         unsigned int m_height;
         bool closeRequest;
@@ -36,7 +40,7 @@ struct SSVEPInterfaceImpl
             m_backgroundsprite(0), m_updatebackgroundmanually(false),
             m_width(width), m_height(height), 
             closeRequest(false), 
-            fpsLog("fps.log"), app(0)
+            fpsLog("fps.log"), app(0), compt_begin(0)
             #ifdef WITH_COSHELL
             , m_coshellBCI(new coshellbci::CoshellBCI("hrp2010c", 2809, 1111)), 
             m_coshellrunning(false)
@@ -78,6 +82,17 @@ struct SSVEPInterfaceImpl
                 delete m_squares[i];
             }
             m_squares.resize(0);
+        }
+
+        void AddCursor(MoovingCursor * moovingCursor)
+        {
+        	m_cursors.push_back(moovingCursor);
+        }
+
+        void AddCursor(float x_init, float y_init, float size, float x_fin, int r, int g, int b, int a)
+        {
+        	MoovingCursor * moovingCursor = new MoovingCursor(x_init, y_init, size, x_fin, r, g, b, a);
+        	m_cursors.push_back(moovingCursor);
         }
 
         void ChangeFrequency(unsigned int squareId, int frequency, int screenFrequency)
@@ -246,6 +261,28 @@ struct SSVEPInterfaceImpl
                         app->Draw(*(m_squares[i]->GetShape()));
                     }
                 }
+
+
+				if (m_cursors.size() !=0 && m_cursors[0]->CursorDisplay()){
+					if (compt_begin >= 50)
+					{
+						currentCursor = *(m_cursors[0]->GetCursor());
+						currentPos=currentCursor.GetPosition().x;
+						if(currentPos < m_cursors[0]->GetfinalPosX())
+						{
+							m_cursors[0]->SetCursorX(currentPos+1);
+						}
+					}
+					else
+					{
+						compt_begin++;
+					}
+					app->Draw(*(m_cursors[0]->GetCursor()));
+				}
+
+
+
+
         
                 app->Display();
 
@@ -273,7 +310,6 @@ struct SSVEPInterfaceImpl
                 delete coshellTh;
             }
             #endif
-
         }
         
         void Close()
@@ -299,6 +335,16 @@ void SSVEPInterface::AddSquare(int frequency, int screenFrequency, float x, floa
 void SSVEPInterface::CleanUpSquares()
 {
     m_impl->CleanUpSquares();
+}
+
+void SSVEPInterface::AddCursor(float x_init, float y_init, float size, float x_fin, int r, int g, int b, int a)
+{
+	m_impl->AddCursor(x_init, y_init, size, x_fin, r, g, b, a);
+}
+
+void SSVEPInterface::AddCursor(MoovingCursor * moovingCursor)
+{
+	m_impl->AddCursor(moovingCursor);
 }
 
 void SSVEPInterface::ChangeFrequency(unsigned int squareId, int frequency, int screenFrequency)
