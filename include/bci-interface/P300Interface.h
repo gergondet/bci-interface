@@ -46,6 +46,9 @@ public:
 
     P300INTERFACE_API void StartP300Client(const std::string & serverName, unsigned short serverPort);
 
+    /* After each decision the interface is paused and should be relaunched like this */
+    P300INTERFACE_API void ResumeP300Client();
+
     /* Interface related functions */
 
     P300INTERFACE_API void SetBackgroundSprite(BackgroundSprite * sprite);

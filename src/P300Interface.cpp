@@ -41,11 +41,11 @@ public:
         {
             m_training = true;
             m_trainingset.push_back(3);
-            m_trainingset.push_back(14);
-            m_trainingset.push_back(18);
-            m_trainingset.push_back(19);
-            m_trainingset.push_back(27);
-            m_trainingset.push_back(1);
+//            m_trainingset.push_back(14);
+//            m_trainingset.push_back(18);
+//            m_trainingset.push_back(19);
+//            m_trainingset.push_back(27);
+//            m_trainingset.push_back(1);
         }
     }
     ~P300InterfaceImpl()
@@ -97,6 +97,12 @@ public:
     {
         delete m_p300client;
         m_p300client = new bcimw::P300Client(serverName, serverPort);
+    }
+
+    void ResumeP300Client()
+    {
+        if(m_p300client) { m_p300client->ResumeP300(); }
+        m_pause = false;
     }
 
     void SetBackgroundSprite(BackgroundSprite * sprite)
@@ -280,13 +286,7 @@ public:
                         *cmdOut = cmd;
                     }
                     std::cerr << "Got cmd " << cmd << std::endl;
-                    m_pausable = true;
-                    clock.Reset();
-                    while(!m_close && m_app->IsOpened() && clock.GetElapsedTime() < 2*m_intercycletime)
-                    {
-                            frameCount++;
-                            Display(cmd - 1);
-                    }
+                    m_pause = true;
                 }
             }
         }
@@ -392,6 +392,11 @@ void P300Interface::ClearObjects()
 void P300Interface::StartP300Client(const std::string & serverName, unsigned short serverPort)
 {
     m_impl->StartP300Client(serverName, serverPort);
+}
+
+void P300Interface::ResumeP300Client()
+{
+    m_impl->ResumeP300Client();
 }
 
 void P300Interface::SetBackgroundSprite(BackgroundSprite * sprite)
