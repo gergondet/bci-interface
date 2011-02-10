@@ -195,21 +195,24 @@ static void mdlOutputs(SimStruct *S, int_T tid)
         }
     }
 
-    u = ssGetInputPortRealSignal(S, 1);
-    bool stop = (bool)u[0];
-    if( IN_stop != stop && stop )
+    if(IN_mode == 2) 
     {
-        IN_stop = stop;
-    }
-    if( IN_stop )
-    {
-        real_T * y = ssGetOutputPortRealSignal(S,0);
-        y[0] = true;
-    }
-    else
-    {
-        real_T * y = ssGetOutputPortRealSignal(S,0);
-        y[0] = false;
+        u = ssGetInputPortRealSignal(S, 2);
+        bool stop = (bool)u[0];
+        if( IN_stop != stop && stop )
+        {
+            IN_stop = stop;
+        }
+        if( IN_stop )
+        {
+            real_T * y = ssGetOutputPortRealSignal(S,0);
+            y[0] = true;
+        }
+        else
+        {
+            real_T * y = ssGetOutputPortRealSignal(S,0);
+            y[0] = false;
+        }
     }
 	
     UNUSED_ARG(tid);                             
