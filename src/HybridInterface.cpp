@@ -22,6 +22,14 @@ public:
         m_backgroundsprite = new BackgroundSprite("hrp2010v", 4242, 640, 480);
         SSVEPInterface::SetBackgroundSprite(m_backgroundsprite);
         P300Interface::SetBackgroundSprite(m_backgroundsprite);
+        if(mode == 1)
+        {
+            P300Interface::SetNbTrials(10);
+        }
+        else
+        {
+            P300Interface::SetNbTrials(4);
+        }
     }
 
     ~HybridInterfaceImpl()
@@ -44,16 +52,47 @@ public:
 
         while(m_app->IsOpened())
         {
-            if(m_paradigm == 0)
+            unsigned int  * cmd = new unsigned int;
+
+            SSVEPInterface::AddSquare(7, 60, 125, 5, 390, 255, 0, 0, 255); 
+            SSVEPInterface::AddSquare(12, 60, 765, 5, 390, 255, 0, 0, 255); 
+            SSVEPInterface::AddSquare(5, 60, 125, 405, 390, 255, 0, 0, 255); 
+            SSVEPInterface::AddSquare(9, 60, 765, 405, 390, 255, 0, 0, 255); 
+            SSVEPInterface::DisplayLoop(m_app, cmd);
+            std::cout << "First iteration of SSVEPInterface got cmd " << *cmd << std::endl;
+            SSVEPInterface::CleanUpSquares();
+
+            unsigned int x0, y0;
+            switch(*cmd)
             {
-                SSVEPInterface::DisplayLoop(m_app);
-                SwitchParadigm();
+                case 1:
+                    x0 = 65; y0 = 5; break;
+                case 2:
+                    x0 = 705; y0 = 5; break;
+                case 3:
+                    x0 = 65; y0 = 405; break;
+                case 4:
+                    x0 = 705; y0 = 405; break;
+                default:
+                    x0 = 65; y0 = 5; break;
             }
-            else
-            {
-                P300Interface::DisplayLoop(m_app);
-                SwitchParadigm();
-            }
+
+            SSVEPInterface::AddSquare(7, 60, x0, y0, 190, 255, 0, 0, 255); 
+            SSVEPInterface::AddSquare(12, 60, 320+x0, y0, 190, 255, 0, 0, 255); 
+            SSVEPInterface::AddSquare(5, 60, x0, 200+y0, 190, 255, 0, 0, 255); 
+            SSVEPInterface::AddSquare(9, 60, 320+x0, 200+y0, 190, 255, 0, 0, 255); 
+            SSVEPInterface::DisplayLoop(m_app, cmd);
+            std::cout << "Second iteration of SSVEPInterface got cmd " << *cmd << std::endl;
+
+            P300Interface::AddObject(new P300Object("7" , x0, y0, 190, 190, 255, 0, 0)); 
+            P300Interface::AddObject(new P300Object("12", 320+x0, y0, 190, 190, 255, 0, 0)); 
+            P300Interface::AddObject(new P300Object("5" , x0, 200+y0, 190, 190, 255, 0, 0)); 
+            P300Interface::AddObject(new P300Object("9" , 320+x0, 200+y0, 190, 190, 255, 0, 0)); 
+            P300Interface::DisplayLoop(m_app, cmd);
+            std::cout << "P300 got cmd " << *cmd << std::endl;
+
+            delete cmd;
+            m_app->Close();
         }
 
         m_app->Close();

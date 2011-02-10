@@ -71,6 +71,15 @@ struct SSVEPInterfaceImpl
             AddSquare(square);
         }
 
+        void CleanUpSquares()
+        {
+            for(size_t i = 0; i < m_squares.size(); ++i)
+            {
+                delete m_squares[i];
+            }
+            m_squares.resize(0);
+        }
+
         void ChangeFrequency(unsigned int squareId, int frequency, int screenFrequency)
         {
             if(squareId > 0 && squareId <= m_squares.size())
@@ -109,7 +118,7 @@ struct SSVEPInterfaceImpl
             }
         }
 
-        void DisplayLoop(sf::RenderWindow * appin)
+        void DisplayLoop(sf::RenderWindow * appin, unsigned int * cmd)
         {
             if(!m_backgroundsprite)
             {
@@ -119,7 +128,9 @@ struct SSVEPInterfaceImpl
 
             app = appin;
 
-            DisplayLoop();
+            DisplayLoop(cmd);
+
+            m_coshellrunning = false;
 
             app = 0;
         }
@@ -149,7 +160,7 @@ struct SSVEPInterfaceImpl
             app->Close();
         }
 
-        void DisplayLoop()
+        void DisplayLoop(unsigned int * cmdOut = 0)
         {
             unsigned int frameCount = 0;
             sf::Clock clock;
@@ -223,6 +234,7 @@ struct SSVEPInterfaceImpl
                     if((unsigned int)bcicmd == i+1)
                     {
                         m_squares[i]->Highlight();
+                        if(cmdOut) { *cmdOut = (unsigned int)bcicmd; closeRequest = true; }
                     }
                     else
                     {
@@ -284,6 +296,11 @@ void SSVEPInterface::AddSquare(int frequency, int screenFrequency, float x, floa
     m_impl->AddSquare(frequency, screenFrequency, x, y, size, r, g, b, a);
 }
 
+void SSVEPInterface::CleanUpSquares()
+{
+    m_impl->CleanUpSquares();
+}
+
 void SSVEPInterface::ChangeFrequency(unsigned int squareId, int frequency, int screenFrequency)
 {
     m_impl->ChangeFrequency(squareId, frequency, screenFrequency);
@@ -309,9 +326,9 @@ void SSVEPInterface::EnableFlash(bool enable)
     m_impl->EnableFlash(enable);
 }
 
-void SSVEPInterface::DisplayLoop(sf::RenderWindow * app)
+void SSVEPInterface::DisplayLoop(sf::RenderWindow * app, unsigned int * cmd)
 {
-    m_impl->DisplayLoop(app);
+    m_impl->DisplayLoop(app, cmd);
 }
 
 void SSVEPInterface::DisplayLoop(bool fullScreen)

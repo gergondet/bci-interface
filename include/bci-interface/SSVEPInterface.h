@@ -24,6 +24,8 @@ public:
 
     SSVEPINTERFACE_API void AddSquare(int frequency, int screenFrequency, float x, float y, float size = 100, int r = 255, int g = 0, int b = 0, int a = 255);
 
+    SSVEPINTERFACE_API void CleanUpSquares();
+
     SSVEPINTERFACE_API void ChangeFrequency(unsigned int squareId, int frequency, int screenFrequency);
 
     SSVEPINTERFACE_API void SetBackgroundSprite(BackgroundSprite * sprite);
@@ -34,7 +36,7 @@ public:
 
     SSVEPINTERFACE_API void EnableFlash(bool enable);
 
-    SSVEPINTERFACE_API void DisplayLoop(sf::RenderWindow * app);
+    SSVEPINTERFACE_API void DisplayLoop(sf::RenderWindow * app, unsigned int * cmd = 0);
 
     SSVEPINTERFACE_API void DisplayLoop(bool fullScreen = true);
 

@@ -120,7 +120,7 @@ public:
         }
     }
 
-    void DisplayLoop(sf::RenderWindow * app)
+    void DisplayLoop(sf::RenderWindow * app, unsigned int * cmdOut)
     {
         if(!m_backgroundSprite)
         {
@@ -135,7 +135,7 @@ public:
 
         m_app = app;
 
-        DisplayLoop();
+        DisplayLoop(cmdOut);
 
         m_app = 0;
         
@@ -169,7 +169,7 @@ public:
         m_app->Close();
     }
 
-    void DisplayLoop()
+    void DisplayLoop(unsigned int * cmdOut = 0)
     {
         sf::Clock clock;
         time_t t1,t2;
@@ -192,12 +192,12 @@ public:
                 for(int i = 0; i < m_trainingset.size(); ++i)
                 { 
                     clock.Reset();
-                    while(clock.GetElapsedTime() < 2*m_intercycletime)
+                    while(!m_close && clock.GetElapsedTime() < 2*m_intercycletime)
                     {
                             frameCount++;
                             Display(m_trainingset[i] - 1);
                     }
-                    while(clock.GetElapsedTime() < m_intercycletime)
+                    while(!m_close && clock.GetElapsedTime() < m_intercycletime)
                     {
                             frameCount++;
                             Display(-1);
@@ -225,10 +225,14 @@ public:
                     }
 
                     unsigned int cmd = m_p300client->GetID();
-                    std::cerr << "Got cmd " << cmd << std::endl;
+                    if(cmdOut)
+                    {
+                        *cmdOut = cmd;
+                    }
+                    std::cerr << "[Training] Got cmd " << cmd << std::endl;
                     
                     clock.Reset();
-                    while(clock.GetElapsedTime() < 2*m_intercycletime)
+                    while(!m_close && clock.GetElapsedTime() < 2*m_intercycletime)
                     {
                         frameCount++;
                         Display(cmd - 1);
@@ -271,6 +275,10 @@ public:
 
                     /* P300 cycle finished, get the command and then wait go for next cycle */
                     unsigned int cmd = m_p300client->GetID();
+                    if(cmdOut)
+                    {
+                        *cmdOut = cmd;
+                    }
                     std::cerr << "Got cmd " << cmd << std::endl;
                     m_pausable = true;
                     clock.Reset();
@@ -401,9 +409,9 @@ void P300Interface::UpdateBackground(unsigned char * img)
     m_impl->UpdateBackground(img);
 }
 
-void P300Interface::DisplayLoop(sf::RenderWindow * app)
+void P300Interface::DisplayLoop(sf::RenderWindow * app, unsigned int * cmdOut)
 {
-    m_impl->DisplayLoop(app);
+    m_impl->DisplayLoop(app, cmdOut);
 }
 
 void P300Interface::DisplayLoop(bool fullscreen)

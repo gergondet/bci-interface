@@ -56,7 +56,7 @@ public:
     /* Expect a w*h grayscale buffer */
     P300INTERFACE_API void UpdateBackground(unsigned char * img);
 
-    P300INTERFACE_API void DisplayLoop(sf::RenderWindow * app);
+    P300INTERFACE_API void DisplayLoop(sf::RenderWindow * app, unsigned int * cmdOut = 0);
 
     P300INTERFACE_API void DisplayLoop(bool fullscreen = true);
 
