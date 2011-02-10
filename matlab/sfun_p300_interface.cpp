@@ -22,6 +22,7 @@
 
 unsigned int IN_result = 0;
 unsigned int IN_flash = 0;
+bool IN_stop = false;
 
 double IN_mode = 1; /* 1 : training mode ,  2 : free mode */
 
@@ -45,7 +46,7 @@ public:
     ~P300Server()
     {
         m_close = true;
-        if(th) { th->join(); }
+        if(th) { th->interrupt(); }
         closesocket(cSocket);
         closesocket(sSocket);
         WSACleanup();
@@ -65,6 +66,17 @@ public:
         ss << result;
         int err = send(cSocket, ss.str().c_str(), ss.str().size() + 1, 0);
 		debug << "send return " << err << " for result " << result << std::endl;
+    }
+
+    void Resume()
+    {
+        unsigned char buffer[256];
+        int err = recv(cSocket, buffer, 256, 0);
+        std::string stop(buffer);
+        if(stop == "resume")
+        {
+            IN_stop = false;
+        }
     }
 
     void GetClient()
@@ -102,15 +114,21 @@ static void mdlInitializeSizes(SimStruct *S)
     ssSetNumContStates(S, 0);
     ssSetNumDiscStates(S, 0);
 
-    if (!ssSetNumInputPorts(S, 2)) return;
-    for(int i = 0; i < 2; ++i)
+    if (!ssSetNumInputPorts(S, 3)) return;
+    for(int i = 0; i < 3; ++i)
     {
     	ssSetInputPortWidth(S, i, 1);
 	    ssSetInputPortDirectFeedThrough(S, i, 1);
     	ssSetInputPortRequiredContiguous(S,i,1);
     }
     
-    if (!ssSetNumOutputPorts(S, 0)) return;
+    if (!ssSetNumOutputPorts(S, 1)) return;
+    for(int i = 0; i < 1; ++i)
+    {
+    	ssSetOutputPortWidth(S, i, 1);
+	    ssSetOutputPortDirectFeedThrough(S, i, 1);
+    	ssSetOutputPortRequiredContiguous(S,i,1);
+    }
 
     ssSetNumSampleTimes(S, 1);
     ssSetNumRWork(S, 0);
@@ -161,6 +179,7 @@ static void mdlOutputs(SimStruct *S, int_T tid)
         if(IN_result != 0)
         {
             m_p300server->SendResult(IN_result);
+            th = new boost::thread(boost::bind(&P300Server::Resume, m_p300server));
         }
 	}
 	
@@ -174,6 +193,23 @@ static void mdlOutputs(SimStruct *S, int_T tid)
             debug << "FLASH " << flash << std::endl;
             m_p300server->SendFlashID(flash);
         }
+    }
+
+    u = ssGetInputPortRealSignal(S, 1);
+    bool stop = (bool)u[0];
+    if( IN_stop != stop && stop )
+    {
+        IN_stop = stop;
+    }
+    if( IN_stop )
+    {
+        real_T * y = ssGetOutputPortRealSignal(S,0);
+        y[0] = true;
+    }
+    else
+    {
+        real_T * y = ssGetOutputPortRealSignal(S,0);
+        y[0] = false;
     }
 	
     UNUSED_ARG(tid);                             
