@@ -57,7 +57,7 @@ public:
         std::stringstream ss;
         ss << flashID;
         int err = send(cSocket, ss.str().c_str(), ss.str().size() + 1, 0);
-		debug << "send return " << err << " for flashID " << flashID << std::endl;
+        debug << "send return " << err << " for flashID " << flashID << std::endl;
     }
 
     void SendResult(unsigned int result)
@@ -65,25 +65,28 @@ public:
         std::stringstream ss;
         ss << result;
         int err = send(cSocket, ss.str().c_str(), ss.str().size() + 1, 0);
-		debug << "send return " << err << " for result " << result << std::endl;
+        debug << "send return " << err << " for result " << result << std::endl;
     }
 
     void Resume()
     {
-        unsigned char buffer[256];
+        debug << "Waiting for resume message" << std::endl;
+        char buffer[256];
         int err = recv(cSocket, buffer, 256, 0);
+        debug << "Got resume message " << buffer << std::endl;
         std::string stop(buffer);
         if(stop == "resume")
         {
+            debug << "Switching IN_stop to false" << std::endl;
             IN_stop = false;
         }
     }
 
     void GetClient()
     {
-		listen(sSocket, 1);
+        listen(sSocket, 1);
         cSocket =  accept(sSocket, 0, 0);
-		debug << "Got a client" << std::endl;
+        debug << "Got a client" << std::endl;
     }
 
 private:
@@ -117,17 +120,15 @@ static void mdlInitializeSizes(SimStruct *S)
     if (!ssSetNumInputPorts(S, 3)) return;
     for(int i = 0; i < 3; ++i)
     {
-    	ssSetInputPortWidth(S, i, 1);
-	    ssSetInputPortDirectFeedThrough(S, i, 1);
-    	ssSetInputPortRequiredContiguous(S,i,1);
+        ssSetInputPortWidth(S, i, 1);
+        ssSetInputPortDirectFeedThrough(S, i, 1);
+        ssSetInputPortRequiredContiguous(S,i,1);
     }
     
     if (!ssSetNumOutputPorts(S, 1)) return;
     for(int i = 0; i < 1; ++i)
     {
-    	ssSetOutputPortWidth(S, i, 1);
-	    ssSetOutputPortDirectFeedThrough(S, i, 1);
-    	ssSetOutputPortRequiredContiguous(S,i,1);
+        ssSetOutputPortWidth(S, i, 1);
     }
 
     ssSetNumSampleTimes(S, 1);
@@ -159,10 +160,11 @@ static void mdlStart(SimStruct *S)
     th = new boost::thread(boost::bind(&P300Server::GetClient, m_p300server));
 
     IN_mode = mxGetPr(ssGetSFcnParam(S,0))[0];
-	debug << "MODE " << IN_mode << std::endl;
+    debug << "MODE " << IN_mode << std::endl;
 
     IN_result = 0;
     IN_flash  = 0;
+    IN_stop = false;
 
 }                                            
 #endif /*  MDL_START */
@@ -170,19 +172,20 @@ static void mdlStart(SimStruct *S)
 
 static void mdlOutputs(SimStruct *S, int_T tid)
 {
-	const real_T* u  = ssGetInputPortRealSignal(S,0);
-	unsigned int result = (unsigned int)u[0];
-	if( result != IN_result )
-	{
-		debug << "NEW RESULT " << result << std::endl;
-		IN_result = result;
+    const real_T* u  = ssGetInputPortRealSignal(S,0);
+    unsigned int result = (unsigned int)u[0];
+    if( result != IN_result )
+    {
+        debug << "NEW RESULT " << result << std::endl;
+        IN_result = result;
         if(IN_result != 0)
         {
             m_p300server->SendResult(IN_result);
             th = new boost::thread(boost::bind(&P300Server::Resume, m_p300server));
         }
-	}
-	
+        IN_stop = false;
+    }
+    
     u = ssGetInputPortRealSignal(S, 1);
     unsigned int flash = (unsigned int)u[0];
     if( flash != IN_flash )
@@ -214,7 +217,7 @@ static void mdlOutputs(SimStruct *S, int_T tid)
             y[0] = false;
         }
     }
-	
+    
     UNUSED_ARG(tid);                             
 }                                                
 
