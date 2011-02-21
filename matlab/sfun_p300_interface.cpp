@@ -1,11 +1,8 @@
-/*  File    : sfun_counter_cpp.cpp
+/*  File    : sfun_p300_interface.cpp
  *  Abstract:
  *
- *      Example of an C++ S-function which stores an C++ object in
- *      the pointers vector PWork.
- *
- *  Copyright 1990-2009 The MathWorks, Inc.
- *  $Revision: 1.1.6.1 $
+ *     Interface between a remote P300 interface and matlab processing laptop 
+ *      
  */
 
 #include <fstream>
@@ -21,6 +18,7 @@
 #define S_FUNCTION_NAME  sfun_p300_interface
 
 unsigned int IN_result = 0;
+unsigned int OUT_result = 0;
 unsigned int IN_flash = 0;
 bool IN_stop = false;
 
@@ -79,6 +77,7 @@ public:
         {
             debug << "Switching IN_stop to false" << std::endl;
             IN_stop = false;
+            OUT_result = 0;
         }
     }
 
@@ -125,8 +124,8 @@ static void mdlInitializeSizes(SimStruct *S)
         ssSetInputPortRequiredContiguous(S,i,1);
     }
     
-    if (!ssSetNumOutputPorts(S, 1)) return;
-    for(int i = 0; i < 1; ++i)
+    if (!ssSetNumOutputPorts(S, 2)) return;
+    for(int i = 0; i < 2; ++i)
     {
         ssSetOutputPortWidth(S, i, 1);
     }
@@ -163,6 +162,7 @@ static void mdlStart(SimStruct *S)
     debug << "MODE " << IN_mode << std::endl;
 
     IN_result = 0;
+    OUT_result = 0;
     IN_flash  = 0;
     IN_stop = false;
 
@@ -183,8 +183,22 @@ static void mdlOutputs(SimStruct *S, int_T tid)
             m_p300server->SendResult(IN_result);
             th = new boost::thread(boost::bind(&P300Server::Resume, m_p300server));
         }
-        IN_stop = false;
     }
+    if(IN_mode == 1)
+    {
+        /* In training copy the input to the output */
+        OUT_result = IN_result;
+    }
+    else
+    {
+        /* Else hold on to the non-zero value until system unpaused */
+        if(IN_result != 0)
+        {
+            OUT_result = IN_result;
+        }
+    }
+    real_T * y = ssGetOutputPortRealSignal(S,1);
+    y[0] = OUT_result;
     
     u = ssGetInputPortRealSignal(S, 1);
     unsigned int flash = (unsigned int)u[0];
@@ -216,6 +230,14 @@ static void mdlOutputs(SimStruct *S, int_T tid)
             real_T * y = ssGetOutputPortRealSignal(S,0);
             y[0] = false;
         }
+    }
+    else
+    {
+        u = ssGetInputPortRealSignal(S, 2);
+        bool stop = (bool)u[0];
+        IN_stop = stop;
+        real_T * y = ssGetOutputPortRealSignal(S,0);
+        y[0] = IN_stop;
     }
     
     UNUSED_ARG(tid);                             
