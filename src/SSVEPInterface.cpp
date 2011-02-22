@@ -194,6 +194,7 @@ struct SSVEPInterfaceImpl
             #endif
 
             bcimw::SSVEP_COMMAND bcicmd = bcimw::NONE;
+            coshellTh = new boost::thread(boost::bind(&coshellbci::CoshellBCI::CommandLoop, m_coshellBCI));
 
             while(!closeRequest && app->IsOpened())
             {
@@ -221,8 +222,8 @@ struct SSVEPInterfaceImpl
                     {
                         if(not m_coshellrunning)
                         {
-                            coshellTh = new boost::thread(boost::bind(&coshellbci::CoshellBCI::CommandLoop, m_coshellBCI));
                             m_coshellrunning = true;
+                            m_coshellBCI->ActiveCoshell();
                         }
                         else
                         {
