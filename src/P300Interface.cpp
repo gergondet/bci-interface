@@ -24,6 +24,8 @@ private:
     unsigned int m_nbtrials;
     float m_flashtime, m_interflashtime, m_intercycletime;
     unsigned int m_nbObjects;
+    unsigned int m_curridx;
+    unsigned int m_cmd;
     bool m_training;
     std::vector<int> m_trainingset;
     P300ObjectVector m_p300objects;
@@ -32,9 +34,9 @@ private:
 public:
     P300InterfaceImpl(unsigned int width, unsigned int height, unsigned int mode) :
         m_backgroundSprite(0), m_updateBackgroundManually(false),
-        m_width(width), m_height(height), m_pausable(true), m_pause(false), m_close(false),
+        m_width(width), m_height(height), m_pausable(true), m_pause(true), m_close(false),
         m_nbtrials(4), m_flashtime(0.060), m_interflashtime(0.010), m_intercycletime(1.0),
-        m_nbObjects(36), m_training(false) , m_p300client(0),
+        m_nbObjects(36), m_curridx(0), m_cmd(0), m_training(false) , m_p300client(0),
         m_app(0)
     {
         if(mode == 1)
@@ -70,27 +72,15 @@ public:
     }
     void AddObject(P300Object * object)
     {
-        Pause();
-
         m_p300objects.AddObject(object);
-
-        Resume();
     }
     void RemoveObject(const std::string & name)
     {
-        Pause();
-
         m_p300objects.RemoveObject(name);
-
-        Resume();
     }
     void ClearObjects()
     {
-        Pause();
-
         m_p300objects.ClearObjects();
-
-        Resume();
     }
 
     void StartP300Client(const std::string & serverName, unsigned short serverPort)
@@ -102,7 +92,7 @@ public:
     void ResumeP300Client()
     {
         if(m_p300client) { m_p300client->ResumeP300(); }
-        m_pause = false;
+        boost::thread thp300(&P300InterfaceImpl::GetNextId, this);
     }
 
     void SetBackgroundSprite(BackgroundSprite * sprite)
@@ -189,6 +179,10 @@ public:
             th = new boost::thread(boost::bind(&BackgroundSprite::UpdateLoop, m_backgroundSprite));
         }
 
+        if(!m_training)
+        {
+            boost::thread thp300(&P300InterfaceImpl::ResumeP300Client, this);
+        }
         time(&t1);
         while(!m_close && m_app->IsOpened())
         {
@@ -248,27 +242,30 @@ public:
             }
             else
             {
-                if(frameCount < 100 || m_pause)
+                if(m_pause)
                 {
                     /* Just draw the background when in pause */
                     frameCount++;
-                    Display(-1);
+                    Display(m_cmd - 1);
                 }
                 else
                 {
                     /* Enter a P300 cycle, can not be paused now */
                     m_pausable = false;
-                    unsigned int apparitionCount = m_nbObjects*m_nbtrials;
-                    while(apparitionCount > 0 )
+                    unsigned int apparitionCount = 0;
+                    while(apparitionCount < m_nbObjects*m_nbtrials )
                     {
                         /* Randomly select a new object to highlight */
-                        apparitionCount--;
-                        unsigned int idx = m_p300client->GetID();
+                        if(apparitionCount != 0)
+                        {
+                            m_curridx = m_p300client->GetID();
+                        }
+                        apparitionCount++;
                         clock.Reset();
                         while(!m_close && m_app->IsOpened() && clock.GetElapsedTime() < m_flashtime)
                         {
                             frameCount++;
-                            Display(idx - 1);
+                            Display(m_curridx - 1);
                         }
 
                         clock.Reset();
@@ -280,12 +277,13 @@ public:
                     }
 
                     /* P300 cycle finished, get the command and then wait go for next cycle */
-                    unsigned int cmd = m_p300client->GetID();
+                    m_cmd = m_p300client->GetID();
                     if(cmdOut)
                     {
-                        *cmdOut = cmd;
+                        *cmdOut = m_cmd; 
                     }
-                    std::cerr << "Got cmd " << cmd << std::endl;
+                    std::cerr << "Got cmd " << m_cmd << std::endl;
+                    m_cmd = (m_cmd % 4) + 1;
                     m_pause = true;
                 }
             }
@@ -317,6 +315,12 @@ public:
     }
 
 private:
+    void GetNextId()
+    {
+        m_pause = true;
+        m_curridx = m_p300client->GetID();
+        m_pause = false;
+    }
     inline void ProcessEvents()
     {
         sf::Event Event;
@@ -328,6 +332,8 @@ private:
                 m_app->Close();
             if( Event.Type == sf::Event::KeyPressed && ( Event.Key.Code == sf::Key::S ) )
                 m_close = true;
+            if( Event.Type == sf::Event::KeyPressed && ( Event.Key.Code == sf::Key::Space ) )
+                ResumeP300Client();
         }
     }
 
