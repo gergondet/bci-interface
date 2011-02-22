@@ -31,7 +31,7 @@ std::ofstream debug("debug.log");
 class P300Server
 {
 public:
-    P300Server(unsigned short port) : m_close(false) , m_result(0)
+    P300Server(unsigned short port) : has_client(false), m_close(false) , m_result(0)
     {
         WSAStartup(0x0202, &w);
         addr.sin_family = AF_INET;
@@ -52,22 +52,30 @@ public:
 
     void SendFlashID(unsigned int flashID)
     {
-        std::stringstream ss;
-        ss << flashID;
-        int err = send(cSocket, ss.str().c_str(), ss.str().size() + 1, 0);
-        debug << "send return " << err << " for flashID " << flashID << std::endl;
+		if(has_client)
+		{
+			std::stringstream ss;
+			ss << flashID;
+			int err = send(cSocket, ss.str().c_str(), ss.str().size() + 1, 0);
+			debug << "send return " << err << " for flashID " << flashID << std::endl;
+		}
     }
 
     void SendResult(unsigned int result)
     {
-        std::stringstream ss;
-        ss << result;
-        int err = send(cSocket, ss.str().c_str(), ss.str().size() + 1, 0);
-        debug << "send return " << err << " for result " << result << std::endl;
+		if(has_client)
+		{
+			std::stringstream ss;
+			ss << result;
+			int err = send(cSocket, ss.str().c_str(), ss.str().size() + 1, 0);
+			debug << "send return " << err << " for result " << result << std::endl;
+		}
     }
 
     void Resume()
     {
+		debug << "Resume waiting for client" << std::endl;
+		while(!has_client) { Sleep(100); }
         debug << "Waiting for resume message" << std::endl;
         char buffer[256];
         int err = recv(cSocket, buffer, 256, 0);
@@ -86,6 +94,7 @@ public:
         listen(sSocket, 1);
         cSocket =  accept(sSocket, 0, 0);
         debug << "Got a client" << std::endl;
+		has_client = true;
     }
 
 private:
@@ -93,6 +102,7 @@ private:
     WSADATA w;
     SOCKET cSocket;
     sockaddr_in addr;
+	bool has_client;
     bool m_close;
     unsigned int m_result;
 };
