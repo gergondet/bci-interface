@@ -127,6 +127,11 @@ public:
         blackSquare = &unhighlightedBlackSquare;
     }
 
+    void SetSquareX(float positionX)
+     {
+         this->square.SetX(positionX);
+     }
+
 }; //class FlickeringSquareImpl
 
 FlickeringSquare::FlickeringSquare(int frequency, int screenFrequency, float x, float y, float size, int r, int g, int b, int a, bool fill) :
@@ -173,6 +178,11 @@ void FlickeringSquare::Unhighlight()
 {
     m_flsqimpl->Unhighlight();
 }
+
+void FlickeringSquare::SetSquareX(float positionX)
+ {
+	m_flsqimpl->SetSquareX(positionX);
+ }
 
 } // namespace bciinterface
 

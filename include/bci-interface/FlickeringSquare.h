@@ -49,6 +49,9 @@ public:
     /*! \brief Change outline color back to normal */
     void Unhighlight();
 
+    /*Change position of the square*/
+    void SetSquareX(float positionX);
+
 private:
     boost::shared_ptr<FlickeringSquareImpl> m_flsqimpl;
 };

@@ -10,6 +10,7 @@ SET(${EXEC_NAME}_src
     ./P300ObjectVector.cpp
     ./P300Interface.cpp
     ./MoovingCursor.cpp
+    ./RandomPoint.cpp
     ./HybridInterface.cpp
 )
 

@@ -10,6 +10,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <stdarg.h>
 
 #include <boost/thread.hpp>
 
@@ -22,10 +23,24 @@ struct SSVEPInterfaceImpl
         BackgroundSprite * m_backgroundsprite;
         bool m_updatebackgroundmanually;
         std::vector<FlickeringSquare *> m_squares;
+        int indicePos;
+        std::vector<float> m_positionsTabLeft;
+        std::vector<float> m_positionsTabRight;
+
+        //cursors
         std::vector<MoovingCursor *> m_cursors;
         float currentPos;
         sf::Shape currentCursor;
         int compt_begin;
+        bool nextPosition, previousPosition;
+
+        //points
+        std::vector<RandomPoint *> m_points;
+        std::vector<float> position;
+        int compt_point;
+        sf::Shape squareForbidden;
+        bool allowedPosition;
+
         unsigned int m_width;
         unsigned int m_height;
         bool closeRequest;
@@ -40,13 +55,15 @@ struct SSVEPInterfaceImpl
             m_backgroundsprite(0), m_updatebackgroundmanually(false),
             m_width(width), m_height(height), 
             closeRequest(false), 
-            fpsLog("fps.log"), app(0), compt_begin(0)
+            fpsLog("fps.log"), app(0), compt_begin(0), compt_point(0),
+            indicePos(0), nextPosition(false), previousPosition(false)
             #ifdef WITH_COSHELL
             , m_coshellBCI(new coshellbci::CoshellBCI("hrp2010c", 2809, 1111)), 
             m_coshellrunning(false)
             #endif
         {
             m_squares.resize(0);
+            position.resize(2);
         }
 
         ~SSVEPInterfaceImpl()
@@ -85,6 +102,38 @@ struct SSVEPInterfaceImpl
         	MoovingCursor * moovingCursor = new MoovingCursor(x_init, y_init, size, x_fin, r, g, b, a);
         	m_cursors.push_back(moovingCursor);
         }
+
+        void AddPoint(RandomPoint * randomPoint)
+        {
+        	m_points.push_back(randomPoint);
+        }
+
+        void AddPoint(float x, float y, float size, float period, int r, int g, int b, int a)
+        {
+        	RandomPoint * randomPoint = new RandomPoint(x, y, size, period, r, g, b, a);
+        	m_points.push_back(randomPoint);
+        }
+
+        void ClearPositionsTabs(){
+        	m_positionsTabLeft.clear();
+        	m_positionsTabRight.clear();
+        }
+
+        void AddPositionsTab(float positionX){
+        	m_positionsTabLeft.push_back(positionX);
+        }
+
+        void AddPositionsTab(float posXSquareLeft, float posXSquareRight, float size, int numPos){
+        	std::cout << "parametres : " << posXSquareLeft << ", " << posXSquareRight << ", " << size << ", " << numPos << std::endl;
+        	float extend = posXSquareRight - (posXSquareLeft + size);
+        	std::cout << "extend : " << extend << std::endl;
+        	for(int i=0; i<numPos; i++){
+        		m_positionsTabLeft.push_back(posXSquareLeft + (float)i/(2*(float)numPos)*extend);
+        		m_positionsTabRight.push_back(posXSquareRight - (float)i/(2*(float)numPos)*extend);
+        		std::cout << "posLeft : " << m_positionsTabLeft[i] << ", posRight : " << m_positionsTabRight[i] << std::endl;
+        	}
+        }
+
 
         void ChangeFrequency(unsigned int squareId, int frequency, int screenFrequency)
         {
@@ -205,6 +254,10 @@ struct SSVEPInterfaceImpl
                         app->Close();
                     if( Event.Type == sf::Event::KeyPressed && ( Event.Key.Code == sf::Key::S ) )
                         closeRequest = true;
+                    if( Event.Type == sf::Event::KeyPressed && ( Event.Key.Code == sf::Key::P ) )
+                        nextPosition = true;
+                    if( Event.Type == sf::Event::KeyPressed && ( Event.Key.Code == sf::Key::O ) )
+                        previousPosition = true;
                     #ifdef WITH_COSHELL
                     if( Event.Type == sf::Event::KeyPressed && Event.Key.Code == sf::Key::Space)
                     {
@@ -233,6 +286,52 @@ struct SSVEPInterfaceImpl
                     app->Draw(*sprite);
                 }
 
+/*				cursor taking each position when asked by pressing P key or O key*/
+				if (m_squares.size() >=2 && m_squares[1]->SquareDisplay() && m_squares[0]->SquareDisplay()){
+					if (nextPosition){
+						if (indicePos<m_positionsTabLeft.size()-1) indicePos++;
+						m_squares[1]->SetSquareX(m_positionsTabLeft[indicePos]);
+						m_squares[0]->SetSquareX(m_positionsTabRight[indicePos]);
+						nextPosition=false;
+					}
+					if (previousPosition) {
+						if (indicePos>0) indicePos--;
+						m_squares[1]->SetSquareX(m_positionsTabLeft[indicePos]);
+						m_squares[0]->SetSquareX(m_positionsTabRight[indicePos]);
+						previousPosition=false;
+					}
+
+					if (indicePos==0){
+						m_squares[1]->SetSquareX(25);
+						m_squares[0]->SetSquareX(m_width - 175);
+					}
+				}
+				app->Draw(*(m_points[0]->GetPoint()));
+
+
+/*				cursor taking each position when asked by pressing P key or O key*/
+/*				if (m_squares.size() !=0 && m_squares[1]->SquareDisplay()){
+					if (nextPosition){
+						if (indicePos<m_positionsTabLeft.size()-1) indicePos++;
+						m_squares[1]->SetSquareX(m_positionsTabLeft[indicePos]);
+						nextPosition=false;
+					}
+					if (previousPosition) {
+						if (indicePos>0) indicePos--;
+						m_squares[1]->SetSquareX(m_positionsTabLeft[indicePos]);
+						previousPosition=false;
+					}
+
+					if (indicePos==0){
+						m_squares[1]->SetSquareX(25);
+					}
+
+					//position[1]=(*(m_points[0]->GetPoint())).GetPointPosition(0).y ;
+					position[0]=( (*(m_squares[0]->GetShape())).GetPointPosition(0).x + m_positionsTabLeft[indicePos] + 150) /2 -5 ;
+					m_points[0]->SetPosition(position);
+					app->Draw(*(m_points[0]->GetPoint()));
+				}*/
+
                 for(unsigned int i = 0; i < m_squares.size(); ++i)
                 {
                     if((unsigned int)bcicmd == i+1)
@@ -251,27 +350,6 @@ struct SSVEPInterfaceImpl
                 }
 
 
-				if (m_cursors.size() !=0 && m_cursors[0]->CursorDisplay()){
-					if (compt_begin >= 50)
-					{
-						currentCursor = *(m_cursors[0]->GetCursor());
-						currentPos=currentCursor.GetPosition().x;
-						if(currentPos < m_cursors[0]->GetfinalPosX())
-						{
-							m_cursors[0]->SetCursorX(currentPos+1);
-						}
-					}
-					else
-					{
-						compt_begin++;
-					}
-					app->Draw(*(m_cursors[0]->GetCursor()));
-				}
-
-
-
-
-        
                 app->Display();
 
                 if(frameCount % 60 == 0)
@@ -328,6 +406,28 @@ void SSVEPInterface::AddCursor(float x_init, float y_init, float size, float x_f
 void SSVEPInterface::AddCursor(MoovingCursor * moovingCursor)
 {
 	m_impl->AddCursor(moovingCursor);
+}
+
+void SSVEPInterface::AddPoint(RandomPoint * randomPoint)
+{
+	m_impl->AddPoint(randomPoint);
+}
+
+void SSVEPInterface::AddPoint(float x, float y, float size, float period, int r, int g, int b, int a)
+{
+	m_impl->AddPoint(x, y, size, period, r, g, b, a);
+}
+
+void SSVEPInterface::ClearPositionsTabs(){
+	 m_impl->ClearPositionsTabs();
+}
+
+void SSVEPInterface::AddPositionsTab(float positionX){
+	 m_impl->AddPositionsTab(positionX);
+}
+
+void SSVEPInterface::AddPositionsTab(float posXSquareLeft, float posXSquareRight, float size, int numPos){
+	 m_impl->AddPositionsTab(posXSquareLeft, posXSquareRight, size, numPos);
 }
 
 void SSVEPInterface::ChangeFrequency(unsigned int squareId, int frequency, int screenFrequency)

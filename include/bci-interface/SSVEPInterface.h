@@ -3,6 +3,7 @@
 
 #include <bci-interface/FlickeringSquare.h>
 #include <bci-interface/MoovingCursor.h>
+#include <bci-interface/RandomPoint.h>
 #include <bci-interface/BackgroundSprite.h>
 
 #ifdef WIN32
@@ -29,6 +30,16 @@ public:
 
     SSVEPINTERFACE_API void AddCursor(float x_init=0, float y_init=0, float size=100, float x_fin=500, int r=0, int g=0, int b=0, int a=255);
 
+    SSVEPINTERFACE_API void AddPoint(RandomPoint * randomPoint);
+
+    SSVEPINTERFACE_API void AddPoint(float x=0, float y=0, float size=5, float period=300, int r=0, int g=0, int b=0, int a=255);
+
+    SSVEPINTERFACE_API void ClearPositionsTabs();
+
+    SSVEPINTERFACE_API void AddPositionsTab(float positionX);
+
+    SSVEPINTERFACE_API void AddPositionsTab(float posXSquareLeft, float posXSquareRight, float size, int numPos);
+
     SSVEPINTERFACE_API void ChangeFrequency(unsigned int squareId, int frequency, int screenFrequency);
 
     SSVEPINTERFACE_API void SetBackgroundSprite(BackgroundSprite * sprite);
@@ -44,6 +55,8 @@ public:
     SSVEPINTERFACE_API void DisplayLoop(bool fullScreen = true);
 
     SSVEPINTERFACE_API void Close();
+
+
 private:
     boost::shared_ptr<SSVEPInterfaceImpl> m_impl;
 };

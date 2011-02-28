@@ -58,11 +58,11 @@ ENDIF(Boost_FOUND)
 #
 #  Dependency on dg-middleware
 #
-# pkg_check_modules(DGMIDDLEWARE dg-middleware)
-# 
-# MESSAGE(STATUS "PKG_CONFIG_EXEC: ${PKG_CONFIG_EXECUTABLE}")
-# EXEC_PROGRAM(${PKG_CONFIG_EXECUTABLE} ARGS dg-middleware --variable=datarootdir
-#   OUTPUT_VARIABLE DGMIDDLEWARE_DATADIR)
+pkg_check_modules(DGMIDDLEWARE dg-middleware)
+
+MESSAGE(STATUS "PKG_CONFIG_EXEC: ${PKG_CONFIG_EXECUTABLE}")
+EXEC_PROGRAM(${PKG_CONFIG_EXECUTABLE} ARGS dg-middleware --variable=datarootdir
+  OUTPUT_VARIABLE DGMIDDLEWARE_DATADIR)
 
 #
 # Dependency on bci-middle ware

@@ -2,6 +2,8 @@ SET(${PROJECT_NAME}_HEADERS
 	bci-interface/SSVEPInterface.h
 	bci-interface/SSVEPInterfaceConfig.h
 	bci-interface/FlickeringSquare.h
+	bci-interface/MoovingCursor.h
+	bci-interface/RandomPoint.h
 	bci-interface/square-function.h
     bci-interface/BackgroundSprite.h
     bci-interface/P300Interface.h

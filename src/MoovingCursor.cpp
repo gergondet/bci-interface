@@ -11,7 +11,6 @@ struct MoovingCursorImpl
 private:
     sf::Shape cursor;
     bool cursorDisplay;
- //   vector<float> currentPos;
     float finalPosX;
 
 public:
@@ -23,8 +22,6 @@ public:
         cursorDisplay(true)
 
     {
-        //currentPos.push_back(x_init);
-        //currentPos.push_back(y_init);
         finalPosX=x_fin;
     	cursor.EnableFill(true);
     }
