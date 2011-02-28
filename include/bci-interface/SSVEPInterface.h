@@ -5,6 +5,9 @@
 #include <bci-interface/MoovingCursor.h>
 #include <bci-interface/BackgroundSprite.h>
 
+#include <vector>
+#include <string>
+
 #ifdef WIN32
 #define SSVEPINTERFACE_API __declspec(dllexport)
 #else
@@ -41,7 +44,9 @@ public:
 
     SSVEPINTERFACE_API void EnableFlash(bool enable);
 
-    SSVEPINTERFACE_API void DisplayLoop(sf::RenderWindow * app, unsigned int * cmd = 0);
+    SSVEPINTERFACE_API void SetCoshellCommands(const std::vector<std::string> & commands);
+
+    SSVEPINTERFACE_API void DisplayLoop(sf::RenderWindow * app, unsigned int * cmd = 0, float timeout = 0);
 
     SSVEPINTERFACE_API void DisplayLoop(bool fullScreen = true);
 
