@@ -33,7 +33,7 @@ public:
     /* SSVEP flickering squares related functions */
     HYBRIDINTERFACE_API void AddSquare(FlickeringSquare * square);
 
-    HYBRIDINTERFACE_API void AddSquare(int frequency, int screenFrequency, float x, float y, float size = 100, int r = 255, int g = 0, int b = 0, int a = 255);
+    HYBRIDINTERFACE_API void AddSquare(int frequency, int screenFrequency, float x, float y, float size_x = 100, float size_y = 100, int r = 255, int g = 0, int b = 0, int a = 255);
 
 private:
     boost::shared_ptr<HybridInterfaceImpl> m_impl;

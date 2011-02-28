@@ -21,11 +21,11 @@ private:
     int screenFrequency;
     std::vector<bool> frameSeq;
 public:
-    FlickeringSquareImpl(int frequency, int screenFrequency, float x, float y, float size, int r, int g, int b, int a, bool fill) : 
-        square(sf::Shape::Rectangle(x, y, x+size, y+size, sf::Color(r, g, b, a), 0, sf::Color(r,g,b,a))) , 
-        highlightOn(0,255,0,255), highlightOff(0,0,0,255), 
-        highlightedBlackSquare(sf::Shape::Rectangle(x, y, x+size, y+size, highlightOff, 6, highlightOn)) ,
-        unhighlightedBlackSquare(sf::Shape::Rectangle(x, y, x+size, y+size, highlightOff, 6, highlightOff)) ,
+    FlickeringSquareImpl(int frequency, int screenFrequency, float x, float y, float size_x, float size_y, int r, int g, int b, int a, bool fill) : 
+        square(sf::Shape::Rectangle(x, y, x+size_x, y+size_y, sf::Color(r, g, b, a), 0, sf::Color(r,g,b,a))) , 
+        highlightOn(0,255,0,128), highlightOff(0,0,0,0), 
+        highlightedBlackSquare(sf::Shape::Rectangle(x, y, x+size_x, y+size_y, highlightOff, 6, highlightOn)) ,
+        unhighlightedBlackSquare(sf::Shape::Rectangle(x, y, x+size_x, y+size_y, highlightOff, 6, highlightOff)) ,
         blackSquare(0) ,
         squareDisplay(true),
         frequency(frequency) , screenFrequency(screenFrequency)
@@ -129,8 +129,8 @@ public:
 
 }; //class FlickeringSquareImpl
 
-FlickeringSquare::FlickeringSquare(int frequency, int screenFrequency, float x, float y, float size, int r, int g, int b, int a, bool fill) :
-    m_flsqimpl(new FlickeringSquareImpl(frequency, screenFrequency, x, y, size, r, g, b, a, fill))
+FlickeringSquare::FlickeringSquare(int frequency, int screenFrequency, float x, float y, float size_x, float size_y, int r, int g, int b, int a, bool fill) :
+    m_flsqimpl(new FlickeringSquareImpl(frequency, screenFrequency, x, y, size_x, size_y, r, g, b, a, fill))
 {
 }
 

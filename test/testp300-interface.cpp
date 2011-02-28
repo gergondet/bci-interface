@@ -30,7 +30,7 @@ int main(int argc, char * argv[])
         ss >> mode;
     }
 
-    bool fullscreen = false;
+    bool fullscreen = true;
     int winW = 1280;
     int winH = 800;
 

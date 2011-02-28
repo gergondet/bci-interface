@@ -1,5 +1,6 @@
 #include <bci-interface/HybridInterface.h>
 #include <iostream>
+#include <sstream>
 
 namespace bciinterface
 {
@@ -52,51 +53,129 @@ public:
 
         while(m_app->IsOpened())
         {
-            unsigned int  * cmdSSVEP = new unsigned int(100);
+            unsigned int  * cmdSSVEP1 = new unsigned int(100);
+            unsigned int  * cmdSSVEP2 = new unsigned int(101);
+            unsigned int  * cmdSSVEP3 = new unsigned int(102);
             unsigned int  * cmdP300 = new unsigned int(200);
-            while(*cmdP300 != *cmdSSVEP)
+            while(1 || *cmdP300 != *cmdSSVEP3)
             {
-               SSVEPInterface::AddSquare(7, 60, 125, 5, 390, 255, 0, 0, 255); 
-               SSVEPInterface::AddSquare(12, 60, 765, 5, 390, 255, 0, 0, 255); 
-               SSVEPInterface::AddSquare(5, 60, 125, 405, 390, 255, 0, 0, 255); 
-               SSVEPInterface::AddSquare(9, 60, 765, 405, 390, 255, 0, 0, 255); 
-               SSVEPInterface::DisplayLoop(m_app, cmdSSVEP);
-               std::cout << "First iteration of SSVEPInterface got cmd " << *cmdSSVEP << std::endl;
+               SSVEPInterface::AddSquare(7, 60, 0, 0, 640, 400, 255, 0, 0, 128); 
+               SSVEPInterface::AddSquare(12, 60, 640, 0, 640, 400, 255, 0, 0, 128); 
+               SSVEPInterface::AddSquare(5, 60, 640, 400, 640, 400, 255, 0, 0, 128); 
+               SSVEPInterface::AddSquare(9, 60, 0, 400, 640, 400, 255, 0, 0, 128); 
+               SSVEPInterface::DisplayLoop(m_app, cmdSSVEP1);
+               std::cout << "First iteration of SSVEPInterface got cmd " << *cmdSSVEP1 << std::endl;
                SSVEPInterface::CleanUpSquares();
 
                unsigned int x0, y0;
-               switch(*cmdSSVEP)
+               switch(*cmdSSVEP1)
                {
                    case 1:
-                       x0 = 65; y0 = 5; break;
+                       x0 = 0; y0 = 0; break;
                    case 2:
-                       x0 = 705; y0 = 5; break;
+                       x0 = 640; y0 = 0; break;
                    case 3:
-                       x0 = 65; y0 = 405; break;
+                       x0 = 640; y0 = 400; break;
                    case 4:
-                       x0 = 705; y0 = 405; break;
+                       x0 = 0; y0 = 400; break;
                    default:
-                       x0 = 65; y0 = 5; break;
+                       x0 = 0; y0 = 0; break;
                }
 
-               SSVEPInterface::AddSquare(7, 60, x0, y0, 190, 255, 0, 0, 255); 
-               SSVEPInterface::AddSquare(12, 60, 320+x0, y0, 190, 255, 0, 0, 255); 
-               SSVEPInterface::AddSquare(5, 60, x0, 200+y0, 190, 255, 0, 0, 255); 
-               SSVEPInterface::AddSquare(9, 60, 320+x0, 200+y0, 190, 255, 0, 0, 255); 
-               SSVEPInterface::DisplayLoop(m_app, cmdSSVEP);
-               std::cout << "Second iteration of SSVEPInterface got cmd " << *cmdSSVEP << std::endl;
+               SSVEPInterface::AddSquare(7, 60, x0, y0, 320, 200, 255, 0, 0, 128); 
+               SSVEPInterface::AddSquare(12, 60, 320+x0, y0, 320, 200, 255, 0, 0, 128); 
+               SSVEPInterface::AddSquare(5, 60, 320+x0, 200+y0, 320, 200, 255, 0, 0, 128); 
+               SSVEPInterface::AddSquare(9, 60, x0, 200+y0, 320, 200, 255, 0, 0, 128); 
+               SSVEPInterface::DisplayLoop(m_app, cmdSSVEP2);
+               std::cout << "Second iteration of SSVEPInterface got cmd " << *cmdSSVEP2 << std::endl;
                SSVEPInterface::CleanUpSquares();
 
-               P300Interface::AddObject(new P300Object("7" , x0, y0, 190, 190, 255, 0, 0)); 
-               P300Interface::AddObject(new P300Object("12", 320+x0, y0, 190, 190, 255, 0, 0)); 
-               P300Interface::AddObject(new P300Object("5" , x0, 200+y0, 190, 190, 255, 0, 0)); 
-               P300Interface::AddObject(new P300Object("9" , 320+x0, 200+y0, 190, 190, 255, 0, 0)); 
+               unsigned int x1, y1;
+                switch(*cmdSSVEP2)
+                {
+                    case 1:
+                        x1 = x0; y1 = y0; break;
+                    case 2:
+                        x1 = 320+x0; y1 = y0; break;
+                    case 3:
+                        x1 = 320+x0; y1 = 200+y0; break;
+                    case 4:
+                        x1 = x0; y1 = 200+y0; break;
+                    default:
+                        x1 = x0; y1 = y0; break;
+                }
+
+               SSVEPInterface::AddSquare(7, 60, x1, y1, 160, 100, 255, 0, 0, 128); 
+               SSVEPInterface::AddSquare(12, 60, 160+x1, y1, 160, 100, 255, 0, 0, 128); 
+               SSVEPInterface::AddSquare(5, 60, 160+x1, 100+y1, 160, 100, 255, 0, 0, 128); 
+               SSVEPInterface::AddSquare(9, 60, x1, 100+y1, 160, 100, 255, 0, 0, 128); 
+               SSVEPInterface::DisplayLoop(m_app, cmdSSVEP3);
+               std::cout << "Third iteration of SSVEPInterface got cmd " << *cmdSSVEP3 << std::endl;
+               SSVEPInterface::CleanUpSquares();
+
+               std::stringstream tmp;
+               tmp << "x";
+               P300Interface::AddObject(new P300Object(tmp.str() , x1, y1, 160, 100, 255, 0, 0)); 
+               tmp << "x";
+               P300Interface::AddObject(new P300Object(tmp.str(), 160+x1, y1, 160, 100, 255, 0, 0)); 
+               tmp << "x";
+               P300Interface::AddObject(new P300Object(tmp.str() , 160+x1, 100+y1, 160, 100, 255, 0, 0)); 
+               tmp << "x";
+               P300Interface::AddObject(new P300Object(tmp.str() , x1, 100+y1, 160, 100, 255, 0, 0)); 
+               unsigned int i = 1;
+               for(unsigned int i = 1; i < 5; ++i)
+               {
+                    switch(i)
+                    {
+                        case 1:
+                            x0 = 0; y0 = 0; break;
+                        case 2:
+                            x0 = 640; y0 = 0; break;
+                        case 3:
+                            x0 = 640; y0 = 400; break;
+                        case 4:
+                            x0 = 0; y0 = 400; break;
+                        default:
+                            x0 = 0; y0 = 0; break;
+                    }
+                    for(unsigned int j = 1; j < 5; ++j)
+                    {
+                        switch(j)
+                        {
+                            case 1:
+                                x1 = x0; y1 = y0; break;
+                            case 2:
+                                x1 = 320+x0; y1 = y0; break;
+                            case 3:
+                                x1 = 320+x0; y1 = 200+y0; break;
+                            case 4:
+                                x1 = x0; y1 = 200+y0; break;
+                            default:
+                                x1 = x0; y1 = y0; break;
+                        }
+                        if( ! (i == *cmdSSVEP2 && j == *cmdSSVEP3) )
+                        {
+                            tmp << "x";
+                            P300Interface::AddObject(new P300Object(tmp.str() , x0, y0, 320, 200, 255, 0, 0)); 
+                            tmp << "x";
+                            P300Interface::AddObject(new P300Object(tmp.str(), 320+x0, y0, 320, 200, 255, 0, 0)); 
+                            tmp << "x";
+                            P300Interface::AddObject(new P300Object(tmp.str() , 320+x0, 200+y0, 320, 200, 255, 0, 0)); 
+                            tmp << "x";
+                            P300Interface::AddObject(new P300Object(tmp.str() , x0, 200+y0, 320, 200, 255, 0, 0)); 
+                        }
+                    }
+               }
+               
                P300Interface::DisplayLoop(m_app, cmdP300);
                std::cout << "P300 got cmd " << *cmdP300 << std::endl;
                P300Interface::ClearObjects();
+
             }   
 
-            delete cmdSSVEP;
+            delete cmdSSVEP1;
+            delete cmdSSVEP2;
+            delete cmdSSVEP3;
             delete cmdP300;
             m_app->Close();
         }
@@ -149,9 +228,9 @@ void HybridInterface::AddSquare(FlickeringSquare * square)
     m_impl->AddSquare(square);
 }
 
-void HybridInterface::AddSquare(int frequency, int screenFrequency, float x, float y, float size, int r, int g, int b, int a)
+void HybridInterface::AddSquare(int frequency, int screenFrequency, float x, float y, float size_x, float size_y, int r, int g, int b, int a)
 {
-    m_impl->AddSquare(frequency, screenFrequency, x, y, size, r, g, b, a);
+    m_impl->AddSquare(frequency, screenFrequency, x, y, size_x, size_y, r, g, b, a);
 }
 
 } // namespace bciinterface

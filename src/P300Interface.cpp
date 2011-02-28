@@ -43,11 +43,11 @@ public:
         {
             m_training = true;
             m_trainingset.push_back(3);
-//            m_trainingset.push_back(14);
-//            m_trainingset.push_back(18);
-//            m_trainingset.push_back(19);
-//            m_trainingset.push_back(27);
-//            m_trainingset.push_back(1);
+            m_trainingset.push_back(14);
+            m_trainingset.push_back(18);
+            m_trainingset.push_back(19);
+            m_trainingset.push_back(27);
+            m_trainingset.push_back(1);
         }
     }
     ~P300InterfaceImpl()
@@ -246,6 +246,10 @@ public:
                 {
                     /* Just draw the background when in pause */
                     frameCount++;
+                    if(frameCount == 10000 && cmdOut)
+                    {
+                        m_close = true;
+                    }
                     Display(m_cmd - 1);
                 }
                 else
@@ -283,8 +287,8 @@ public:
                         *cmdOut = m_cmd; 
                     }
                     std::cerr << "Got cmd " << m_cmd << std::endl;
-                    m_cmd = (m_cmd % 4) + 1;
                     m_pause = true;
+                    frameCount = 0;
                 }
             }
         }

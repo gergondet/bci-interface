@@ -24,7 +24,7 @@ int main(int argc, char * argv[])
     bool fullscreen = false;
     int winW = 1280;
     int winH = 800;
-    HybridInterface * interface = new HybridInterface(winW, winH, 1);
+    HybridInterface * interface = new HybridInterface(winW, winH, 2);
 
     void (HybridInterface::*fn)(bool) = &HybridInterface::DisplayLoop;
     boost::thread th(fn, interface, fullscreen);

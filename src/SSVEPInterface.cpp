@@ -69,9 +69,9 @@ struct SSVEPInterfaceImpl
             }
         }
 
-        void AddSquare(int frequency, int screenFrequency, float x, float y, float size, int r, int g, int b, int a)
+        void AddSquare(int frequency, int screenFrequency, float x, float y, float size_x, float size_y, int r, int g, int b, int a)
         {
-            FlickeringSquare * square = new FlickeringSquare(frequency, screenFrequency, x, y, size, r, g, b, a);
+            FlickeringSquare * square = new FlickeringSquare(frequency, screenFrequency, x, y, size_x, size_y, r, g, b, a);
             AddSquare(square);
         }
 
@@ -328,9 +328,9 @@ void SSVEPInterface::AddSquare(FlickeringSquare * square)
     m_impl->AddSquare(square);
 }
 
-void SSVEPInterface::AddSquare(int frequency, int screenFrequency, float x, float y, float size, int r, int g, int b, int a)
+void SSVEPInterface::AddSquare(int frequency, int screenFrequency, float x, float y, float size_x, float size_y, int r, int g, int b, int a)
 {
-    m_impl->AddSquare(frequency, screenFrequency, x, y, size, r, g, b, a);
+    m_impl->AddSquare(frequency, screenFrequency, x, y, size_x, size_y, r, g, b, a);
 }
 
 void SSVEPInterface::CleanUpSquares()

@@ -23,7 +23,7 @@ public:
 
     SSVEPINTERFACE_API void AddSquare(FlickeringSquare * square);
 
-    SSVEPINTERFACE_API void AddSquare(int frequency, int screenFrequency, float x, float y, float size = 100, int r = 255, int g = 0, int b = 0, int a = 255);
+    SSVEPINTERFACE_API void AddSquare(int frequency, int screenFrequency, float x, float y, float size_x = 100, float size_y = 100, int r = 255, int g = 0, int b = 0, int a = 255);
 
     SSVEPINTERFACE_API void CleanUpSquares();
 
