@@ -46,6 +46,9 @@ public:
 
     P300INTERFACE_API void StartP300Client(const std::string & serverName, unsigned short serverPort);
 
+    /* After each decision the interface is paused and should be relaunched like this */
+    P300INTERFACE_API void ResumeP300Client();
+
     /* Interface related functions */
 
     P300INTERFACE_API void SetBackgroundSprite(BackgroundSprite * sprite);
@@ -56,7 +59,7 @@ public:
     /* Expect a w*h grayscale buffer */
     P300INTERFACE_API void UpdateBackground(unsigned char * img);
 
-    P300INTERFACE_API void DisplayLoop(sf::RenderWindow * app);
+    P300INTERFACE_API void DisplayLoop(sf::RenderWindow * app, unsigned int * cmdOut = 0);
 
     P300INTERFACE_API void DisplayLoop(bool fullscreen = true);
 

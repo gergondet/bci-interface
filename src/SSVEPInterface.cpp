@@ -86,10 +86,19 @@ struct SSVEPInterfaceImpl
             }
         }
 
-        void AddSquare(int frequency, int screenFrequency, float x, float y, float size, int r, int g, int b, int a)
+        void AddSquare(int frequency, int screenFrequency, float x, float y, float size_x, float size_y, int r, int g, int b, int a)
         {
-            FlickeringSquare * square = new FlickeringSquare(frequency, screenFrequency, x, y, size, r, g, b, a);
+            FlickeringSquare * square = new FlickeringSquare(frequency, screenFrequency, x, y, size_x, size_y, r, g, b, a);
             AddSquare(square);
+        }
+
+        void CleanUpSquares()
+        {
+            for(size_t i = 0; i < m_squares.size(); ++i)
+            {
+                delete m_squares[i];
+            }
+            m_squares.resize(0);
         }
 
         void AddCursor(MoovingCursor * moovingCursor)
@@ -173,7 +182,14 @@ struct SSVEPInterfaceImpl
             }
         }
 
-        void DisplayLoop(sf::RenderWindow * appin)
+        void SetCoshellCommands(const std::vector<std::string> & commands)
+        {
+            #ifdef WITH_COSHELL
+            m_coshellBCI->SetCoshellCommands(commands);
+            #endif
+        }
+
+        void DisplayLoop(sf::RenderWindow * appin, unsigned int * cmd, float timeout)
         {
             if(!m_backgroundsprite)
             {
@@ -182,8 +198,10 @@ struct SSVEPInterfaceImpl
             }
 
             app = appin;
+    
+            DisplayLoop(cmd, timeout);
 
-            DisplayLoop();
+//            m_coshellrunning = false;
 
             app = 0;
         }
@@ -213,7 +231,7 @@ struct SSVEPInterfaceImpl
             app->Close();
         }
 
-        void DisplayLoop()
+        void DisplayLoop(unsigned int * cmdOut = 0, float timeout = 0)
         {
             unsigned int frameCount = 0;
             sf::Clock clock;
@@ -232,6 +250,7 @@ struct SSVEPInterfaceImpl
             #endif
 
             bcimw::SSVEP_COMMAND bcicmd = bcimw::NONE;
+            coshellTh = new boost::thread(boost::bind(&coshellbci::CoshellBCI::CommandLoop, m_coshellBCI));
 
             while(!closeRequest && app->IsOpened())
             {
@@ -263,8 +282,8 @@ struct SSVEPInterfaceImpl
                     {
                         if(not m_coshellrunning)
                         {
-                            coshellTh = new boost::thread(boost::bind(&coshellbci::CoshellBCI::CommandLoop, m_coshellBCI));
                             m_coshellrunning = true;
+                            m_coshellBCI->ActiveCoshell();
                         }
                         else
                         {
@@ -277,6 +296,10 @@ struct SSVEPInterfaceImpl
         
                 #ifdef WITH_COSHELL
                 bcicmd = m_coshellBCI->GetCurrentCommand();
+                if(clock.GetElapsedTime() < timeout)
+                {
+                    bcicmd = (bcimw::SSVEP_COMMAND)0; /* ignore command while in timeout period */
+                }
                 #endif
 
                 sf::Sprite * sprite = m_backgroundsprite->GetSprite();
@@ -337,6 +360,7 @@ struct SSVEPInterfaceImpl
                     if((unsigned int)bcicmd == i+1)
                     {
                         m_squares[i]->Highlight();
+                        if(cmdOut && m_coshellrunning) { *cmdOut = (unsigned int)bcicmd; closeRequest = true; }
                     }
                     else
                     {
@@ -359,7 +383,7 @@ struct SSVEPInterfaceImpl
         
             }
             fpsLog.close();
-            if(!m_updatebackgroundmanually)
+            if(!m_updatebackgroundmanually && !cmdOut)
             {
                 m_backgroundsprite->Close();
                 if(th)
@@ -393,9 +417,14 @@ void SSVEPInterface::AddSquare(FlickeringSquare * square)
     m_impl->AddSquare(square);
 }
 
-void SSVEPInterface::AddSquare(int frequency, int screenFrequency, float x, float y, float size, int r, int g, int b, int a)
+void SSVEPInterface::AddSquare(int frequency, int screenFrequency, float x, float y, float size_x, float size_y, int r, int g, int b, int a)
 {
-    m_impl->AddSquare(frequency, screenFrequency, x, y, size, r, g, b, a);
+    m_impl->AddSquare(frequency, screenFrequency, x, y, size_x, size_y, r, g, b, a);
+}
+
+void SSVEPInterface::CleanUpSquares()
+{
+    m_impl->CleanUpSquares();
 }
 
 void SSVEPInterface::AddCursor(float x_init, float y_init, float size, float x_fin, int r, int g, int b, int a)
@@ -455,9 +484,14 @@ void SSVEPInterface::EnableFlash(bool enable)
     m_impl->EnableFlash(enable);
 }
 
-void SSVEPInterface::DisplayLoop(sf::RenderWindow * app)
+void SSVEPInterface::SetCoshellCommands(const std::vector<std::string> & commands)
 {
-    m_impl->DisplayLoop(app);
+    m_impl->SetCoshellCommands(commands);
+}
+
+void SSVEPInterface::DisplayLoop(sf::RenderWindow * app, unsigned int * cmd, float timeout)
+{
+    m_impl->DisplayLoop(app, cmd, timeout);
 }
 
 void SSVEPInterface::DisplayLoop(bool fullScreen)

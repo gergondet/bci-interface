@@ -1,11 +1,8 @@
-/*  File    : sfun_counter_cpp.cpp
+/*  File    : sfun_p300_interface.cpp
  *  Abstract:
  *
- *      Example of an C++ S-function which stores an C++ object in
- *      the pointers vector PWork.
- *
- *  Copyright 1990-2009 The MathWorks, Inc.
- *  $Revision: 1.1.6.1 $
+ *     Interface between a remote P300 interface and matlab processing laptop 
+ *      
  */
 
 #include <fstream>
@@ -21,7 +18,9 @@
 #define S_FUNCTION_NAME  sfun_p300_interface
 
 unsigned int IN_result = 0;
+unsigned int OUT_result = 0;
 unsigned int IN_flash = 0;
+bool IN_stop = false;
 
 double IN_mode = 1; /* 1 : training mode ,  2 : free mode */
 
@@ -32,7 +31,7 @@ std::ofstream debug("debug.log");
 class P300Server
 {
 public:
-    P300Server(unsigned short port) : m_close(false) , m_result(0)
+    P300Server(unsigned short port) : has_client(false), m_close(false) , m_result(0)
     {
         WSAStartup(0x0202, &w);
         addr.sin_family = AF_INET;
@@ -45,7 +44,7 @@ public:
     ~P300Server()
     {
         m_close = true;
-        if(th) { th->join(); }
+        if(th) { th->interrupt(); }
         closesocket(cSocket);
         closesocket(sSocket);
         WSACleanup();
@@ -53,25 +52,49 @@ public:
 
     void SendFlashID(unsigned int flashID)
     {
-        std::stringstream ss;
-        ss << flashID;
-        int err = send(cSocket, ss.str().c_str(), ss.str().size() + 1, 0);
-		debug << "send return " << err << " for flashID " << flashID << std::endl;
+		if(has_client)
+		{
+			std::stringstream ss;
+			ss << flashID;
+			int err = send(cSocket, ss.str().c_str(), ss.str().size() + 1, 0);
+			debug << "send return " << err << " for flashID " << flashID << std::endl;
+		}
     }
 
     void SendResult(unsigned int result)
     {
-        std::stringstream ss;
-        ss << result;
-        int err = send(cSocket, ss.str().c_str(), ss.str().size() + 1, 0);
-		debug << "send return " << err << " for result " << result << std::endl;
+		if(has_client)
+		{
+			std::stringstream ss;
+			ss << result;
+			int err = send(cSocket, ss.str().c_str(), ss.str().size() + 1, 0);
+			debug << "send return " << err << " for result " << result << std::endl;
+		}
+    }
+
+    void Resume()
+    {
+		debug << "Resume waiting for client" << std::endl;
+		while(!has_client) { Sleep(100); }
+        debug << "Waiting for resume message" << std::endl;
+        char buffer[256];
+        int err = recv(cSocket, buffer, 256, 0);
+        debug << "Got resume message " << buffer << std::endl;
+        std::string stop(buffer);
+        if(stop == "resume")
+        {
+            debug << "Switching IN_stop to false" << std::endl;
+            IN_stop = false;
+            OUT_result = 0;
+        }
     }
 
     void GetClient()
     {
-		listen(sSocket, 1);
+        listen(sSocket, 1);
         cSocket =  accept(sSocket, 0, 0);
-		debug << "Got a client" << std::endl;
+        debug << "Got a client" << std::endl;
+		has_client = true;
     }
 
 private:
@@ -79,6 +102,7 @@ private:
     WSADATA w;
     SOCKET cSocket;
     sockaddr_in addr;
+	bool has_client;
     bool m_close;
     unsigned int m_result;
 };
@@ -102,15 +126,19 @@ static void mdlInitializeSizes(SimStruct *S)
     ssSetNumContStates(S, 0);
     ssSetNumDiscStates(S, 0);
 
-    if (!ssSetNumInputPorts(S, 2)) return;
-    for(int i = 0; i < 2; ++i)
+    if (!ssSetNumInputPorts(S, 3)) return;
+    for(int i = 0; i < 3; ++i)
     {
-    	ssSetInputPortWidth(S, i, 1);
-	    ssSetInputPortDirectFeedThrough(S, i, 1);
-    	ssSetInputPortRequiredContiguous(S,i,1);
+        ssSetInputPortWidth(S, i, 1);
+        ssSetInputPortDirectFeedThrough(S, i, 1);
+        ssSetInputPortRequiredContiguous(S,i,1);
     }
     
-    if (!ssSetNumOutputPorts(S, 0)) return;
+    if (!ssSetNumOutputPorts(S, 2)) return;
+    for(int i = 0; i < 2; ++i)
+    {
+        ssSetOutputPortWidth(S, i, 1);
+    }
 
     ssSetNumSampleTimes(S, 1);
     ssSetNumRWork(S, 0);
@@ -141,10 +169,12 @@ static void mdlStart(SimStruct *S)
     th = new boost::thread(boost::bind(&P300Server::GetClient, m_p300server));
 
     IN_mode = mxGetPr(ssGetSFcnParam(S,0))[0];
-	debug << "MODE " << IN_mode << std::endl;
+    debug << "MODE " << IN_mode << std::endl;
 
     IN_result = 0;
+    OUT_result = 0;
     IN_flash  = 0;
+    IN_stop = false;
 
 }                                            
 #endif /*  MDL_START */
@@ -152,18 +182,34 @@ static void mdlStart(SimStruct *S)
 
 static void mdlOutputs(SimStruct *S, int_T tid)
 {
-	const real_T* u  = ssGetInputPortRealSignal(S,0);
-	unsigned int result = (unsigned int)u[0];
-	if( result != IN_result )
-	{
-		debug << "NEW RESULT " << result << std::endl;
-		IN_result = result;
+    const real_T* u  = ssGetInputPortRealSignal(S,0);
+    unsigned int result = (unsigned int)u[0];
+    if( result != IN_result )
+    {
+        debug << "NEW RESULT " << result << std::endl;
+        IN_result = result;
         if(IN_result != 0)
         {
             m_p300server->SendResult(IN_result);
+            th = new boost::thread(boost::bind(&P300Server::Resume, m_p300server));
         }
-	}
-	
+    }
+    if(IN_mode == 1)
+    {
+        /* In training copy the input to the output */
+        OUT_result = IN_result;
+    }
+    else
+    {
+        /* Else hold on to the non-zero value until system unpaused */
+        if(IN_result != 0)
+        {
+            OUT_result = IN_result;
+        }
+    }
+    real_T * y = ssGetOutputPortRealSignal(S,1);
+    y[0] = OUT_result;
+    
     u = ssGetInputPortRealSignal(S, 1);
     unsigned int flash = (unsigned int)u[0];
     if( flash != IN_flash )
@@ -175,7 +221,35 @@ static void mdlOutputs(SimStruct *S, int_T tid)
             m_p300server->SendFlashID(flash);
         }
     }
-	
+
+    if(IN_mode == 2) 
+    {
+        u = ssGetInputPortRealSignal(S, 2);
+        bool stop = (bool)u[0];
+        if( IN_stop != stop && stop )
+        {
+            IN_stop = stop;
+        }
+        if( IN_stop )
+        {
+            real_T * y = ssGetOutputPortRealSignal(S,0);
+            y[0] = true;
+        }
+        else
+        {
+            real_T * y = ssGetOutputPortRealSignal(S,0);
+            y[0] = false;
+        }
+    }
+    else
+    {
+        u = ssGetInputPortRealSignal(S, 2);
+        bool stop = (bool)u[0];
+        IN_stop = stop;
+        real_T * y = ssGetOutputPortRealSignal(S,0);
+        y[0] = IN_stop;
+    }
+    
     UNUSED_ARG(tid);                             
 }                                                
 
