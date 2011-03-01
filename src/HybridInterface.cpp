@@ -56,10 +56,37 @@ public:
 
         while(m_app->IsOpened())
         {
-            SSVEPInterface::AddSquare(new FlickeringSquare(7,60, (2*x+1)*m_width/10-75, (2*y-1)*m_height/10-75, 150, 150, 255, 0, 0, 128, true));
-            SSVEPInterface::AddSquare(new FlickeringSquare(12,60,(2*x+3)*m_width/10-75, (2*y+1)*m_height/10-75, 150, 150, 255, 0, 0, 128, true));
-            SSVEPInterface::AddSquare(new FlickeringSquare(5,60, (2*x+1)*m_width/10-75, (2*y+3)*m_height/10-75, 150, 150, 255, 0, 0, 128, true));
-            SSVEPInterface::AddSquare(new FlickeringSquare(9,60, (2*x-1)*m_width/10-75, (2*y+1)*m_height/10-75, 150, 150, 255, 0, 0, 128, true));
+            unsigned int zeroFrequency = 0;
+            unsigned int zeroCommand = 0;
+            if( y != 0 )
+            {
+                /* up */
+                SSVEPInterface::AddSquare(new FlickeringSquare(7,60, (2*x+1)*m_width/10-75, (2*y-1)*m_height/10-75, 150, 150, 255, 0, 0, 128, true));
+            }
+            else { zeroFrequency = 7; zeroCommand = 1; }
+            if( x != 4 )
+            {
+                /* right */
+                SSVEPInterface::AddSquare(new FlickeringSquare(12,60,(2*x+3)*m_width/10-75, (2*y+1)*m_height/10-75, 150, 150, 255, 0, 0, 128, true));
+            }
+            else { zeroFrequency = 12; zeroCommand = 2; }
+            if( y != 4 )
+            {
+                /* down */
+                SSVEPInterface::AddSquare(new FlickeringSquare(5,60, (2*x+1)*m_width/10-75, (2*y+3)*m_height/10-75, 150, 150, 255, 0, 0, 128, true));
+            }
+            else { zeroFrequency = 5; zeroCommand = 3; }
+            if( x != 0 )
+            {
+                /* left */
+                SSVEPInterface::AddSquare(new FlickeringSquare(9,60, (2*x-1)*m_width/10-75, (2*y+1)*m_height/10-75, 150, 150, 255, 0, 0, 128, true));
+            }
+            else { zeroFrequency = 9; zeroCommand = 4; }
+            if( zeroFrequency != 0 )
+            {
+                /* center square to go back to zero speed quickly */
+                SSVEPInterface::AddSquare(new FlickeringSquare(zeroFrequency,60, m_width/2-75, m_height/2-75, 150, 150, 255, 0, 0, 128, true));
+            }
             SSVEPInterface::DisplayLoop(m_app, cmdSSVEP, timeout);
             switch(*cmdSSVEP)
             {
@@ -78,17 +105,22 @@ public:
                 default:
                     break;
             } 
+            if(zeroCommand != 0 && *cmdSSVEP == zeroCommand )
+            {
+                x = 2;
+                y = 2;
+            }
 
             std::vector<std::string> newCommands;
             newCommands.resize(5);
             newCommands[0] = GenerateCommand(x, y);
-            if( y == 0 ) { newCommands[1] = GenerateCommand(x, y); }
+            if( y == 0 ) { newCommands[1] = GenerateCommand(2, 2); }
             else { newCommands[1] = GenerateCommand(x, y - 1); }
-            if( x == 4 ) { newCommands[2] = GenerateCommand(x, y); }
+            if( x == 4 ) { newCommands[2] = GenerateCommand(2, 2); }
             else { newCommands[2] = GenerateCommand(x+1, y); }
-            if( y == 4 ) { newCommands[3] = GenerateCommand(x, y); }
+            if( y == 4 ) { newCommands[3] = GenerateCommand(2, 2); }
             else { newCommands[3] = GenerateCommand(x, y+1); }
-            if( x == 0 ) { newCommands[4] = GenerateCommand(x, y); }
+            if( x == 0 ) { newCommands[4] = GenerateCommand(2, 2); }
             else { newCommands[4] = GenerateCommand(x-1, y); } 
             SSVEPInterface::SetCoshellCommands(newCommands);
 
