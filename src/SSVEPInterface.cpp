@@ -50,17 +50,19 @@ struct SSVEPInterfaceImpl
         coshellbci::CoshellBCI * m_coshellBCI;
         bool m_coshellrunning;
         #endif
+        boost::thread * m_backgroundTh;
     public:
         SSVEPInterfaceImpl(unsigned int width, unsigned int height) : 
             m_backgroundsprite(0), m_updatebackgroundmanually(false),
             m_width(width), m_height(height), 
             closeRequest(false), 
             fpsLog("fps.log"), app(0), compt_begin(0), compt_point(0),
-            indicePos(0), nextPosition(false), previousPosition(false)
+            indicePos(0), nextPosition(false), previousPosition(false),
             #ifdef WITH_COSHELL
-            , m_coshellBCI(new coshellbci::CoshellBCI("hrp2010c", 2809, 1111)), 
-            m_coshellrunning(false)
+            m_coshellBCI(new coshellbci::CoshellBCI("hrp2010c", 2809, 1111)), 
+            m_coshellrunning(false),
             #endif
+            m_backgroundTh(0)
         {
             m_squares.resize(0);
             position.resize(2);
@@ -76,6 +78,15 @@ struct SSVEPInterfaceImpl
             #ifdef WITH_COSHELL
             delete m_coshellBCI;
             #endif
+            if(m_backgroundsprite)
+            {
+                m_backgroundsprite->Close();
+                if(m_backgroundTh)
+                {
+                    m_backgroundTh->join();
+                    delete m_backgroundTh;
+                }
+            }
         }
 
         void AddSquare(FlickeringSquare * square)
@@ -237,11 +248,10 @@ struct SSVEPInterfaceImpl
             sf::Clock clock;
             closeRequest = false;
 
-            boost::thread * th = 0;
-            if(!m_updatebackgroundmanually)
+            if( !m_updatebackgroundmanually && !m_backgroundTh )
             {
                 m_backgroundsprite->Initialize();
-                th = new boost::thread(boost::bind(&BackgroundSprite::UpdateLoop, m_backgroundsprite));
+                m_backgroundTh = new boost::thread(boost::bind(&BackgroundSprite::UpdateLoop, m_backgroundsprite));
             }
 
             #ifdef WITH_COSHELL
@@ -388,10 +398,10 @@ struct SSVEPInterfaceImpl
             if(!m_updatebackgroundmanually && !cmdOut)
             {
                 m_backgroundsprite->Close();
-                if(th)
+                if(m_backgroundTh)
                 {
-                    th->join();
-                    delete th;
+                    m_backgroundTh->join();
+                    delete m_backgroundTh;
                 }
             }
             #ifdef WITH_COSHELL
