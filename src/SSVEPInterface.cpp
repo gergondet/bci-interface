@@ -308,8 +308,9 @@ struct SSVEPInterfaceImpl
                     sprite->Resize(m_width, m_height);
                     app->Draw(*sprite);
                 }
-
-/*				cursor taking each position when asked by pressing P key or O key*/
+			if(m_points.size() >= 1)
+			{
+/*				flickering square taking each position when asked by pressing P key or O key*/
 				if (m_squares.size() >=2 && m_squares[1]->SquareDisplay() && m_squares[0]->SquareDisplay()){
 					if (nextPosition){
 						if (indicePos<m_positionsTabLeft.size()-1) indicePos++;
@@ -329,7 +330,8 @@ struct SSVEPInterfaceImpl
 						m_squares[0]->SetSquareX(m_width - 175);
 					}
 				}
-				app->Draw(*(m_points[0]->GetPoint()));
+					app->Draw(*(m_points[0]->GetPoint()));
+			}
 
 
 /*				cursor taking each position when asked by pressing P key or O key*/
