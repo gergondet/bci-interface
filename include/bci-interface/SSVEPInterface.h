@@ -57,6 +57,8 @@ public:
 
     SSVEPINTERFACE_API void SetCoshellCommands(const std::vector<std::string> & commands);
 
+    SSVEPINTERFACE_API void SendCoshellCommand(int cmd);
+
     SSVEPINTERFACE_API void DisplayLoop(sf::RenderWindow * app, unsigned int * cmd = 0, float timeout = 0);
 
     SSVEPINTERFACE_API void DisplayLoop(bool fullScreen = true);

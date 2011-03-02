@@ -1,4 +1,5 @@
 #include <bci-interface/HybridInterface.h>
+#include <bci-middleware/SSVEPReceiver.h>
 #include <iostream>
 #include <sstream>
 
@@ -56,6 +57,7 @@ public:
 
         while(m_app->IsOpened())
         {
+            SSVEPInterface::SendCoshellCommand((bcimw::SSVEP_COMMAND)0);
             unsigned int zeroFrequency = 0;
             unsigned int zeroCommand = 0;
             if( y != 0 )

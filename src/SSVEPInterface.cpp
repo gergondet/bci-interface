@@ -200,6 +200,13 @@ struct SSVEPInterfaceImpl
             #endif
         }
 
+        void SendCoshellCommand(int cmd)
+        {
+            #ifdef WITH_COSHELL
+            m_coshellBCI->SendCommand((bcimw::SSVEP_COMMAND)cmd);
+            #endif
+        }
+
         void DisplayLoop(sf::RenderWindow * appin, unsigned int * cmd, float timeout)
         {
             if(!m_backgroundsprite)
@@ -499,6 +506,11 @@ void SSVEPInterface::EnableFlash(bool enable)
 void SSVEPInterface::SetCoshellCommands(const std::vector<std::string> & commands)
 {
     m_impl->SetCoshellCommands(commands);
+}
+
+void SSVEPInterface::SendCoshellCommand(int cmd)
+{
+    m_impl->SendCoshellCommand(cmd);
 }
 
 void SSVEPInterface::DisplayLoop(sf::RenderWindow * app, unsigned int * cmd, float timeout)
