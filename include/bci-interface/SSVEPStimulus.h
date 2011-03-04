@@ -1,14 +1,15 @@
-/*! \brief FlickeringSquare class 
+/*! \brief SSVEPStimulus class 
  * \author Pierre Gergondet
  * Copyright: JRL, CNRS-AIST
  * Date: 16/11/2010
  */
 
-#ifndef _H_FLICKERINGSQUARE_H_
-#define _H_FLICKERINGSQUARE_H_
+#ifndef _H_SSVEPSTIMULUS_H_
+#define _H_SSVEPSTIMULUS_H_
+
+#include <bci-interface/DisplayObject.h>
 
 #include <boost/shared_ptr.hpp>
-#include <SFML/Graphics.hpp>
 
 #ifdef WIN32
 #define SSVEPINTERFACE_API __declspec(dllexport)
@@ -19,41 +20,31 @@
 namespace bciinterface
 {
 
-struct FlickeringSquareImpl;
+struct SSVEPStimulusImpl;
 
-class FlickeringSquare
+class SSVEPStimulus : 
 {
 public:
     /*! \brief Constructor */ 
-    SSVEPINTERFACE_API FlickeringSquare(int frequency, int screenFrequency, float x = 0, float y = 0, float size_x = 100, float size_y = 100, int r = 255, int g = 0, int b = 0, int a = 255, bool fill = true);
+    SSVEPINTERFACE_API SSVEPStimulus(int frequency, int screenFrequency, float x = 0, float y = 0, float size_x = 100, float size_y = 100, int r = 255, int g = 0, int b = 0, int a = 255);
 
     /* \brief Change flickering frequency */
     bool ChangeFrequency(int frequency, int screenFrequency);
 
-    /*! \brief Function to be called in the main program loop, make the flicker happens ! */
-    void UpdateForNewFrame(unsigned int frameIndex);
-
-    /*! \brief True: display square, flase: do not display square */
-    void SetSquareDisplay(bool const display);
-
-    bool SquareDisplay();
-
-    /*! \brief Get the actual shape */
-    sf::Shape * GetShape();
-
-    sf::Shape * GetBlackShape();
-
-    /*! \brief Hight the square by changing outline color */
+    /*! \brief Highlight the stimulus by changing outline color */
     void Highlight();
 
-    /*! \brief Change outline color back to normal */
+    /*! \brief Unhighlight the stimulus */
     void Unhighlight();
 
     /*Change position of the square*/
-    void SetSquareX(float positionX);
+    void Move(float diffX, float diffY);
+
+    /* Display function */
+    void Display(sf::RenderWindow * app, unsigned int frameCount = 0);
 
 private:
-    boost::shared_ptr<FlickeringSquareImpl> m_flsqimpl;
+    boost::shared_ptr<SSVEPStimulusImpl> m_impl;
 };
 
 }
