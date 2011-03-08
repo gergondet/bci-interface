@@ -84,7 +84,10 @@ public:
 
     void Display(sf::RenderWindow * app, unsigned int frameCount)
     {
-
+        if(m_frameSeq[frameCount % m_screenFrequency])
+        {
+            app->Draw(m_shape);
+        }
     }
 
 }; //class SSVEPStimulusImpl
