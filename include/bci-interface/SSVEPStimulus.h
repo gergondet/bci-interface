@@ -22,7 +22,7 @@ namespace bciinterface
 
 struct SSVEPStimulusImpl;
 
-class SSVEPStimulus : 
+class SSVEPStimulus : public DisplayObject
 {
 public:
     /*! \brief Constructor */ 
