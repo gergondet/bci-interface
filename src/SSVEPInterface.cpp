@@ -59,7 +59,7 @@ struct SSVEPInterfaceImpl
             fpsLog("fps.log"), app(0), compt_begin(0), compt_point(0),
             indicePos(0), nextPosition(false), previousPosition(false),
             #ifdef WITH_COSHELL
-            m_coshellBCI(new coshellbci::CoshellBCI("hrp2010c", 2809, 1111)), 
+            m_coshellBCI(new coshellbci::CoshellBCI("192.168.140.2", 2809, 1111)), 
             m_coshellrunning(false),
             #endif
             m_backgroundTh(0)
@@ -267,7 +267,14 @@ struct SSVEPInterfaceImpl
             #endif
 
             bcimw::SSVEP_COMMAND bcicmd = bcimw::NONE;
-            coshellTh = new boost::thread(boost::bind(&coshellbci::CoshellBCI::CommandLoop, m_coshellBCI));
+            if(cmdOut)
+            {
+                coshellTh = new boost::thread(boost::bind(&coshellbci::CoshellBCI::CommandLoop, m_coshellBCI, false));
+            }
+            else    
+            {
+                coshellTh = new boost::thread(boost::bind(&coshellbci::CoshellBCI::CommandLoop, m_coshellBCI, true));
+            }
 
             while(!closeRequest && app->IsOpened())
             {

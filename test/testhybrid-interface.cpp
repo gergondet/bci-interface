@@ -21,7 +21,7 @@ using namespace bciinterface;
 
 int main(int argc, char * argv[])
 {
-    bool fullscreen = false;
+    bool fullscreen = true;
     int winW = 1280;
     int winH = 800;
     HybridInterface * interface = new HybridInterface(winW, winH, 2);

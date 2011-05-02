@@ -42,19 +42,19 @@ int main(int argc, char * argv[])
     }
     else
     {
-        int winW = 1600;
-        int winH = 1200;
+        int winW = 1280;
+        int winH = 800;
 
         interface = new SSVEPInterface(winW, winH);
 
 
         /*(int frequency, int screenFrequency, float x, float y, float size, int r, int g, int b, int a, bool fill)*/
-//        interface->AddSquare(new FlickeringSquare(5,60, winW/2-75, 50, 150, 255, 0, 0, 255, true));
-        interface->AddSquare(new FlickeringSquare(7,60, 0, winH/2-75, 150, 255, 0, 0, 255, true));
-//        interface->AddSquare(new FlickeringSquare(9,60, winW/2-75, winH-200, 150, 255, 0, 0, 255, true));
-        interface->AddSquare(new FlickeringSquare(12,60, 0, winH/2-75, 150, 255, 0, 0, 255, true));
+        interface->AddSquare(new FlickeringSquare(7,60, winW/2-75, 50, 150, 150, 255, 0, 0, 255, true));
+        interface->AddSquare(new FlickeringSquare(12,60, winW-225, winH/2-75, 150, 150, 255, 0, 0, 255, true));
+        interface->AddSquare(new FlickeringSquare(5,60, winW/2-75, winH-200, 150, 150, 255, 0, 0, 255, true));
+        interface->AddSquare(new FlickeringSquare(9,60, 75, winH/2-75, 150, 150, 255, 0, 0, 255, true));
 
-        interface->ClearPositionsTabs();
+//        interface->ClearPositionsTabs();
         /*interface->AddPositionsTab(25);
         interface->AddPositionsTab(100+(winW-350)/6);
         interface->AddPositionsTab(100+2*(winW-350)/6);
@@ -63,16 +63,16 @@ int main(int argc, char * argv[])
         interface->AddPositionsTab(100+5*(winW-350)/6);*/
 
         /*(float posXSquareLeft, float posXSquareRight, float size, int numPos)*/
-        interface->AddPositionsTab(25, winW - 175, 150, 6);
+//        interface->AddPositionsTab(25, winW - 175, 150, 6);
 
         /*(x, y, size, final_position, r, g, b, a)*/
         //interface->AddCursor(new MoovingCursor(0, winH/2-50, 150, 0, 255, 0, 0, 255));
 
         /*( x, y, size, period, r, g, b, a)*/
-        interface->AddPoint(new RandomPoint(winW/2-5, winH/2-5, 10, 100000, 0, 255, 0, 255));
+//        interface->AddPoint(new RandomPoint(winW/2-5, winH/2-5, 10, 100000, 0, 255, 0, 255));
     }
 
-    BackgroundSprite * background = new BackgroundSprite("hrp2010v", 4242, 640, 480);
+    BackgroundSprite * background = new BackgroundSprite("192.168.140.1", 4242, 160, 120);
     interface->SetBackgroundSprite(background);
     void (SSVEPInterface::*fn)(bool) = &SSVEPInterface::DisplayLoop;
     boost::thread th(fn, interface, fullscreen);

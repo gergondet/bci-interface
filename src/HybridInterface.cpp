@@ -19,7 +19,7 @@ public:
         m_backgroundsprite(0), m_app(0)
     {
         StartP300Client("150.29.145.150", 4242);
-        m_backgroundsprite = new BackgroundSprite("hrp2010v", 4242, 640, 480);
+        m_backgroundsprite = new BackgroundSprite("192.168.140.1", 4242, 160, 120);
         SSVEPInterface::SetBackgroundSprite(m_backgroundsprite);
         P300Interface::SetBackgroundSprite(m_backgroundsprite);
         if(mode == 1)
@@ -50,6 +50,8 @@ public:
             m_app = new sf::RenderWindow(sf::VideoMode(m_width, m_height), "hybrid-interface");
         }
 
+        m_app->UseVerticalSync(true);
+
         float timeout = 2.5;
         int x = 2;
         int y = 2;
@@ -63,25 +65,25 @@ public:
             if( y != 0 )
             {
                 /* up */
-                SSVEPInterface::AddSquare(new FlickeringSquare(7,60, (2*x+1)*m_width/10-75, (2*y-1)*m_height/10-75, 150, 150, 255, 0, 0, 128, true));
+                SSVEPInterface::AddSquare(new FlickeringSquare(7,60, (2*x+1)*m_width/10-75, (2*y-1)*m_height/10-75, 150, 150, 255, 0, 0, 255, true));
             }
             else { zeroFrequency = 7; zeroCommand = 1; AddZeroSquare(zeroFrequency); }
             if( x != 4 )
             {
                 /* right */
-                SSVEPInterface::AddSquare(new FlickeringSquare(12,60,(2*x+3)*m_width/10-75, (2*y+1)*m_height/10-75, 150, 150, 255, 0, 0, 128, true));
+                SSVEPInterface::AddSquare(new FlickeringSquare(12,60,(2*x+3)*m_width/10-75, (2*y+1)*m_height/10-75, 150, 150, 255, 0, 0, 255, true));
             }
             else { if(zeroFrequency == 0) { zeroFrequency = 12; zeroCommand = 2; AddZeroSquare(zeroFrequency); } }
             if( y != 4 )
             {
                 /* down */
-                SSVEPInterface::AddSquare(new FlickeringSquare(5,60, (2*x+1)*m_width/10-75, (2*y+3)*m_height/10-75, 150, 150, 255, 0, 0, 128, true));
+                SSVEPInterface::AddSquare(new FlickeringSquare(5,60, (2*x+1)*m_width/10-75, (2*y+3)*m_height/10-75, 150, 150, 255, 0, 0, 255, true));
             }
             else { if(zeroFrequency == 0) { zeroFrequency = 5; zeroCommand = 3; AddZeroSquare(zeroFrequency); } }
             if( x != 0 )
             {
                 /* left */
-                SSVEPInterface::AddSquare(new FlickeringSquare(9,60, (2*x-1)*m_width/10-75, (2*y+1)*m_height/10-75, 150, 150, 255, 0, 0, 128, true));
+                SSVEPInterface::AddSquare(new FlickeringSquare(9,60, (2*x-1)*m_width/10-75, (2*y+1)*m_height/10-75, 150, 150, 255, 0, 0, 255, true));
             }
             else { if(zeroFrequency == 0) { zeroFrequency = 9; zeroCommand = 4; AddZeroSquare(zeroFrequency); } }
             SSVEPInterface::DisplayLoop(m_app, cmdSSVEP, timeout);
@@ -275,7 +277,7 @@ private:
     inline void AddZeroSquare(unsigned int zeroFrequency)
     {
         /* center square to go back to zero speed quickly */
-        SSVEPInterface::AddSquare(new FlickeringSquare(zeroFrequency,60, m_width/2-75, m_height/2-75, 150, 150, 255, 0, 0, 128, true));
+        SSVEPInterface::AddSquare(new FlickeringSquare(zeroFrequency,60, m_width/2-75, m_height/2-75, 150, 150, 255, 0, 0, 255, true));
     }
 
 };
