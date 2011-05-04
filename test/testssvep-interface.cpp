@@ -49,10 +49,17 @@ int main(int argc, char * argv[])
 
 
         /*(int frequency, int screenFrequency, float x, float y, float size, int r, int g, int b, int a, bool fill)*/
-        interface->AddSquare(new FlickeringSquare(7,60, winW/2-75, 50, 150, 150, 255, 0, 0, 255, true));
-        interface->AddSquare(new FlickeringSquare(12,60, winW-225, winH/2-75, 150, 150, 255, 0, 0, 255, true));
-        interface->AddSquare(new FlickeringSquare(5,60, winW/2-75, winH-200, 150, 150, 255, 0, 0, 255, true));
-        interface->AddSquare(new FlickeringSquare(9,60, 75, winH/2-75, 150, 150, 255, 0, 0, 255, true));
+        /* Squares */
+//        interface->AddSquare(new FlickeringSquare(7,60, winW/2-75, 50, 150, 150, 255, 0, 0, 255, true));
+//        interface->AddSquare(new FlickeringSquare(12,60, winW-225, winH/2-75, 150, 150, 255, 0, 0, 255, true));
+//        interface->AddSquare(new FlickeringSquare(5,60, winW/2-75, winH-200, 150, 150, 255, 0, 0, 255, true));
+//        interface->AddSquare(new FlickeringSquare(9,60, 75, winH/2-75, 150, 150, 255, 0, 0, 255, true));
+
+        /* Circles */
+        interface->AddSquare(new FlickeringSquare(7,60, winW/2, 150, 75, 255, 0, 0, 255, true));
+        interface->AddSquare(new FlickeringSquare(12,60, winW-150, winH/2, 75, 255, 0, 0, 255, true));
+        interface->AddSquare(new FlickeringSquare(5,60, winW/2, winH-150, 75, 255, 0, 0, 255, true));
+        interface->AddSquare(new FlickeringSquare(9,60, 150, winH/2, 75, 255, 0, 0, 255, true));
 
 //        interface->ClearPositionsTabs();
         /*interface->AddPositionsTab(25);

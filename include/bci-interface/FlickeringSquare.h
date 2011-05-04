@@ -27,6 +27,9 @@ public:
     /*! \brief Constructor */ 
     SSVEPINTERFACE_API FlickeringSquare(int frequency, int screenFrequency, float x = 0, float y = 0, float size_x = 100, float size_y = 100, int r = 255, int g = 0, int b = 0, int a = 255, bool fill = true);
 
+    /*! \brief Circle constructor */
+    SSVEPINTERFACE_API FlickeringSquare(int frequency, int screenFrequency, float x = 100, float y = 100, float radius = 50, int r = 255, int g = 0, int b = 0, int a = 255, bool fill = true);
+
     /* \brief Change flickering frequency */
     bool ChangeFrequency(int frequency, int screenFrequency);
 

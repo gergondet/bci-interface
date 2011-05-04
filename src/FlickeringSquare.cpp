@@ -60,6 +60,45 @@ public:
             }
         }
     }
+    FlickeringSquareImpl(int frequency, int screenFrequency, float x, float y, float radius, int r, int g, int b, int a, bool fill) : 
+        square(sf::Shape::Circle(x, y, radius, sf::Color(r, g, b, a), 0, sf::Color(r,g,b,a))) , 
+        highlightOn(0,255,0,128), highlightOff(0,0,0,0), 
+        highlightedBlackSquare(sf::Shape::Circle(x, y, radius, highlightOff, 6, highlightOn)) ,
+        unhighlightedBlackSquare(sf::Shape::Circle(x, y, radius, highlightOff, 6, highlightOff)) ,
+        blackSquare(0) ,
+        squareDisplay(true),
+        frequency(frequency) , screenFrequency(screenFrequency)
+    {
+        highlightedBlackSquare.EnableOutline(true);
+        unhighlightedBlackSquare.EnableOutline(true);
+        blackSquare = &highlightedBlackSquare;
+        if(!fill)
+        {
+            square.EnableFill(false);
+            highlightedBlackSquare.EnableFill(false);
+            unhighlightedBlackSquare.EnableFill(false);
+            square.EnableOutline(true);
+            highlightedBlackSquare.SetOutlineWidth(15);
+            unhighlightedBlackSquare.SetOutlineWidth(15);
+            square.SetOutlineWidth(10);
+        }
+
+        std::vector< std::pair<int, int> > tmpSeq;
+        if(squarefunction(frequency, screenFrequency, tmpSeq))
+        {
+            for(unsigned int i = 0; i < tmpSeq.size(); ++i)
+            {
+                for(int j = 0; j < tmpSeq[i].first; ++j)
+                {
+                    frameSeq.push_back(true);
+                }
+                for(int j = 0; j < tmpSeq[i].second; ++j)
+                {
+                    frameSeq.push_back(false);
+                }
+            }
+        }
+    }
     ~FlickeringSquareImpl()
     {
     }
@@ -136,6 +175,11 @@ public:
 
 FlickeringSquare::FlickeringSquare(int frequency, int screenFrequency, float x, float y, float size_x, float size_y, int r, int g, int b, int a, bool fill) :
     m_flsqimpl(new FlickeringSquareImpl(frequency, screenFrequency, x, y, size_x, size_y, r, g, b, a, fill))
+{
+}
+
+FlickeringSquare::FlickeringSquare(int frequency, int screenFrequency, float x, float y, float radius, int r, int g, int b, int a, bool fill) :
+    m_flsqimpl(new FlickeringSquareImpl(frequency, screenFrequency, x, y, radius, r, g, b, a, fill))
 {
 }
 
