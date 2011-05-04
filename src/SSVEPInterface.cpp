@@ -48,8 +48,8 @@ struct SSVEPInterfaceImpl
         sf::RenderWindow * app;
         #ifdef WITH_COSHELL
         coshellbci::CoshellBCI * m_coshellBCI;
-        bool m_coshellrunning;
         #endif
+        bool m_coshellrunning;
         boost::thread * m_backgroundTh;
     public:
         SSVEPInterfaceImpl(unsigned int width, unsigned int height) : 
@@ -60,8 +60,8 @@ struct SSVEPInterfaceImpl
             indicePos(0), nextPosition(false), previousPosition(false),
             #ifdef WITH_COSHELL
             m_coshellBCI(new coshellbci::CoshellBCI("192.168.140.2", 2809, 1111)), 
-            m_coshellrunning(false),
             #endif
+            m_coshellrunning(false),
             m_backgroundTh(0)
         {
             m_squares.resize(0);
@@ -264,9 +264,6 @@ struct SSVEPInterfaceImpl
             #ifdef WITH_COSHELL
             m_coshellBCI->Initialize();
             boost::thread * coshellTh = 0;
-            #endif
-
-            bcimw::SSVEP_COMMAND bcicmd = bcimw::NONE;
             if(cmdOut)
             {
                 coshellTh = new boost::thread(boost::bind(&coshellbci::CoshellBCI::CommandLoop, m_coshellBCI, false));
@@ -275,6 +272,9 @@ struct SSVEPInterfaceImpl
             {
                 coshellTh = new boost::thread(boost::bind(&coshellbci::CoshellBCI::CommandLoop, m_coshellBCI, true));
             }
+            #endif
+
+            bcimw::SSVEP_COMMAND bcicmd = bcimw::NONE;
 
             while(!closeRequest && app->IsOpened())
             {
@@ -301,21 +301,25 @@ struct SSVEPInterfaceImpl
                         nextPosition = true;
                     if( Event.Type == sf::Event::KeyPressed && ( Event.Key.Code == sf::Key::O ) )
                         previousPosition = true;
-                    #ifdef WITH_COSHELL
                     if( Event.Type == sf::Event::KeyPressed && Event.Key.Code == sf::Key::Space)
                     {
                         if(not m_coshellrunning)
                         {
                             m_coshellrunning = true;
+                            #ifdef WITH_COSHELL
                             m_coshellBCI->ActiveCoshell();
+                            #endif
                         }
                         else
                         {
+                            #ifdef WITH_COSHELL
                             m_coshellBCI->Close();
                             /* do not set m_coshellrunning back to false because we cannot relaunch the walking for now */
+                            #else
+                            m_coshellrunning = false;
+                            #endif
                         }
                     }
-                    #endif
                 }
         
                 #ifdef WITH_COSHELL
