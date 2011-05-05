@@ -55,6 +55,10 @@ public:
     /*Change position of the square*/
     void SetSquareX(float positionX);
 
+    /*Get Radius for Circle, size_x for Square*/
+    float GetRadius();
+
+
 private:
     boost::shared_ptr<FlickeringSquareImpl> m_flsqimpl;
 };

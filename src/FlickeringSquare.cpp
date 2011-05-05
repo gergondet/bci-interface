@@ -20,6 +20,8 @@ private:
     int frequency;
     int screenFrequency;
     std::vector<bool> frameSeq;
+    float radius;
+
 public:
     FlickeringSquareImpl(int frequency, int screenFrequency, float x, float y, float size_x, float size_y, int r, int g, int b, int a, bool fill) : 
         square(sf::Shape::Rectangle(x, y, x+size_x, y+size_y, sf::Color(r, g, b, a), 0, sf::Color(r,g,b,a))) , 
@@ -28,6 +30,7 @@ public:
         unhighlightedBlackSquare(sf::Shape::Rectangle(x, y, x+size_x, y+size_y, highlightOff, 6, highlightOff)) ,
         blackSquare(0) ,
         squareDisplay(true),
+        radius(size_x),
         frequency(frequency) , screenFrequency(screenFrequency)
     {
         highlightedBlackSquare.EnableOutline(true);
@@ -67,6 +70,7 @@ public:
         unhighlightedBlackSquare(sf::Shape::Circle(x, y, radius, highlightOff, 6, highlightOff)) ,
         blackSquare(0) ,
         squareDisplay(true),
+        radius(radius),
         frequency(frequency) , screenFrequency(screenFrequency)
     {
         highlightedBlackSquare.EnableOutline(true);
@@ -171,6 +175,12 @@ public:
          this->square.SetX(positionX);
      }
 
+    float GetRadius()
+     {
+         return radius;
+     }
+
+
 }; //class FlickeringSquareImpl
 
 FlickeringSquare::FlickeringSquare(int frequency, int screenFrequency, float x, float y, float size_x, float size_y, int r, int g, int b, int a, bool fill) :
@@ -224,9 +234,14 @@ void FlickeringSquare::Unhighlight()
 }
 
 void FlickeringSquare::SetSquareX(float positionX)
- {
+{
 	m_flsqimpl->SetSquareX(positionX);
- }
+}
+
+float FlickeringSquare::GetRadius()
+{
+	m_flsqimpl->GetRadius();
+}
 
 } // namespace bciinterface
 

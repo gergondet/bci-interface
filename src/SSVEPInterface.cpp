@@ -1,3 +1,4 @@
+
 #include <bci-interface/SSVEPInterface.h>
 #include <bci-interface/BackgroundSprite.h>
 
@@ -11,6 +12,7 @@
 #include <fstream>
 #include <sstream>
 #include <stdarg.h>
+#include <ctime>
 
 #include <boost/thread.hpp>
 
@@ -40,6 +42,9 @@ struct SSVEPInterfaceImpl
         int compt_point;
         sf::Shape squareForbidden;
         bool allowedPosition;
+        float distance;
+		std::ofstream coordonnees;
+		time_t t;
 
         unsigned int m_width;
         unsigned int m_height;
@@ -58,6 +63,7 @@ struct SSVEPInterfaceImpl
             closeRequest(false), 
             fpsLog("fps.log"), app(0), compt_begin(0), compt_point(0),
             indicePos(0), nextPosition(false), previousPosition(false),
+            allowedPosition(false), distance(0), coordonnees("../donnees_test/coordonnees_1600_05_05_2010.log", std::ios::out | std::ios::app),
             #ifdef WITH_COSHELL
             m_coshellBCI(new coshellbci::CoshellBCI("192.168.140.2", 2809, 1111)), 
             #endif
@@ -153,7 +159,6 @@ struct SSVEPInterfaceImpl
         		std::cout << "posLeft : " << m_positionsTabLeft[i] << ", posRight : " << m_positionsTabRight[i] << std::endl;
         	}
         }
-
 
         void ChangeFrequency(unsigned int squareId, int frequency, int screenFrequency)
         {
@@ -261,6 +266,8 @@ struct SSVEPInterfaceImpl
                 m_backgroundTh = new boost::thread(boost::bind(&BackgroundSprite::UpdateLoop, m_backgroundsprite));
             }
 
+            if (!coordonnees) std::cerr << "Error opening" << std::endl;
+
             #ifdef WITH_COSHELL
             m_coshellBCI->Initialize();
             boost::thread * coshellTh = 0;
@@ -294,7 +301,7 @@ struct SSVEPInterfaceImpl
                     if (Event.Type == sf::Event::Closed)
                         app->Close();
                     if( Event.Type == sf::Event::KeyPressed && ( Event.Key.Code == sf::Key::Escape || Event.Key.Code == sf::Key::Q ) )
-                        app->Close();
+                    	app->Close();
                     if( Event.Type == sf::Event::KeyPressed && ( Event.Key.Code == sf::Key::S ) )
                         closeRequest = true;
                     if( Event.Type == sf::Event::KeyPressed && ( Event.Key.Code == sf::Key::P ) )
@@ -336,54 +343,52 @@ struct SSVEPInterfaceImpl
                     sprite->Resize(m_width, m_height);
                     app->Draw(*sprite);
                 }
-			if(m_points.size() >= 1)
-			{
-/*				flickering square taking each position when asked by pressing P key or O key*/
-				if (m_squares.size() >=2 && m_squares[1]->SquareDisplay() && m_squares[0]->SquareDisplay()){
-					if (nextPosition){
-						if (indicePos<m_positionsTabLeft.size()-1) indicePos++;
-						m_squares[1]->SetSquareX(m_positionsTabLeft[indicePos]);
-						m_squares[0]->SetSquareX(m_positionsTabRight[indicePos]);
-						nextPosition=false;
+
+				if(m_points.size() >= 1)
+				{
+					if (compt_point==0) {
+
+						while (allowedPosition !=true){
+							position[0] = ((double)rand()*(double)m_width/(double)RAND_MAX - m_points[0]->GetSize() );
+							position[1] = ((double)rand()*(double)m_height/(double)RAND_MAX - m_points[0]->GetSize() );
+							//position [1]= (m_points[0]->GetPosition()[1]);
+							squareForbidden= *(m_squares[0]->GetShape());
+							std::cout << position[0] << ", " << position[1] << std::endl;
+
+						    std::time(&t);
+							coordonnees << std::ctime(&t) << " " << position[0] << ", " << position[1] << std::endl;
+							coordonnees << position[0] << ", " << position[1] << std::endl;
+
+							distance =sqrt((position[0]- squareForbidden.GetCenter().x)*(position[0]- squareForbidden.GetCenter().x) + (position[1]- squareForbidden.GetCenter().y)*(position[1]- squareForbidden.GetCenter().y));
+							if (distance > (m_squares[0]->GetRadius())) {
+								allowedPosition = true;
+								m_points[0]->SetPosition(position);
+							}
+
+						}
+						//std::cout << "1 : " << compt_point << std::endl;
+						app->Draw(*(m_points[0]->GetPoint()));
+						compt_point++;
+
 					}
-					if (previousPosition) {
-						if (indicePos>0) indicePos--;
-						m_squares[1]->SetSquareX(m_positionsTabLeft[indicePos]);
-						m_squares[0]->SetSquareX(m_positionsTabRight[indicePos]);
-						previousPosition=false;
+					else if (compt_point <= m_points[0]->GetPeriod()){
+						app->Draw(*(m_points[0]->GetPoint()));
+						//std::cout << "2 : " <<  compt_point << std::endl;
+						compt_point++;
+
+					}
+					else if ((m_points[0]->GetPeriod()+ 60) >= compt_point){
+						//std::cout << "3 : " <<  compt_point << std::endl;
+						compt_point++;
+
+					}
+					else if (compt_point > m_points[0]->GetPeriod()+ 60){
+						//std::cout << "4 : " <<  compt_point << std::endl;
+						compt_point=0;
+						allowedPosition = false;
 					}
 
-					if (indicePos==0){
-						m_squares[1]->SetSquareX(25);
-						m_squares[0]->SetSquareX(m_width - 175);
-					}
 				}
-					app->Draw(*(m_points[0]->GetPoint()));
-			}
-
-
-/*				cursor taking each position when asked by pressing P key or O key*/
-/*				if (m_squares.size() !=0 && m_squares[1]->SquareDisplay()){
-					if (nextPosition){
-						if (indicePos<m_positionsTabLeft.size()-1) indicePos++;
-						m_squares[1]->SetSquareX(m_positionsTabLeft[indicePos]);
-						nextPosition=false;
-					}
-					if (previousPosition) {
-						if (indicePos>0) indicePos--;
-						m_squares[1]->SetSquareX(m_positionsTabLeft[indicePos]);
-						previousPosition=false;
-					}
-
-					if (indicePos==0){
-						m_squares[1]->SetSquareX(25);
-					}
-
-					//position[1]=(*(m_points[0]->GetPoint())).GetPointPosition(0).y ;
-					position[0]=( (*(m_squares[0]->GetShape())).GetPointPosition(0).x + m_positionsTabLeft[indicePos] + 150) /2 -5 ;
-					m_points[0]->SetPosition(position);
-					app->Draw(*(m_points[0]->GetPoint()));
-				}*/
 
                 for(unsigned int i = 0; i < m_squares.size(); ++i)
                 {
@@ -413,6 +418,7 @@ struct SSVEPInterfaceImpl
         
             }
             fpsLog.close();
+            coordonnees.close();
             if(!m_updatebackgroundmanually && !cmdOut)
             {
                 m_backgroundsprite->Close();
