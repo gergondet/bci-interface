@@ -12,6 +12,7 @@ SET(${EXEC_NAME}_src
     ./MoovingCursor.cpp
     ./RandomPoint.cpp
     ./HybridInterface.cpp
+    ./TestInterface.cpp
 )
 
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include)

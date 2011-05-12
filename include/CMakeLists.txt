@@ -8,6 +8,7 @@ SET(${PROJECT_NAME}_HEADERS
     bci-interface/BackgroundSprite.h
     bci-interface/P300Interface.h
     bci-interface/HybridInterface.h
+    bci-interface/TestInterface.h
 )
 
 INSTALL(FILES ${${PROJECT_NAME}_HEADERS}
