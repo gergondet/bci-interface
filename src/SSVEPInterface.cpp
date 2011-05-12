@@ -6,7 +6,6 @@
 #include <coshell-bci/CoshellBCI.h>
 #endif
 #include <bci-middleware/SSVEPReceiver.h>
-
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <fstream>
@@ -377,7 +376,7 @@ struct SSVEPInterfaceImpl
 						compt_point++;
 
 					}
-					else if ((m_points[0]->GetPeriod()+ 60) >= compt_point){
+					else if ((m_points[0]->GetPeriod()+ 120) >= compt_point){
 						//std::cout << "3 : " <<  compt_point << std::endl;
 						compt_point++;
 
@@ -389,6 +388,15 @@ struct SSVEPInterfaceImpl
 					}
 
 				}
+
+/*					if (nextPosition){
+						if (indicePos<m_positionsTabLeft.size()-1) indicePos++;
+						m_squares[1]->SetSquareX(m_positionsTabLeft[indicePos]);
+						m_squares[0]->SetSquareX(m_positionsTabRight[indicePos]);
+						nextPosition=false;
+					}
+
+*/
 
                 for(unsigned int i = 0; i < m_squares.size(); ++i)
                 {

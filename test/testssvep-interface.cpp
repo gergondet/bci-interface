@@ -76,7 +76,7 @@ int main(int argc, char * argv[])
         //interface->AddCursor(new MoovingCursor(0, winH/2-50, 150, 0, 255, 0, 0, 255));
 
         /*( x, y, size, period, r, g, b, a)*/
-        interface->AddPoint(new RandomPoint(200, 200, 10, 100, 0, 255, 0, 255));
+        interface->AddPoint(new RandomPoint(200, 200, 10, 420, 0, 255, 0, 255));
     }
 
     BackgroundSprite * background = new BackgroundSprite("192.168.140.1", 4242, 160, 120);

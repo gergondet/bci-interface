@@ -50,7 +50,7 @@ struct TestInterfaceImpl
         sf::RenderWindow * app;
     public:
         TestInterfaceImpl(unsigned int width, unsigned int height) : 
-            m_trigger(new bcimw::TCPTrigger("127.0.0.1", 4242)),
+            m_trigger(new bcimw::TCPTrigger("194.254.115.67", 4242)),
             m_width(width), m_height(height), 
             closeRequest(false), 
             fpsLog("fps.log"), app(0), compt_begin(0), compt_point(0),
@@ -218,11 +218,9 @@ struct TestInterfaceImpl
 							position[1] = ((double)rand()*(double)m_height/(double)RAND_MAX - m_points[0]->GetSize() );
 							//position [1]= (m_points[0]->GetPosition()[1]);
 							squareForbidden= *(m_squares[0]->GetShape());
-							std::cout << position[0] << ", " << position[1] << std::endl;
+							//std::cout << position[0] << ", " << position[1] << std::endl;
 
-						    std::time(&t);
-							coordonnees << std::ctime(&t) << " " << position[0] << ", " << position[1] << std::endl;
-							coordonnees << position[0] << ", " << position[1] << std::endl;
+
 
 							distance =sqrt((position[0]- squareForbidden.GetCenter().x)*(position[0]- squareForbidden.GetCenter().x) + (position[1]- squareForbidden.GetCenter().y)*(position[1]- squareForbidden.GetCenter().y));
 							if (distance > (m_squares[0]->GetRadius())) {
@@ -233,6 +231,11 @@ struct TestInterfaceImpl
 						}
 						//std::cout << "1 : " << compt_point << std::endl;
                         m_trigger->SendTrigger();
+
+					    std::time(&t);
+						coordonnees << std::ctime(&t) << " " << position[0] << ", " << position[1] << std::endl;
+						coordonnees << position[0] << ", " << position[1] << std::endl;
+
 						app->Draw(*(m_points[0]->GetPoint()));
 						compt_point++;
 
