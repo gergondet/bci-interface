@@ -1,5 +1,7 @@
 #include <bci-interface/TestInterface.h>
 
+#include <bci-middleware/TCPTrigger.h>
+
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <fstream>
@@ -15,6 +17,10 @@ namespace bciinterface
 struct TestInterfaceImpl
 {
     private:
+        /* Trigger */
+        bcimw::TCPTrigger * m_trigger; 
+
+        /* Squares */
         std::vector<FlickeringSquare *> m_squares;
         int indicePos;
         std::vector<float> m_positionsTabLeft;
@@ -44,6 +50,7 @@ struct TestInterfaceImpl
         sf::RenderWindow * app;
     public:
         TestInterfaceImpl(unsigned int width, unsigned int height) : 
+            m_trigger(new bcimw::TCPTrigger("127.0.0.1", 4242)),
             m_width(width), m_height(height), 
             closeRequest(false), 
             fpsLog("fps.log"), app(0), compt_begin(0), compt_point(0),
@@ -225,6 +232,7 @@ struct TestInterfaceImpl
 
 						}
 						//std::cout << "1 : " << compt_point << std::endl;
+                        m_trigger->SendTrigger();
 						app->Draw(*(m_points[0]->GetPoint()));
 						compt_point++;
 
