@@ -234,7 +234,7 @@ struct TestInterfaceImpl
 
 					    std::time(&t);
 						coordonnees << std::ctime(&t) << " " << position[0] << ", " << position[1] << std::endl;
-						coordonnees << position[0] << ", " << position[1] << std::endl;
+						//coordonnees << position[0] << ", " << position[1] << std::endl;
 
 						app->Draw(*(m_points[0]->GetPoint()));
 						compt_point++;
