@@ -22,7 +22,7 @@ public:
     virtual void Display(sf::RenderWindow * app, unsigned int frameCount = 0) = 0;
 
     /* Process an event */
-    virtual void Process(sf::Event * event) {}
+    virtual void Process(sf::Event & event) {}
 };
 
 } // namespace bciinterface
