@@ -2,6 +2,7 @@ SET(${PROJECT_NAME}_HEADERS
     bci-interface/DisplayObject.h
     bci-interface/square-function.h
     bci-interface/SSVEPStimulus.h
+    bci-interface/BCIInterface.h
 )
 
 INSTALL(FILES ${${PROJECT_NAME}_HEADERS}

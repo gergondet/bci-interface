@@ -3,6 +3,7 @@ SET(EXEC_NAME bci-interface)
 SET(${EXEC_NAME}_src
     square-function.cpp
     SSVEPStimulus.cpp
+    BCIInterface.cpp
 )
 
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include)
