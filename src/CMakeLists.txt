@@ -1,6 +1,7 @@
 SET(EXEC_NAME bci-interface)
 
 SET(${EXEC_NAME}_src
+    VisionServerBS.cpp
     square-function.cpp
     SSVEPStimulus.cpp
     BCIInterface.cpp

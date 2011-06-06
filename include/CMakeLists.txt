@@ -1,5 +1,6 @@
 SET(${PROJECT_NAME}_HEADERS
     bci-interface/BackgroundSprite.h
+    bci-interface/VisionServerBS.h
     bci-interface/DisplayObject.h
     bci-interface/square-function.h
     bci-interface/SSVEPStimulus.h
