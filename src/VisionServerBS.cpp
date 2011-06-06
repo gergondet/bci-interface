@@ -148,7 +148,7 @@ public:
 };
 
 VisionServerBS::VisionServerBS(const std::string & vs_name, unsigned short vs_port, unsigned int width, unsigned int height)
-    : BackgroundSprite(width, height), m_impl(new VisionServerBSImpl(vs_name, vs_port, width, height))
+    : m_impl(new VisionServerBSImpl(vs_name, vs_port, width, height))
 {
 }
 
