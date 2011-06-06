@@ -4,6 +4,8 @@
 namespace sf
 {
     class RenderWindow;
+
+    class Event;
 }
 
 namespace bciinterface
@@ -18,6 +20,9 @@ public:
 
     /* Display function which needs to be implemented, can expect to receive frameCount from the interface */
     virtual void Display(sf::RenderWindow * app, unsigned int frameCount = 0) = 0;
+
+    /* Process an event */
+    virtual void Process(sf::Event * event) {}
 };
 
 } // namespace bciinterface
