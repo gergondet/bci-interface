@@ -1,3 +1,6 @@
+#include <bci-interface/BCIInterface.h>
+#include <bci-interface/SSVEPStimulus.h>
+
 #include <SFML/Graphics.hpp>
 
 #include <iostream>
@@ -11,10 +14,23 @@ void sleep(DWORD t)
 }
 #endif
 
-#include <boost/thread.hpp>
-#include <boost/bind.hpp>
+using namespace bciinterface;
 
 int main(int argc, char * argv[])
 {
+    bool fullscreen = true;
+    unsigned int width = 1280;
+    unsigned int height = 800;
+
+    BCIInterface * bciinterface = new BCIInterface(width, height);
+    bciinterface->AddObject(new SSVEPStimulus(7,60, width/2-75, 50, 150, 150, 255, 0, 0, 255));
+    bciinterface->AddObject(new SSVEPStimulus(12,60, width-225, height/2-75, 150, 150, 255, 0, 0, 255));
+    bciinterface->AddObject(new SSVEPStimulus(5,60, width/2-75, height-200, 150, 150, 255, 0, 0, 255));
+    bciinterface->AddObject(new SSVEPStimulus(9,60, 75, height/2-75, 150, 150, 255, 0, 0, 255));
+
+    bciinterface->DisplayLoop(fullscreen);
+
+    delete bciinterface;
+
     return 0;
 }
