@@ -14,8 +14,6 @@ void sleep(DWORD t)
 #include <boost/thread.hpp>
 #include <boost/bind.hpp>
 
-using namespace bciinterface;
-
 int main(int argc, char * argv[])
 {
     return 0;

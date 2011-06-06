@@ -1,7 +1,10 @@
 #ifndef _H_DISPLAY_OBJECT_H_
 #define _H_DISPLAY_OBJECT_H_
 
-class sf::RenderWindow;
+namespace sf
+{
+    class RenderWindow;
+}
 
 namespace bciinterface
 {

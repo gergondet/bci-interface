@@ -2,6 +2,7 @@
 
 #include <bci-interface/square-function.h>
 #include <iostream>
+#include <SFML/Graphics.hpp>
 
 namespace bciinterface
 {
@@ -15,7 +16,7 @@ private:
     std::vector<bool> m_frameSeq;
 public:
     SSVEPStimulusImpl(int frequency, int screenFrequency, float x, float y, float size_x, float size_y, int r, int g, int b, int a) : 
-        m_square(sf::Shape::Rectangle(x, y, x+size_x, y+size_y, sf::Color(r, g, b, a), 6, sf::Color(0, 255, 0, 128))) , 
+        m_shape(sf::Shape::Rectangle(x, y, x+size_x, y+size_y, sf::Color(r, g, b, a), 6, sf::Color(0, 255, 0, 128))) , 
         m_frequency(frequency) , m_screenFrequency(screenFrequency)
     {
         m_shape.EnableOutline(false);
@@ -93,7 +94,7 @@ public:
 }; //class SSVEPStimulusImpl
 
 SSVEPStimulus::SSVEPStimulus(int frequency, int screenFrequency, float x, float y, float size_x, float size_y, int r, int g, int b, int a) :
-    m_flsqimpl(new SSVEPStimulusImpl(frequency, screenFrequency, x, y, size_x, size_y, r, g, b, a))
+    m_impl(new SSVEPStimulusImpl(frequency, screenFrequency, x, y, size_x, size_y, r, g, b, a))
 {
 }
 
@@ -117,7 +118,7 @@ void SSVEPStimulus::Move(float diffX, float diffY)
     m_impl->Move(diffX, diffY);
 }
 
-void Display(sf::RenderWindow * app, unsigned int frameCount)
+void SSVEPStimulus::Display(sf::RenderWindow * app, unsigned int frameCount)
 {
     m_impl->Display(app, frameCount);
 }
