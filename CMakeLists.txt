@@ -99,3 +99,38 @@ ADD_SUBDIRECTORY(src)
 ADD_SUBDIRECTORY(include)
 ADD_SUBDIRECTORY(test)
 
+#
+# pkg-config file
+#
+
+SET(install_pkg_prefix "\${prefix}")
+SET(install_pkg_exec_prefix "\${exec_prefix}")
+SET(install_pkg_libdir "\${libdir}")
+SET(install_pkg_datarootdir "\${datarootdir}")
+SET(install_pkg_include_dir "\${includedir}")
+
+SET(libs-to-pc
+        bci-middleware
+)
+
+FOREACH(lib ${libs-to-pc})
+    SET(pc-libs "${pc-libs} ${LIBINCL_KW}${lib}${CMAKE_IMPORT_LIBRARY_SUFFIX}")
+ENDFOREACH(lib)
+
+IF(UNIX)
+  SET (${PROJECT_NAME}_LDFLAGS "-Wl,-R${install_pkg_libdir} ${pc-libs} ${${PROJECT_NAME}_LDFLAGS}")
+ENDIF(UNIX)
+
+IF(WIN32)
+  SET (${PROJECT_NAME}_LDFLAGS "${pc-libs}")
+ENDIF(WIN32)
+
+# Install the file in the appropriate place.
+SET(install_libdir_pkgconfig ${CMAKE_INSTALL_PREFIX}/lib/pkgconfig)
+
+CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}.pc.cmake
+  ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.pc)
+
+INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.pc
+  DESTINATION ${install_libdir_pkgconfig}   
+  PERMISSIONS OWNER_READ GROUP_READ WORLD_READ OWNER_WRITE)
