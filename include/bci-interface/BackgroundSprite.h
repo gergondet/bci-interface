@@ -14,7 +14,7 @@ namespace bciinterface
 class BackgroundSprite
 {
 public:
-    BackgroundSprite(unsigned int width, unsigned int height) {}
+    BackgroundSprite() {}
 
     virtual ~BackgroundSprite() {}
 
