@@ -1,17 +1,8 @@
 SET(EXEC_NAME bci-interface)
 
 SET(${EXEC_NAME}_src
-    ./square-function.cpp
-    ./SSVEPInterface.cpp
-    ./SSVEPInterfaceConfig.cpp
-    ./FlickeringSquare.cpp
-    ./BackgroundSprite.cpp
-    ./P300Object.cpp
-    ./P300ObjectVector.cpp
-    ./P300Interface.cpp
-    ./MoovingCursor.cpp
-    ./RandomPoint.cpp
-    ./HybridInterface.cpp
+    square-function.cpp
+    SSVEPStimulus.cpp
 )
 
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include)
