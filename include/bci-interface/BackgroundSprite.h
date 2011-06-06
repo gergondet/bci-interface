@@ -14,12 +14,17 @@ namespace bciinterface
 class BackgroundSprite
 {
 public:
-    BackgroundSprite() {}
+    BackgroundSprite(unsigned int width, unsigned int height) {}
 
-    virtual ~BackgroundSprite {}
+    virtual ~BackgroundSprite() {}
 
+    /* Loop for background update will be launched in its own thread */
     virtual void UpdateLoop() = 0;
 
+    /* Close the update loop properly */
+    virtual void Close() = 0;
+
+    /* Returns the current sprite of background */
     virtual sf::Sprite * GetSprite() = 0;
 };
 

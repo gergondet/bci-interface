@@ -10,6 +10,7 @@ namespace sf
 
 namespace bciinterface
 {
+class BackgroundSprite;
 class DisplayObject;
 
 struct BCIInterfaceImpl;
@@ -18,6 +19,9 @@ class BCIInterface
 {
 public:
     BCIInterface(unsigned int width, unsigned int height);
+
+    /* Set BackgroundSprite */
+    void SetBackgroundSprite(BackgroundSprite * background);
 
     /* Add a display object to the interface, the interface assumes ownership of the object */
     void AddObject(DisplayObject * object);

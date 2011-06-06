@@ -1,7 +1,10 @@
 #include <bci-interface/BCIInterface.h>
 
+#include <bci-interface/BackgroundSprite.h>
 #include <bci-interface/DisplayObject.h>
 
+#include <boost/bind.hpp>
+#include <boost/thread.hpp>
 #include <fstream>
 #include <iostream>
 #include <SFML/Graphics.hpp>
@@ -19,11 +22,16 @@ private:
     sf::RenderWindow * m_app;
     std::ofstream m_fpslog;
 
+    BackgroundSprite * m_background;
+    boost::thread * m_backgroundth;
+
     std::vector<DisplayObject *> m_objects;
 
 public:
     BCIInterfaceImpl(unsigned int width, unsigned int height)
-    : m_width(width), m_height(height), m_close(false), m_app(0), m_fpslog("/tmp/bciinterface_fps.log"), m_objects(0)
+    : m_width(width), m_height(height), m_close(false), m_app(0), m_fpslog("/tmp/bciinterface_fps.log"), 
+        m_background(0), m_backgroundth(0),
+        m_objects(0)
     {}
 
     ~BCIInterfaceImpl()
@@ -32,12 +40,49 @@ public:
         {
             delete m_objects[i];
         }
+        if(m_background)
+        {
+            m_background->Close();
+        }
+        if(m_backgroundth)
+        {
+            m_backgroundth->join();
+        }
+        delete m_backgroundth;
+        delete m_background;
         delete m_app;
+    }
+
+    void SetBackgroundSprite(BackgroundSprite * background)
+    {
+        if(m_backgroundth)
+        {
+            /* Change backgroundsprite type while (e.g. camera switch ?) running */
+            m_background->Close();
+            m_backgroundth->join();
+            delete m_backgroundth;
+            m_background = background;
+            m_backgroundth = new boost::thread(boost::bind(&BackgroundSprite::UpdateLoop, m_background));
+        }
+        else
+        {
+            m_background = background;
+        }
     }
 
     void AddObject(DisplayObject * object)
     {
         m_objects.push_back(object);
+    }
+
+    void Clean()
+    {
+        while(m_objects.size() > 0)
+        {
+            DisplayObject * tmp = m_objects.back();
+            delete tmp;
+            m_objects.pop_back();
+        }
     }
 
     void DisplayLoop(bool fullscreen)
@@ -78,6 +123,12 @@ public:
         sf::Clock clock;
         m_close = false;
 
+        /* Launch BackgroundSprite thread */
+        if(m_background && !m_backgroundth)
+        {
+            m_backgroundth = new boost::thread(boost::bind(&BackgroundSprite::UpdateLoop, m_background));
+        }
+
         while(!m_close && m_app->IsOpened())
         {
             unsigned int newFrameCount = (unsigned int)floor(clock.GetElapsedTime()*60);
@@ -100,6 +151,11 @@ public:
                 }
             }
 
+            /* Draw background */
+            if(m_background)
+            {
+                m_app->Draw(*(m_background->GetSprite()));
+            }
 
             /* Draw objects */
             for(size_t i = 0; i < m_objects.size(); ++i)
@@ -116,6 +172,13 @@ public:
             }
         }
         m_fpslog.close();
+
+        if(m_background && !cmd)
+        {
+            m_background->Close();
+            m_backgroundth->join();
+            delete m_backgroundth;
+        }
     }
 
     void Close()
@@ -127,9 +190,19 @@ public:
 BCIInterface::BCIInterface(unsigned int width, unsigned int height) : m_impl(new BCIInterfaceImpl(width, height))
 {}
 
+void BCIInterface::SetBackgroundSprite(BackgroundSprite * background)
+{
+    m_impl->SetBackgroundSprite(background);
+}
+
 void BCIInterface::AddObject(DisplayObject * object)
 {
     m_impl->AddObject(object);
+}
+
+void BCIInterface::Clean()
+{
+    m_impl->Clean();
 }
 
 void BCIInterface::DisplayLoop(bool fullscreen)
