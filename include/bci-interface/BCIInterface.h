@@ -13,6 +13,8 @@ namespace bciinterface
 class BackgroundSprite;
 class DisplayObject;
 
+class CommandReceiver;
+
 struct BCIInterfaceImpl;
 
 class BCIInterface
@@ -26,11 +28,12 @@ public:
     /* Add a display object to the interface, the interface assumes ownership of the object */
     void AddObject(DisplayObject * object);
 
+    /* Set the current command receiver */
+    void SetCommandReceiver(CommandReceiver * receiver);
+
     /* Remove all objects from the interface */
     void Clean();
 
-    /* TODO Background stuff */
-    
     /* Infinite DisplayLoop function */
     void DisplayLoop(bool fullscreen = true);
 

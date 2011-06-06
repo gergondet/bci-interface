@@ -3,6 +3,8 @@
 #include <bci-interface/BackgroundSprite.h>
 #include <bci-interface/DisplayObject.h>
 
+#include <bci-interface/CommandReceiver.h>
+
 #include <boost/bind.hpp>
 #include <boost/thread.hpp>
 #include <fstream>
@@ -27,11 +29,15 @@ private:
 
     std::vector<DisplayObject *> m_objects;
 
+    CommandReceiver * m_receiver;
+    boost::thread * m_receiverth;
+
 public:
     BCIInterfaceImpl(unsigned int width, unsigned int height)
     : m_width(width), m_height(height), m_close(false), m_app(0), m_fpslog("/tmp/bciinterface_fps.log"), 
         m_background(0), m_backgroundth(0),
-        m_objects(0)
+        m_objects(0),
+        m_receiver(0), m_receiverth(0)
     {}
 
     ~BCIInterfaceImpl()
@@ -73,6 +79,23 @@ public:
     void AddObject(DisplayObject * object)
     {
         m_objects.push_back(object);
+    }
+
+    void SetCommandReceiver(CommandReceiver * receiver)
+    {
+        if(m_receiverth)
+        {
+            /* Change receiver while running (e.g. paradigm switch) */
+            m_receiver->Close();
+            m_receiverth->join();
+            delete m_receiverth;
+            m_receiver = receiver;
+            m_receiverth = new boost::thread(boost::bind(&CommandReceiver::CommandLoop, m_receiver));
+        }
+        else
+        {
+            m_receiver = receiver;
+        }
     }
 
     void Clean()
@@ -129,6 +152,11 @@ public:
             m_backgroundth = new boost::thread(boost::bind(&BackgroundSprite::UpdateLoop, m_background));
         }
 
+        if(m_receiver && !m_receiverth)
+        {
+            m_receiverth = new boost::thread(boost::bind(&CommandReceiver::CommandLoop, m_receiver));
+        }
+
         while(!m_close && m_app->IsOpened())
         {
             unsigned int newFrameCount = (unsigned int)floor(clock.GetElapsedTime()*60);
@@ -150,6 +178,9 @@ public:
                     m_objects[i]->Process(event);
                 }
             }
+
+            /* Current command of the BCI system */
+            int current_command = m_receiver->GetCommand();
 
             /* Draw background */
             if(m_background)
@@ -178,12 +209,23 @@ public:
         }
         m_fpslog.close();
 
-        if(m_background && !cmd)
+        if(!cmd)
         {
-            m_background->Close();
-            m_backgroundth->join();
-            delete m_backgroundth;
-            m_backgroundth = 0;
+            /* Actual and final exit */
+            if(m_background)
+            {
+                m_background->Close();
+                m_backgroundth->join();
+                delete m_backgroundth;
+                m_backgroundth = 0;
+            }
+            if(m_receiver)
+            {
+                m_receiver->Close();
+                m_receiverth->join();
+                delete m_receiverth;
+                m_receiverth = 0;
+            }
         }
     }
 
@@ -204,6 +246,11 @@ void BCIInterface::SetBackgroundSprite(BackgroundSprite * background)
 void BCIInterface::AddObject(DisplayObject * object)
 {
     m_impl->AddObject(object);
+}
+
+void BCIInterface::SetCommandReceiver(CommandReceiver * receiver)
+{
+    m_impl->SetCommandReceiver(receiver);
 }
 
 void BCIInterface::Clean()
