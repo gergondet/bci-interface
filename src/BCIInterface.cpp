@@ -154,7 +154,12 @@ public:
             /* Draw background */
             if(m_background)
             {
-                m_app->Draw(*(m_background->GetSprite()));
+                sf::Sprite * sprite = m_background->GetSprite();
+                if(sprite)
+                {
+                    sprite->Resize(m_width, m_height);
+                    m_app->Draw(*sprite);
+                }
             }
 
             /* Draw objects */
@@ -178,6 +183,7 @@ public:
             m_background->Close();
             m_backgroundth->join();
             delete m_backgroundth;
+            m_backgroundth = 0;
         }
     }
 
