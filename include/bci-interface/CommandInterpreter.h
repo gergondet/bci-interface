@@ -15,9 +15,6 @@ public:
 
     virtual ~CommandInterpreter() {}
 
-    /* Close the interpreter loop */
-    virtual void Close() = 0;
-
     /* Set input command */
     virtual void InterpretCommand(int command, const std::vector<DisplayObject*> & objects) = 0;
 };
