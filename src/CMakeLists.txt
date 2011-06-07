@@ -6,6 +6,7 @@ SET(${EXEC_NAME}_src
     square-function.cpp
     SSVEPStimulus.cpp
     VisionServerBS.cpp
+    SimpleInterpreter.cpp
 )
 
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include)

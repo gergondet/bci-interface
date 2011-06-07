@@ -7,6 +7,7 @@ SET(${PROJECT_NAME}_HEADERS
     bci-interface/square-function.h
     bci-interface/SSVEPStimulus.h
     bci-interface/VisionServerBS.h
+    bci-interface/SimpleInterpreter.h
 )
 
 INSTALL(FILES ${${PROJECT_NAME}_HEADERS}
