@@ -54,7 +54,7 @@ public:
         SimpleInterpreter::InterpretCommand(command, objects);
         if(m_initialized)
         {
-            if(command > 0 && command - 1 < (int)m_commands.size())
+            if(command >= 0 && command < (int)m_commands.size())
             {
                 if(command != m_command)
                 {
