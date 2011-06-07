@@ -23,6 +23,10 @@ public:
 
     /* Process an event */
     virtual void Process(sf::Event & event) {}
+
+    virtual void Highlight() {}
+
+    virtual void UnHighlight() {}
 };
 
 } // namespace bciinterface
