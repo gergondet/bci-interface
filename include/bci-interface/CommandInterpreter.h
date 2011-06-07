@@ -21,7 +21,7 @@ public:
     virtual ~CommandInterpreter() {}
 
     /* Set input command */
-    virtual void InterpretCommand(int command, const std::vector<DisplayObject*> & objects) = 0;
+    virtual bool InterpretCommand(int command, const std::vector<DisplayObject*> & objects) = 0;
 
     /* Handle events */
     virtual void Process(sf::Event & event) {}

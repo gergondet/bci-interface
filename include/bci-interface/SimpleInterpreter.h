@@ -13,7 +13,7 @@ namespace bciinterface
 class SimpleInterpreter : public CommandInterpreter
 {
 public:
-    virtual void InterpretCommand(int command, const std::vector<DisplayObject *> & objects);
+    virtual bool InterpretCommand(int command, const std::vector<DisplayObject *> & objects);
 };
 
 } // namespace bciinterface

@@ -20,7 +20,7 @@ class CoshellInterpreter : public CommandInterpreter
 public:
     CoshellInterpreter(const std::string & server_name, int server_port);
 
-    virtual void InterpretCommand(int command, const std::vector<DisplayObject *> & objects);
+    virtual bool InterpretCommand(int command, const std::vector<DisplayObject *> & objects);
 
     virtual void Process(sf::Event & event);
 

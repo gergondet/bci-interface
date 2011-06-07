@@ -49,7 +49,7 @@ public:
         m_initialcommands = commands;
     }
 
-    void InterpretCommand(int command, const std::vector<DisplayObject *> & objects)
+    bool InterpretCommand(int command, const std::vector<DisplayObject *> & objects)
     {
         SimpleInterpreter::InterpretCommand(command, objects);
         if(m_initialized)
@@ -60,9 +60,11 @@ public:
                 {
                     m_coshell->ExecuteACommand(m_commands[command]);
                     m_command = command;
+                    return true;
                 }
             }
         }
+        return false;
     }
 
     void Process(sf::Event & event)
@@ -94,9 +96,9 @@ CoshellInterpreter::CoshellInterpreter(const std::string & server_name, int serv
 {
 }
 
-void CoshellInterpreter::InterpretCommand(int command, const std::vector<DisplayObject *> & objects)
+bool CoshellInterpreter::InterpretCommand(int command, const std::vector<DisplayObject *> & objects)
 {
-    m_impl->InterpretCommand(command, objects);
+    return m_impl->InterpretCommand(command, objects);
 }
 
 void CoshellInterpreter::Process(sf::Event & event)

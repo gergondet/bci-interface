@@ -217,8 +217,8 @@ public:
                 {
                     in_cmd = m_receiver->GetCommand();
                 }
-                m_interpreter->InterpretCommand(in_cmd, m_objects);
-                if(cmd && in_cmd != 0) { *cmd = in_cmd; m_close = true; }
+                bool interpreter_status = m_interpreter->InterpretCommand(in_cmd, m_objects);
+                if(cmd && interpreter_status) { *cmd = in_cmd; m_close = true; }
             }
 
             /* Draw background */
