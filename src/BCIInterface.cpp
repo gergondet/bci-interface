@@ -138,15 +138,31 @@ public:
         m_app->Close();
     }
 
-    void DisplayLoop(sf::RenderWindow * app, unsigned int * cmd = 0, float timeout = 0)
+    sf::RenderWindow * DisplayLoop(sf::RenderWindow * app, bool fullscreen, unsigned int * cmd, float timeout = 0)
     {
-        m_app = app;
+        if(!app)
+        {
+            if(fullscreen)
+            {
+                m_app = new sf::RenderWindow(sf::VideoMode(m_width, m_height), "bci-interface", sf::Style::Fullscreen);
+                m_app->ShowMouseCursor(false);
+            }
+            else
+            {
+                m_app = new sf::RenderWindow(sf::VideoMode(m_width, m_height), "bci-interface");
+            }
+            m_app->UseVerticalSync(true);    
+        }
+        else
+        {
+            m_app = app;
+        }
 
         m_app->UseVerticalSync(true);
 
         DisplayLoop(cmd, timeout);
 
-        m_app = 0;
+        return m_app;
     }
 
     /* Actual loop launched by BCIInterface public functions */
@@ -196,7 +212,13 @@ public:
             /* Current command of the BCI system */
             if(m_receiver && m_interpreter)
             {
-                m_interpreter->InterpretCommand(m_receiver->GetCommand(), m_objects);
+                int in_cmd = 0;
+                if(clock.GetElapsedTime() > timeout)
+                {
+                    in_cmd = m_receiver->GetCommand();
+                }
+                m_interpreter->InterpretCommand(in_cmd, m_objects);
+                if(cmd && in_cmd != 0) { *cmd = in_cmd; m_close = true; }
             }
 
             /* Draw background */
@@ -285,9 +307,14 @@ void BCIInterface::DisplayLoop(bool fullscreen)
     m_impl->DisplayLoop(fullscreen);
 }
 
-void BCIInterface::DisplayLoop(sf::RenderWindow * app, unsigned int * cmd, float timeout)
+sf::RenderWindow * BCIInterface::DisplayLoop(sf::RenderWindow * app, bool fullscreen, unsigned int * cmd, float timeout)
 {
-    m_impl->DisplayLoop(app, cmd, timeout);
+    return m_impl->DisplayLoop(app, fullscreen, cmd, timeout);
+}
+
+sf::RenderWindow * BCIInterface::DisplayLoop(sf::RenderWindow * app, unsigned int * cmd, float timeout)
+{
+    return m_impl->DisplayLoop(app, true, cmd, timeout);
 }
 
 void BCIInterface::Close()

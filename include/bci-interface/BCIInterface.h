@@ -42,7 +42,10 @@ public:
     void DisplayLoop(bool fullscreen = true);
 
     /* DisplayLoop function for interface chaining */
-    void DisplayLoop(sf::RenderWindow * app, unsigned int * cmd = 0, float timeout = 0);
+    sf::RenderWindow * DisplayLoop(sf::RenderWindow * app, bool fullscreen, unsigned int * cmd, float timeout = 0);
+
+    /* DisplayLoop function for interface chaining alternate proto */
+    sf::RenderWindow * DisplayLoop(sf::RenderWindow * app, unsigned int * cmd, float timeout = 0);
 
     /* Close the interface */
     void Close();
