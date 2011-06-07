@@ -14,6 +14,7 @@ class BackgroundSprite;
 class DisplayObject;
 
 class CommandReceiver;
+class CommandInterpreter;
 
 struct BCIInterfaceImpl;
 
@@ -28,8 +29,11 @@ public:
     /* Add a display object to the interface, the interface assumes ownership of the object */
     void AddObject(DisplayObject * object);
 
-    /* Set the current command receiver */
+    /* Set the current command receiver: BCIInterface does NOT assume ownership of the receiver */
     void SetCommandReceiver(CommandReceiver * receiver);
+
+    /* Set the current command interpreter: BCIInterface does NOT assume ownership of the interpreter */
+    void SetCommandInterpreter(CommandInterpreter * interpreter);
 
     /* Remove all objects from the interface */
     void Clean();
