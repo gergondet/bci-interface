@@ -138,7 +138,7 @@ public:
         m_app->Close();
     }
 
-    sf::RenderWindow * DisplayLoop(sf::RenderWindow * app, bool fullscreen, unsigned int * cmd, float timeout = 0)
+    sf::RenderWindow * DisplayLoop(sf::RenderWindow * app, bool fullscreen, int * cmd, float timeout = 0)
     {
         if(!app)
         {
@@ -166,7 +166,7 @@ public:
     }
 
     /* Actual loop launched by BCIInterface public functions */
-    void DisplayLoop(unsigned int * cmd = 0, float timeout = 0)
+    void DisplayLoop(int * cmd = 0, float timeout = 0)
     {
         unsigned int frameCount = 0;
         sf::Clock clock;
@@ -307,12 +307,12 @@ void BCIInterface::DisplayLoop(bool fullscreen)
     m_impl->DisplayLoop(fullscreen);
 }
 
-sf::RenderWindow * BCIInterface::DisplayLoop(sf::RenderWindow * app, bool fullscreen, unsigned int * cmd, float timeout)
+sf::RenderWindow * BCIInterface::DisplayLoop(sf::RenderWindow * app, bool fullscreen, int * cmd, float timeout)
 {
     return m_impl->DisplayLoop(app, fullscreen, cmd, timeout);
 }
 
-sf::RenderWindow * BCIInterface::DisplayLoop(sf::RenderWindow * app, unsigned int * cmd, float timeout)
+sf::RenderWindow * BCIInterface::DisplayLoop(sf::RenderWindow * app, int * cmd, float timeout)
 {
     return m_impl->DisplayLoop(app, true, cmd, timeout);
 }
