@@ -39,6 +39,10 @@ public:
                 ss << buffer;
                 ss >> m_command;
             }
+            else
+            {
+                m_command = 0;
+            }
         }
     }
 
@@ -50,7 +54,6 @@ public:
     int GetCommand()
     {
         int command = m_command;
-        m_command = 0;
         return command;
     }
 };
