@@ -1,10 +1,11 @@
 SET(EXEC_NAME bci-interface)
 
 SET(${EXEC_NAME}_src
-    VisionServerBS.cpp
+    BCIInterface.cpp
+    CMakeLists.txt
     square-function.cpp
     SSVEPStimulus.cpp
-    BCIInterface.cpp
+    VisionServerBS.cpp
 )
 
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include)

@@ -1,10 +1,12 @@
 SET(${PROJECT_NAME}_HEADERS
     bci-interface/BackgroundSprite.h
-    bci-interface/VisionServerBS.h
+    bci-interface/BCIInterface.h
+    bci-interface/CommandInterpreter.h
+    bci-interface/CommandReceiver.h
     bci-interface/DisplayObject.h
     bci-interface/square-function.h
     bci-interface/SSVEPStimulus.h
-    bci-interface/BCIInterface.h
+    bci-interface/VisionServerBS.h
 )
 
 INSTALL(FILES ${${PROJECT_NAME}_HEADERS}
