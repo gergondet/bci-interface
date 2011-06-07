@@ -34,7 +34,6 @@ private:
     boost::thread * m_receiverth;
 
     CommandInterpreter * m_interpreter;
-    boost::thread * m_interpreterth;
 
 public:
     BCIInterfaceImpl(unsigned int width, unsigned int height)
@@ -42,7 +41,7 @@ public:
         m_background(0), m_backgroundth(0),
         m_objects(0),
         m_receiver(0), m_receiverth(0),
-        m_interpreter(0), m_interpreterth(0)
+        m_interpreter(0)
     {}
 
     ~BCIInterfaceImpl()
@@ -62,7 +61,6 @@ public:
         delete m_backgroundth;
         delete m_background;
         delete m_receiverth;
-        delete m_interpreterth;
         delete m_app;
     }
 
@@ -107,19 +105,7 @@ public:
 
     void SetCommandInterpreter(CommandInterpreter * interpreter)
     {
-        if(m_interpreterth)
-        {
-            /* Change interpreter while running (e.g. adaptive SSVEP interface) */
-            m_interpreter->Close();
-            m_interpreterth->join();
-            delete m_interpreterth;
-            m_interpreter = interpreter;
-            m_interpreterth = new boost::thread(boost::bind(&CommandInterpreter::InterpreterLoop, m_interpreter));
-        }
-        else
-        {
-            m_interpreter = interpreter;
-        }
+        m_interpreter = interpreter;
     }
 
     void Clean()
@@ -181,11 +167,6 @@ public:
             m_receiverth = new boost::thread(boost::bind(&CommandReceiver::CommandLoop, m_receiver));
         }
 
-        if(m_interpreter && !m_interpreterth)
-        {
-            m_interpreterth = new boost::thread(boost::bind(&CommandInterpreter::InterpreterLoop, m_interpreter));
-        }
-
         while(!m_close && m_app->IsOpened())
         {
             unsigned int newFrameCount = (unsigned int)floor(clock.GetElapsedTime()*60);
@@ -211,7 +192,7 @@ public:
             /* Current command of the BCI system */
             if(m_receiver && m_interpreter)
             {
-                m_interpreter->SetInCommand(m_receiver->GetCommand());
+                m_interpreter->InterpretCommand(m_receiver->GetCommand(), m_objects);
             }
 
             /* Draw background */
@@ -257,13 +238,6 @@ public:
                 m_receiverth->join();
                 delete m_receiverth;
                 m_receiverth = 0;
-            }
-            if(m_interpreter)
-            {
-                m_interpreter->Close();
-                m_interpreterth->join();
-                delete m_interpreterth;
-                m_interpreterth = 0;
             }
         }
     }
