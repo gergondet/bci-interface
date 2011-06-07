@@ -8,6 +8,7 @@ SET(${EXEC_NAME}_src
     VisionServerBS.cpp
     SimpleInterpreter.cpp
     UDPReceiver.cpp
+    CoshellInterpreter.cpp
 )
 
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include)

@@ -9,6 +9,7 @@ SET(${PROJECT_NAME}_HEADERS
     bci-interface/VisionServerBS.h
     bci-interface/SimpleInterpreter.h
     bci-interface/UDPReceiver.h
+    bci-interface/CoshellInterpreter.h
 )
 
 INSTALL(FILES ${${PROJECT_NAME}_HEADERS}
