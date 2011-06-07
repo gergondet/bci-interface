@@ -1,6 +1,8 @@
 #include <bci-interface/BCIInterface.h>
 #include <bci-interface/VisionServerBS.h>
 #include <bci-interface/SSVEPStimulus.h>
+#include <bci-interface/UDPReceiver.h>
+#include <bci-interface/SimpleInterpreter.h>
 
 #include <SFML/Graphics.hpp>
 
@@ -24,6 +26,10 @@ int main(int argc, char * argv[])
     unsigned int height = 800;
 
     BCIInterface * bciinterface = new BCIInterface(width, height);
+    UDPReceiver * receiver = new UDPReceiver(1111);
+    SimpleInterpreter * interpreter = new SimpleInterpreter();
+    bciinterface->SetCommandReceiver(receiver);
+    bciinterface->SetCommandInterpreter(interpreter);
 
     bciinterface->SetBackgroundSprite(new VisionServerBS("localhost", 4242, 640, 480));
     
@@ -35,6 +41,8 @@ int main(int argc, char * argv[])
     bciinterface->DisplayLoop(fullscreen);
 
     delete bciinterface;
+    delete interpreter;
+    delete receiver;
 
     return 0;
 }
