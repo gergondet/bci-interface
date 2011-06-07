@@ -11,9 +11,9 @@ void SimpleInterpreter::InterpretCommand(int command, const std::vector<DisplayO
     {
         objects[i]->Unhighlight();
     }
-    if(command - 1 < (int)objects.size())
+    if(command - 1 < (int)objects.size() && command - 1 >= 0)
     {
-        objects[command]->Highlight();
+        objects[command-1]->Highlight();
     }
 }
 
