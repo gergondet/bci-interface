@@ -86,7 +86,8 @@ int main(int argc, char * argv[])
 
     while(*out_cmd != 0)
     {
-        std::cout << "Starting interface" << std::endl;
+        *out_cmd = 0;
+
         std::vector<std::string> commands = GenerateCommands(cross_x,cross_y);
         interpreter->SetCommands(commands);
 

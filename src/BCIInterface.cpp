@@ -58,6 +58,14 @@ public:
         {
             m_backgroundth->join();
         }
+        if(m_receiver)
+        {
+            m_receiver->Close();
+        }
+        if(m_receiverth)
+        {
+            m_receiverth->join();
+        }
         delete m_backgroundth;
         delete m_background;
         delete m_receiverth;
@@ -216,9 +224,13 @@ public:
                 if(clock.GetElapsedTime() > timeout)
                 {
                     in_cmd = m_receiver->GetCommand();
+                    bool interpreter_status = m_interpreter->InterpretCommand(in_cmd, m_objects);
+                    if(cmd && interpreter_status) { *cmd = in_cmd; m_close = true; }
                 }
-                bool interpreter_status = m_interpreter->InterpretCommand(in_cmd, m_objects);
-                if(cmd && interpreter_status) { *cmd = in_cmd; m_close = true; }
+                else
+                {
+                    m_interpreter->InterpretCommand(0, m_objects);
+                }
             }
 
             /* Draw background */
