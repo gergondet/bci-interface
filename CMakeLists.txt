@@ -98,6 +98,7 @@ ENDIF(WIN32)
 ADD_SUBDIRECTORY(src)
 ADD_SUBDIRECTORY(include)
 ADD_SUBDIRECTORY(test)
+ADD_SUBDIRECTORY(application)
 
 #
 # pkg-config file
