@@ -26,7 +26,7 @@ public:
 
     virtual void Highlight() {}
 
-    virtual void UnHighlight() {}
+    virtual void Unhighlight() {}
 };
 
 } // namespace bciinterface
