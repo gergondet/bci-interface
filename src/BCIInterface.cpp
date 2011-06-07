@@ -187,6 +187,10 @@ public:
                 {
                     m_objects[i]->Process(event);
                 }
+                if(m_interpreter)
+                {
+                    m_interpreter->Process(event);
+                }
             }
 
             /* Current command of the BCI system */
