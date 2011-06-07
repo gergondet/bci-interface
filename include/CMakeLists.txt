@@ -8,6 +8,7 @@ SET(${PROJECT_NAME}_HEADERS
     bci-interface/SSVEPStimulus.h
     bci-interface/VisionServerBS.h
     bci-interface/SimpleInterpreter.h
+    bci-interface/UDPReceiver.h
 )
 
 INSTALL(FILES ${${PROJECT_NAME}_HEADERS}

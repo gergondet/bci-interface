@@ -7,6 +7,7 @@ SET(${EXEC_NAME}_src
     SSVEPStimulus.cpp
     VisionServerBS.cpp
     SimpleInterpreter.cpp
+    UDPReceiver.cpp
 )
 
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include)
