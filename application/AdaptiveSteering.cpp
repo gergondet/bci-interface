@@ -19,16 +19,21 @@ void sleep(DWORD t)
 
 using namespace bciinterface;
 
-std::string GenerateCommand(double fwd_speed, double turn_speed)
+std::string GenerateCommand(double fwd_speed, double turn_speed, int x, int y)
 {
     std::stringstream ss;
-    if(fwd_speed == 0)
+    if(x > 2 || y > 2 || x < -2 || y < -2)
     {
-        ss << "set pg.velocitydes [3](0.0001,0.0," << turn_speed << ")";
+        /* Out of screen stimulus */
+        return GenerateCommand(fwd_speed, turn_speed, 0, 0);
+    }
+    if(y == 0)
+    {
+        ss << "set pg.velocitydes [3](0.0001,0.0," << x*turn_speed << ")";
     }
     else
     {
-        ss << "set pg.velocitydes [3](" << fwd_speed << ",0.0," << turn_speed << ")";
+        ss << "set pg.velocitydes [3](" << y*fwd_speed << ",0.0," << x*turn_speed << ")";
     }
     return ss.str();
 }
@@ -38,11 +43,11 @@ std::vector<std::string> GenerateCommands(int x, int y)
     std::vector<std::string> result;
     double fwd_speed = 0.1;
     double turn_speed = -0.1;
-    result.push_back(GenerateCommand(y*fwd_speed, x*turn_speed));
-    result.push_back(GenerateCommand((y+1)*fwd_speed, x*turn_speed));
-    result.push_back(GenerateCommand(y*fwd_speed, (x+1)*turn_speed));
-    result.push_back(GenerateCommand((y-1)*fwd_speed, x*turn_speed));
-    result.push_back(GenerateCommand(y*fwd_speed, (x-1)*turn_speed));
+    result.push_back(GenerateCommand(fwd_speed, turn_speed, x ,y));
+    result.push_back(GenerateCommand(fwd_speed, turn_speed, x, y+1));
+    result.push_back(GenerateCommand(fwd_speed, turn_speed, x+1, y));
+    result.push_back(GenerateCommand(fwd_speed, turn_speed, x, y-1));
+    result.push_back(GenerateCommand(fwd_speed, turn_speed, x-1, y));
     return result;
 }
 
@@ -50,10 +55,34 @@ void CreateObjects(BCIInterface * bciinterface, int cross_x, int cross_y, float 
 {
     float orig_x = width/2 + cross_x*width/6;
     float orig_y = height/2 - cross_y*height/6;
-    bciinterface->AddObject(new SSVEPStimulus(7,60, orig_x, orig_y - height/6, 100, 100, 255, 0, 0, 255));
-    bciinterface->AddObject(new SSVEPStimulus(12,60, orig_x + width/6, orig_y, 100, 100, 255, 0, 0, 255));
-    bciinterface->AddObject(new SSVEPStimulus(5,60, orig_x, orig_y + height/6, 100, 100, 255, 0, 0, 255));
-    bciinterface->AddObject(new SSVEPStimulus(9,60, orig_x - width/6, orig_y, 100, 100, 255, 0, 0, 255));
+    bool out_of_screen = false;
+    if(cross_y > 1)
+    {
+        bciinterface->AddObject(new SSVEPStimulus(7, 60, width/2, height/2, 100, 100, 255, 0, 0, 255));
+        out_of_screen = true;
+    }
+    else { bciinterface->AddObject(new SSVEPStimulus(7,60, orig_x, orig_y - height/6, 100, 100, 255, 0, 0, 255)); }
+    if(cross_x > 1)
+    {
+        if(!out_of_screen) { bciinterface->AddObject(new SSVEPStimulus(12, 60, width/2, height/2, 100, 100, 255, 0, 0, 255)); }
+        else { bciinterface->AddObject(new SSVEPStimulus(12, 60, width+200, height+200, 100, 100, 255, 0, 0, 255)); }
+        out_of_screen = true;
+    }
+    else { bciinterface->AddObject(new SSVEPStimulus(12,60, orig_x + width/6, orig_y, 100, 100, 255, 0, 0, 255)); }
+    if(cross_y < -1)
+    {
+        if(!out_of_screen) { bciinterface->AddObject(new SSVEPStimulus(5, 60, width/2, height/2, 100, 100, 255, 0, 0, 255)); }
+        else { bciinterface->AddObject(new SSVEPStimulus(5, 60, width+200, height+200, 100, 100, 255, 0, 0, 255)); }
+        out_of_screen = true;
+    }
+    else { bciinterface->AddObject(new SSVEPStimulus(5,60, orig_x, orig_y + height/6, 100, 100, 255, 0, 0, 255)); }
+    if(cross_x < -1)
+    {
+        if(!out_of_screen) { bciinterface->AddObject(new SSVEPStimulus(9, 60, width/2, height/2, 100, 100, 255, 0, 0, 255)); }
+        else { bciinterface->AddObject(new SSVEPStimulus(9, 60, width+200, height+200, 100, 100, 255, 0, 0, 255)); }
+        out_of_screen = true;
+    }
+    else { bciinterface->AddObject(new SSVEPStimulus(9,60, orig_x - width/6, orig_y, 100, 100, 255, 0, 0, 255)); }
 }
 
 int main(int argc, char * argv[])
@@ -97,16 +126,20 @@ int main(int argc, char * argv[])
         switch(*out_cmd)
         {
             case 1:
-                cross_y += 1;
+                cross_x = cross_y==2?0:cross_x;
+                cross_y = cross_y==2?0:cross_y+1;
                 break;
             case 2:
-                cross_x += 1;
+                cross_y = cross_x==2?0:cross_y;
+                cross_x = cross_x==2?0:cross_x+1;
                 break;
             case 3:
-                cross_y -= 1;
+                cross_x = cross_y==-2?0:cross_x;
+                cross_y = cross_y==-2?0:cross_y-1;
                 break;
             case 4:
-                cross_x -= 1;
+                cross_y = cross_x==-2?0:cross_y;
+                cross_x = cross_x==-2?0:cross_x-1;
                 break;
             default:
                 break;
