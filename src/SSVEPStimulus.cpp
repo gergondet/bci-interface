@@ -16,7 +16,7 @@ private:
     std::vector<bool> m_frameSeq;
 public:
     SSVEPStimulusImpl(int frequency, int screenFrequency, float x, float y, float size_x, float size_y, int r, int g, int b, int a) : 
-        m_shape(sf::Shape::Rectangle(x - size_x/2, y - size_y/2, x+size_x, y+size_y, sf::Color(r, g, b, a), 6, sf::Color(0, 255, 0, 128))) , 
+        m_shape(sf::Shape::Rectangle(x - size_x/2, y - size_y/2, x + size_x/2, y + size_y/2, sf::Color(r, g, b, a), 6, sf::Color(0, 255, 0, 128))) , 
         m_frequency(frequency) , m_screenFrequency(screenFrequency)
     {
         m_shape.EnableOutline(false);
