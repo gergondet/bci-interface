@@ -46,14 +46,14 @@ std::vector<std::string> GenerateCommands(int x, int y)
     return result;
 }
 
-void CreateObjects(BCIInterface * bciinterface, int cross_x, int cross_y)
+void CreateObjects(BCIInterface * bciinterface, int cross_x, int cross_y, float width, float height)
 {
-    int width = 1280;
-    int height = 800;
-    bciinterface->AddObject(new SSVEPStimulus(7,60, width/2-75, 50, 150, 150, 255, 0, 0, 255));
-    bciinterface->AddObject(new SSVEPStimulus(12,60, width-225, height/2-75, 150, 150, 255, 0, 0, 255));
-    bciinterface->AddObject(new SSVEPStimulus(5,60, width/2-75, height-200, 150, 150, 255, 0, 0, 255));
-    bciinterface->AddObject(new SSVEPStimulus(9,60, 75, height/2-75, 150, 150, 255, 0, 0, 255));
+    float orig_x = width/2 + cross_x*width/6;
+    float orig_y = height/2 - cross_y*height/6;
+    bciinterface->AddObject(new SSVEPStimulus(7,60, orig_x, orig_y - height/6, 100, 100, 255, 0, 0, 255));
+    bciinterface->AddObject(new SSVEPStimulus(12,60, orig_x + width/6, orig_y, 100, 100, 255, 0, 0, 255));
+    bciinterface->AddObject(new SSVEPStimulus(5,60, orig_x, orig_y + height/6, 100, 100, 255, 0, 0, 255));
+    bciinterface->AddObject(new SSVEPStimulus(9,60, orig_x - width/6, orig_y, 100, 100, 255, 0, 0, 255));
 }
 
 int main(int argc, char * argv[])
@@ -90,7 +90,7 @@ int main(int argc, char * argv[])
         interpreter->SetCommands(commands);
 
         bciinterface->Clean();
-        CreateObjects(bciinterface, cross_x, cross_y);
+        CreateObjects(bciinterface, cross_x, cross_y, (float)width, (float)height);
 
         app = bciinterface->DisplayLoop(app, fullscreen, out_cmd, timeout);
 
