@@ -180,6 +180,9 @@ public:
         sf::Clock clock;
         m_close = false;
 
+        /* Reset cmd to handle exit properly when chaining interface */
+        if(cmd) { *cmd = 0; }
+
         /* Launch BackgroundSprite thread */
         if(m_background && !m_backgroundth)
         {
