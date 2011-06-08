@@ -11,12 +11,6 @@
 
 #include <boost/shared_ptr.hpp>
 
-#ifdef WIN32
-#define SSVEPINTERFACE_API __declspec(dllexport)
-#else
-#define SSVEPINTERFACE_API 
-#endif
-
 namespace bciinterface
 {
 
@@ -25,8 +19,8 @@ struct SSVEPStimulusImpl;
 class SSVEPStimulus : public DisplayObject
 {
 public:
-    /*! \brief Constructor */ 
-    SSVEPINTERFACE_API SSVEPStimulus(int frequency, int screenFrequency, float x = 0, float y = 0, float size_x = 100, float size_y = 100, int r = 255, int g = 0, int b = 0, int a = 255);
+    /*! \brief Constructor: x and y are stimulus centers */ 
+    SSVEPStimulus(int frequency, int screenFrequency, float x = 0, float y = 0, float size_x = 100, float size_y = 100, int r = 255, int g = 0, int b = 0, int a = 255);
 
     /* \brief Change flickering frequency */
     bool ChangeFrequency(int frequency, int screenFrequency);
