@@ -1,4 +1,4 @@
-#include <bci-interface/VisionServerBS.h>
+#include <bci-interface/BackgroundSprite/VisionServerBS.h>
 
 #include <SFML/Graphics.hpp>
 
@@ -141,9 +141,9 @@ public:
         m_close = true;
     }
 
-    sf::Sprite * GetSprite()
+    void Draw(sf::RenderWindow * app)
     {
-        return m_sprite;
+        app->Draw(*m_sprite);
     }
 };
 
@@ -162,9 +162,9 @@ void VisionServerBS::Close()
     m_impl->Close();
 }
 
-sf::Sprite * VisionServerBS::GetSprite()
+void VisionServerBS::Draw(sf::RenderWindow * app)
 {
-    return m_impl->GetSprite();
+    return m_impl->Draw(app);
 }
 
 } // namespace bciinterface

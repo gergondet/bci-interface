@@ -239,12 +239,7 @@ public:
             /* Draw background */
             if(m_background)
             {
-                sf::Sprite * sprite = m_background->GetSprite();
-                if(sprite)
-                {
-                    sprite->Resize(m_width, m_height);
-                    m_app->Draw(*sprite);
-                }
+                m_background->Draw(m_app);
             }
 
             /* Draw objects */

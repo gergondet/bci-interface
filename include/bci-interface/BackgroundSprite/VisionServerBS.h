@@ -22,7 +22,7 @@ public:
 
     void Close();
 
-    sf::Sprite * GetSprite();
+    void Draw(sf::RenderWindow * app);
 
 private:
     boost::shared_ptr<VisionServerBSImpl> m_impl;

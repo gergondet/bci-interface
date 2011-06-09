@@ -5,7 +5,7 @@
 
 namespace sf
 {
-    class Sprite;
+    class RenderWindow;
 }
 
 namespace bciinterface
@@ -25,7 +25,7 @@ public:
     virtual void Close() = 0;
 
     /* Returns the current sprite of background */
-    virtual sf::Sprite * GetSprite() = 0;
+    virtual void Draw(sf::RenderWindow * app) = 0;
 };
 
 } // namespace bciinterface
