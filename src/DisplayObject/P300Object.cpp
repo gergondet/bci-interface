@@ -8,12 +8,13 @@ namespace bciinterface
 struct P300ObjectImpl
 {
 private:
+    bool was_active;
     sf::Color m_active_color;
     sf::Color m_inactive_color;
     sf::Shape * m_shape;
 public:
     P300ObjectImpl(unsigned int x, unsigned int y, unsigned int size_x, unsigned int size_y, unsigned char r, unsigned char g, unsigned char b)
-        : m_active_color(sf::Color(r,g,b,255)), m_inactive_color(sf::Color(r,g,b,60)),
+        : was_active(false), m_active_color(sf::Color(r,g,b,255)), m_inactive_color(sf::Color(r,g,b,60)),
           m_shape(new sf::Shape())
     {
         m_shape->AddPoint(x-size_x/2, y-size_y/2, m_inactive_color);
@@ -30,16 +31,19 @@ public:
     void Display(sf::RenderWindow * app, unsigned int frameCount)
     {
         app->Draw(*m_shape);
+        if(was_active) { Unhighlight(); } 
     }
 
     void Highlight()
     {
         m_shape->SetColor(m_active_color);
+        was_active = true;
     }
 
     void Unhighlight()
     {
         m_shape->SetColor(m_inactive_color);
+        was_active = false;
     }
 };
 

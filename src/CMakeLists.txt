@@ -9,6 +9,7 @@ DisplayObject/SSVEPStimulus.cpp
 DisplayObject/P300Object.cpp
 CommandInterpreter/CoshellInterpreter.cpp
 CommandInterpreter/SimpleInterpreter.cpp
+CommandInterpreter/P300Interpreter.cpp
 )
 
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include)
