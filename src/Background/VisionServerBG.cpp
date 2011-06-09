@@ -1,4 +1,4 @@
-#include <bci-interface/BackgroundSprite/VisionServerBS.h>
+#include <bci-interface/Background/VisionServer.h>
 
 #include <SFML/Graphics.hpp>
 
@@ -15,7 +15,7 @@
 namespace bciinterface
 {
 
-struct VisionServerBSImpl
+struct VisionServerBGImpl
 {
 private:
     unsigned int m_width;
@@ -32,7 +32,7 @@ private:
     bool m_close;
 
 public:
-    VisionServerBSImpl(const std::string & vision_name, unsigned short vision_port, unsigned int width, unsigned int height)
+    VisionServerBGImpl(const std::string & vision_name, unsigned short vision_port, unsigned int width, unsigned int height)
        :    m_width(width), m_height(height),
             m_dataFromSocket(new unsigned char[50001]), m_dataImage(new sf::Uint8[width*height*4]),
             m_image(new sf::Image), m_sprite(new sf::Sprite), m_close(false)
@@ -70,7 +70,7 @@ public:
         }
     }
 
-    ~VisionServerBSImpl()
+    ~VisionServerBGImpl()
     {
         delete[] m_dataFromSocket;
         delete[] m_dataImage;
@@ -147,22 +147,22 @@ public:
     }
 };
 
-VisionServerBS::VisionServerBS(const std::string & vs_name, unsigned short vs_port, unsigned int width, unsigned int height)
-    : m_impl(new VisionServerBSImpl(vs_name, vs_port, width, height))
+VisionServerBG::VisionServerBG(const std::string & vs_name, unsigned short vs_port, unsigned int width, unsigned int height)
+    : m_impl(new VisionServerBGImpl(vs_name, vs_port, width, height))
 {
 }
 
-void VisionServerBS::UpdateLoop()
+void VisionServerBG::UpdateLoop()
 {
     m_impl->UpdateLoop();
 }
 
-void VisionServerBS::Close()
+void VisionServerBG::Close()
 {
     m_impl->Close();
 }
 
-void VisionServerBS::Draw(sf::RenderWindow * app)
+void VisionServerBG::Draw(sf::RenderWindow * app)
 {
     return m_impl->Draw(app);
 }

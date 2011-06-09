@@ -1,7 +1,7 @@
-/* BackgroundSprite class is a generic interface to feed the interface background */
+/* Background class is a generic interface to feed the interface background */
 
-#ifndef _H_BACKGROUNDSPRITE_H_
-#define _H_BACKGROUNDSPRITE_H_
+#ifndef _H_BACKGROUND_H_
+#define _H_BACKGROUND_H_
 
 namespace sf
 {
@@ -11,12 +11,12 @@ namespace sf
 namespace bciinterface
 {
 
-class BackgroundSprite
+class Background
 {
 public:
-    BackgroundSprite() {}
+    Background() {}
 
-    virtual ~BackgroundSprite() {}
+    virtual ~Background() {}
 
     /* Loop for background update will be launched in its own thread */
     virtual void UpdateLoop() = 0;

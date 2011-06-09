@@ -1,6 +1,6 @@
 #include <bci-interface/BCIInterface.h>
 
-#include <bci-interface/BackgroundSprite.h>
+#include <bci-interface/Background.h>
 #include <bci-interface/DisplayObject.h>
 
 #include <bci-interface/CommandReceiver.h>
@@ -25,7 +25,7 @@ private:
     sf::RenderWindow * m_app;
     std::ofstream m_fpslog;
 
-    BackgroundSprite * m_background;
+    Background * m_background;
     boost::thread * m_backgroundth;
 
     std::vector<DisplayObject *> m_objects;
@@ -72,16 +72,16 @@ public:
         delete m_app;
     }
 
-    void SetBackgroundSprite(BackgroundSprite * background)
+    void SetBackground(Background * background)
     {
         if(m_backgroundth)
         {
-            /* Change backgroundsprite type while (e.g. camera switch ?) running */
+            /* Change background type while (e.g. camera switch ?) running */
             m_background->Close();
             m_backgroundth->join();
             delete m_backgroundth;
             m_background = background;
-            m_backgroundth = new boost::thread(boost::bind(&BackgroundSprite::UpdateLoop, m_background));
+            m_backgroundth = new boost::thread(boost::bind(&Background::UpdateLoop, m_background));
         }
         else
         {
@@ -183,10 +183,10 @@ public:
         /* Reset cmd to handle exit properly when chaining interface */
         if(cmd) { *cmd = 0; }
 
-        /* Launch BackgroundSprite thread */
+        /* Launch Background thread */
         if(m_background && !m_backgroundth)
         {
-            m_backgroundth = new boost::thread(boost::bind(&BackgroundSprite::UpdateLoop, m_background));
+            m_backgroundth = new boost::thread(boost::bind(&Background::UpdateLoop, m_background));
         }
 
         if(m_receiver && !m_receiverth)
@@ -287,9 +287,9 @@ public:
 BCIInterface::BCIInterface(unsigned int width, unsigned int height) : m_impl(new BCIInterfaceImpl(width, height))
 {}
 
-void BCIInterface::SetBackgroundSprite(BackgroundSprite * background)
+void BCIInterface::SetBackground(Background * background)
 {
-    m_impl->SetBackgroundSprite(background);
+    m_impl->SetBackground(background);
 }
 
 void BCIInterface::AddObject(DisplayObject * object)

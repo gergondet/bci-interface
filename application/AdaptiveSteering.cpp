@@ -1,5 +1,5 @@
 #include <bci-interface/BCIInterface.h>
-#include <bci-interface/BackgroundSprite/VisionServerBS.h>
+#include <bci-interface/Background/VisionServerBG.h>
 #include <bci-interface/DisplayObject/SSVEPStimulus.h>
 #include <bci-interface/CommandReceiver/UDPReceiver.h>
 #include <bci-interface/CommandInterpreter/CoshellInterpreter.h>
@@ -105,7 +105,7 @@ int main(int argc, char * argv[])
     interpreter->SetInitialCommands(initialcommands);
     bciinterface->SetCommandInterpreter(interpreter);
 
-    bciinterface->SetBackgroundSprite(new VisionServerBS("localhost", 4242, 640, 480));
+    bciinterface->SetBackground(new VisionServerBG("localhost", 4242, 640, 480));
     
     int * out_cmd = new int(-1);
     float timeout = 2;
