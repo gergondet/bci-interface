@@ -44,6 +44,9 @@ int main(int argc, char * argv[])
     initialcommands.push_back("import walking/startherdt");
     initialcommands.push_back("set pg.velocitydes [3](0.0001,0.0,0.0)");
     interpreter->SetInitialCommands(initialcommands);
+    std::vector<std::string> finalcommands;
+    finalcommands.push_back("set pg.velocitydes [3](0.0,0.0,0.0)");
+    interpreter->SetFinalCommands(finalcommands);
     bciinterface->SetCommandInterpreter(interpreter);
 
     bciinterface->SetBackground(new VisionServerBG("localhost", 4242, 640, 480));

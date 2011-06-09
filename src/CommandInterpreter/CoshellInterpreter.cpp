@@ -17,11 +17,12 @@ private:
     std::vector<std::string> m_commands;
     std::string m_initialtest;
     std::vector<std::string> m_initialcommands;
+    std::vector<std::string> m_finalcommands;
 public:
     CoshellInterpreterImpl(const std::string & server_name, int server_port)
         : SimpleInterpreter(), m_coshell(new coshellbci::CoshellClient(server_name.c_str(), server_port)),
             m_initialized(false), m_command(0), 
-            m_commands(0), m_initialtest(""), m_initialcommands(0)
+            m_commands(0), m_initialtest(""), m_initialcommands(0), m_finalcommands(0)
     {
         if(!m_coshell || !m_coshell->Initialize())
         {
@@ -49,6 +50,11 @@ public:
         m_initialcommands = commands;
     }
 
+    void SetFinalCommands(const std::vector<std::string> & commands)
+    {
+        m_finalcommands = commands;
+    }
+
     bool InterpretCommand(int command, const std::vector<DisplayObject *> & objects)
     {
         SimpleInterpreter::InterpretCommand(command, objects);
@@ -73,19 +79,31 @@ public:
         {
             if(!m_initialized)
             {
+                bool initial_test = true;
                 if(m_initialtest.size() != 0)
                 {
                     std::string answer = m_coshell->ExecuteACommand(m_initialtest);
                     std::string prefix = "Catch ";
-                    if(answer.compare(0, prefix.length(), prefix) == 0)
+                    if(answer.compare(0, prefix.length(), prefix) != 0)
                     {
-                        for(size_t i = 0; i < m_initialcommands.size(); ++i)
-                        {
-                            m_coshell->ExecuteACommand(m_initialcommands[i]);
-                        }
+                        initial_test = false;
                     }
                 }
+                if(initial_test)
+                {
+                        for(size_t i = 0; i < m_initialcommands.size(); ++i)
+                        {   
+                            m_coshell->ExecuteACommand(m_initialcommands[i]);
+                        }
+                }
                 m_initialized = true;
+            }
+            else
+            {
+                for(size_t i = 0; i < m_finalcommands.size(); ++i)
+                {
+                    m_coshell->ExecuteACommand(m_finalcommands[i]);
+                }
             }
         }
     }
@@ -119,6 +137,11 @@ void CoshellInterpreter::SetInitialTest(const std::string & test)
 void CoshellInterpreter::SetInitialCommands(const std::vector<std::string> & commands)
 {
     m_impl->SetInitialCommands(commands);
+}
+
+void CoshellInterpreter::SetFinalCommands(const std::vector<std::string> & commands)
+{
+    m_impl->SetFinalCommands(commands);
 }
 
 } // namespace bciinterface
