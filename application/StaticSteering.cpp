@@ -1,8 +1,8 @@
 #include <bci-interface/BCIInterface.h>
-#include <bci-interface/VisionServerBS.h>
-#include <bci-interface/SSVEPStimulus.h>
-#include <bci-interface/UDPReceiver.h>
-#include <bci-interface/CoshellInterpreter.h>
+#include <bci-interface/BackgroundSprite/VisionServerBS.h>
+#include <bci-interface/DisplayObject/SSVEPStimulus.h>
+#include <bci-interface/CommandReceiver/UDPReceiver.h>
+#include <bci-interface/CommandInterpreter/CoshellInterpreter.h>
 
 #include <SFML/Graphics.hpp>
 

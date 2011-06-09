@@ -1,14 +1,14 @@
 SET(EXEC_NAME bci-interface)
 
 SET(${EXEC_NAME}_src
-    BCIInterface.cpp
-    CMakeLists.txt
-    square-function.cpp
-    SSVEPStimulus.cpp
-    VisionServerBS.cpp
-    SimpleInterpreter.cpp
-    UDPReceiver.cpp
-    CoshellInterpreter.cpp
+CommandReceiver/UDPReceiver.cpp
+Utils/square-function.cpp
+BCIInterface.cpp
+BackgroundSprite/VisionServerBS.cpp
+DisplayObject/SSVEPStimulus.cpp
+DisplayObject/P300Object.cpp
+CommandInterpreter/CoshellInterpreter.cpp
+CommandInterpreter/SimpleInterpreter.cpp
 )
 
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include)
