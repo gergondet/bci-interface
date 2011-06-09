@@ -1,4 +1,4 @@
-#include <bci-interface/UDPReceiver.h>
+#include <bci-interface/CommandReceiver/UDPReceiver.h>
 
 #include <bci-middleware/UDPSocket.h>
 #include <iostream>

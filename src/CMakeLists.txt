@@ -4,7 +4,7 @@ SET(${EXEC_NAME}_src
 CommandReceiver/UDPReceiver.cpp
 Utils/square-function.cpp
 BCIInterface.cpp
-BackgroundSprite/VisionServerBS.cpp
+Background/VisionServerBG.cpp
 DisplayObject/SSVEPStimulus.cpp
 DisplayObject/P300Object.cpp
 CommandInterpreter/CoshellInterpreter.cpp

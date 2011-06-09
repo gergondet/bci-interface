@@ -1,4 +1,4 @@
-#include <bci-interface/Background/VisionServer.h>
+#include <bci-interface/Background/VisionServerBG.h>
 
 #include <SFML/Graphics.hpp>
 

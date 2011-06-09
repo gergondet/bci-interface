@@ -1,6 +1,6 @@
 /* A BackgroundSprite implementation for the vision_server */
 
-#include <bci-interface/BackgroundSprite.h>
+#include <bci-interface/Background.h>
 
 #include <boost/shared_ptr.hpp>
 #include <string>

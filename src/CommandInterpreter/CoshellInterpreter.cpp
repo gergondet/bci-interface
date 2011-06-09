@@ -1,6 +1,6 @@
-#include <bci-interface/CoshellInterpreter.h>
+#include <bci-interface/CommandInterpreter/CoshellInterpreter.h>
 
-#include <bci-interface/SimpleInterpreter.h>
+#include <bci-interface/CommandInterpreter/SimpleInterpreter.h>
 #include <coshell-bci/CoshellClient.h>
 #include <ctime>
 #include <SFML/Window/Event.hpp>

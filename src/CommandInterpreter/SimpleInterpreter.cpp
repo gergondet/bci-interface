@@ -1,4 +1,4 @@
-#include <bci-interface/SimpleInterpreter.h>
+#include <bci-interface/CommandInterpreter/SimpleInterpreter.h>
 
 #include <bci-interface/DisplayObject.h>
 

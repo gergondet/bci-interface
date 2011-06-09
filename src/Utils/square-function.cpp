@@ -1,4 +1,4 @@
-#include <bci-interface/square-function.h>
+#include <bci-interface/Utils/square-function.h>
 
 #include <cmath>
 #include <cstdlib>

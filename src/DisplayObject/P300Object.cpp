@@ -1,4 +1,4 @@
-#include <bci-interface/P300Object.h>
+#include <bci-interface/DisplayObject/P300Object.h>
 
 #include <SFML/Graphics.hpp>
 
