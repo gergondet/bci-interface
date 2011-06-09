@@ -16,6 +16,8 @@ public:
     P300Interpreter(bool training, unsigned int nb_objects, unsigned int trials = 4);
 
     virtual bool InterpretCommand(int command, const std::vector<DisplayObject*> & objects);
+
+    void SetTrainingSet(std::vector<unsigned int> & training_set);
 private:
     boost::shared_ptr<P300InterpreterImpl> m_impl;
 };
