@@ -7,6 +7,7 @@ BCIInterface.cpp
 Background/VisionServerBG.cpp
 DisplayObject/SSVEPStimulus.cpp
 DisplayObject/P300Object.cpp
+DisplayObject/SpriteObject.cpp
 CommandInterpreter/CoshellInterpreter.cpp
 CommandInterpreter/SimpleInterpreter.cpp
 CommandInterpreter/P300Interpreter.cpp
