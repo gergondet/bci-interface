@@ -49,7 +49,7 @@ public:
 
     void SetTrainingSet(std::vector<unsigned int> & training_set)
     {
-
+        m_training_set = training_set;
     }
 };
 
@@ -62,7 +62,7 @@ bool P300Interpreter::InterpretCommand(int command, const std::vector<DisplayObj
     return m_impl->InterpretCommand(command, objects);
 }
 
-void P300Interpreter::SetTrainingSet(std::vector<int> & training_set)
+void P300Interpreter::SetTrainingSet(std::vector<unsigned int> & training_set)
 {
     return m_impl->SetTrainingSet(training_set);
 }
