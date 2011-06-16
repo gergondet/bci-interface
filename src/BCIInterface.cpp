@@ -29,6 +29,7 @@ private:
     boost::thread * m_backgroundth;
 
     std::vector<DisplayObject *> m_objects;
+    std::vector<DisplayObject *> m_objects_non_owned;
 
     CommandReceiver * m_receiver;
     boost::thread * m_receiverth;
@@ -39,13 +40,14 @@ public:
     BCIInterfaceImpl(unsigned int width, unsigned int height)
     : m_width(width), m_height(height), m_close(false), m_app(0), m_fpslog("/tmp/bciinterface_fps.log"), 
         m_background(0), m_backgroundth(0),
-        m_objects(0),
+        m_objects(0), m_objects_non_owned(0),
         m_receiver(0), m_receiverth(0),
         m_interpreter(0)
     {}
 
     ~BCIInterfaceImpl()
     {
+        m_objects_non_owned.resize(0);
         for(size_t i = 0; i < m_objects.size(); ++i)
         {
             delete m_objects[i];
@@ -94,6 +96,11 @@ public:
         m_objects.push_back(object);
     }
 
+    void AddNonOwnedObject(DisplayObject * object)
+    {
+        m_objects_non_owned.push_back(object);
+    }
+
     void SetCommandReceiver(CommandReceiver * receiver)
     {
         if(m_receiverth)
@@ -124,6 +131,7 @@ public:
             delete tmp;
             m_objects.pop_back();
         }
+        m_objects_non_owned.resize(0);
     }
 
     void DisplayLoop(bool fullscreen)
@@ -295,6 +303,11 @@ void BCIInterface::SetBackground(Background * background)
 void BCIInterface::AddObject(DisplayObject * object)
 {
     m_impl->AddObject(object);
+}
+
+void BCIInterface::AddNonOwnedObject(DisplayObject * object)
+{
+    m_impl->AddNonOwnedObject(object);
 }
 
 void BCIInterface::SetCommandReceiver(CommandReceiver * receiver)

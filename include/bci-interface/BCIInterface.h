@@ -29,6 +29,9 @@ public:
     /* Add a display object to the interface, the interface assumes ownership of the object */
     void AddObject(DisplayObject * object);
 
+    /* Add a display object not owned by the interface*/
+    void AddNonOwnedObject(DisplayObject * object);
+
     /* Set the current command receiver: BCIInterface does NOT assume ownership of the receiver */
     void SetCommandReceiver(CommandReceiver * receiver);
 
