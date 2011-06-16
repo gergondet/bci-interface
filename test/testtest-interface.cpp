@@ -42,7 +42,7 @@ int main(int argc, char * argv[])
    interface->AddSquare(new FlickeringSquare(5,60, winW/2, winH-150, 75, 255, 0, 0, 255, true));
    interface->AddSquare(new FlickeringSquare(9,60, 150, winH/2, 75, 255, 0, 0, 255, true));*/
 
-   interface->ClearPositionsTabs();
+   //interface->ClearPositionsTabs();
    /*interface->AddPositionsTab(25);
    interface->AddPositionsTab(100+(winW-350)/6);
    interface->AddPositionsTab(100+2*(winW-350)/6);
@@ -51,13 +51,13 @@ int main(int argc, char * argv[])
    interface->AddPositionsTab(100+5*(winW-350)/6);*/
 
    /*(float posXSquareLeft, float posXSquareRight, float size, int numPos)*/
-   interface->AddPositionsTab(25, winW - 175, 150, 6);
+   //interface->AddPositionsTab(25, winW - 175, 150, 6);
 
    /*(x, y, size, final_position, r, g, b, a)*/
    //interface->AddCursor(new MoovingCursor(0, winH/2-50, 150, 0, 255, 0, 0, 255));
 
    /*( x, y, size, period, r, g, b, a)*/
-   interface->AddPoint(new RandomPoint(200, 200, 10, 420, 0, 255, 0, 255));
+   interface->AddPoint(new RandomPoint(200, 200, 10, 360, 0, 255, 0, 255));
 
     void (TestInterface::*fn)(bool) = &TestInterface::DisplayLoop;
     boost::thread th(fn, interface, fullscreen);
