@@ -57,7 +57,8 @@ public:
 
     void SetPosition(std::vector<float> position)
      {
-         this->point.SetPosition(position[0],position[1]);
+//         this->point.SetPosition(position[0],position[1]);
+        point = sf::Shape::Rectangle(position[0], position[1], position[0]+size, position[1]+size, sf::Color(0,255,0,255));
      }
 
     float GetPeriod()

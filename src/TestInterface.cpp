@@ -50,12 +50,13 @@ struct TestInterfaceImpl
         sf::RenderWindow * app;
     public:
         TestInterfaceImpl(unsigned int width, unsigned int height) : 
-            m_trigger(new bcimw::TCPTrigger("194.254.115.67", 4242)),
+//            m_trigger(new bcimw::TCPTrigger("194.254.115.67", 4242)),
+            m_trigger(new bcimw::TCPTrigger("localhost", 4242)),
             m_width(width), m_height(height), 
             closeRequest(false), 
             fpsLog("fps.log"), app(0), compt_begin(0), compt_point(0),
             indicePos(0), nextPosition(false), previousPosition(false),
-            allowedPosition(false), distance(0), coordonnees("../donnees_test/coordonnees_1600_05_05_2010.log", std::ios::out | std::ios::app)
+            allowedPosition(false), distance(0), coordonnees("coordonees.log")
         {
             m_squares.resize(0);
             position.resize(2);
@@ -234,7 +235,6 @@ struct TestInterfaceImpl
 
 					    std::time(&t);
 						coordonnees << std::ctime(&t) << " " << position[0] << ", " << position[1] << std::endl;
-						//coordonnees << position[0] << ", " << position[1] << std::endl;
 
 						app->Draw(*(m_points[0]->GetPoint()));
 						compt_point++;
@@ -251,7 +251,7 @@ struct TestInterfaceImpl
 						compt_point++;
 
 					}
-					else if (compt_point > m_points[0]->GetPeriod()+ 60){
+					else {
 						//std::cout << "4 : " <<  compt_point << std::endl;
 						compt_point=0;
 						allowedPosition = false;
