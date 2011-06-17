@@ -21,7 +21,7 @@ void sleep(DWORD t)
 
 using namespace bciinterface;
 
-std::string GenerateCommand(double fwd_speed, double turn_speed, int x, int y)
+inline std::string GenerateCommand(double fwd_speed, double turn_speed, int x, int y)
 {
     std::stringstream ss;
     if(x > 2 || y > 2 || x < -2 || y < -2)
@@ -40,7 +40,7 @@ std::string GenerateCommand(double fwd_speed, double turn_speed, int x, int y)
     return ss.str();
 }
 
-std::vector<std::string> GenerateCommands(int x, int y)
+inline std::vector<std::string> GenerateCommands(int x, int y)
 {
     std::vector<std::string> result;
     double fwd_speed = 0.1;
@@ -53,7 +53,7 @@ std::vector<std::string> GenerateCommands(int x, int y)
     return result;
 }
 
-void CreateObjects(BCIInterface * bciinterface, int cross_x, int cross_y, float width, float height)
+inline void CreateObjects(BCIInterface * bciinterface, int cross_x, int cross_y, float width, float height)
 {
     bool out_of_screen = false;
     if(cross_y > 1)
@@ -85,7 +85,7 @@ void CreateObjects(BCIInterface * bciinterface, int cross_x, int cross_y, float 
     else { bciinterface->AddObject(new SSVEPStimulus(9,60, 100, height/2, 150, 150, 255, 0, 0, 255)); }
 }
 
-void GenerateHUD(BCIInterface * bciinterface, SpriteObject * m_hud_sprite, int cross_x, int cross_y)
+inline void GenerateHUD(BCIInterface * bciinterface, SpriteObject * m_hud_sprite, int cross_x, int cross_y)
 {
     m_hud_sprite->SetSubRect((cross_x+2)*100+1, (-cross_y+2)*100+1, (cross_x+3)*100, (-cross_y+3)*100);
     bciinterface->AddNonOwnedObject(m_hud_sprite);
@@ -178,6 +178,7 @@ int main(int argc, char * argv[])
     delete interpreter;
     delete sinterpreter;
     delete receiver;
+    delete out_cmd;
 
     return 0;
 }

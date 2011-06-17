@@ -19,7 +19,7 @@ void sleep(DWORD t)
 
 using namespace bciinterface;
 
-std::string GenerateCommand(double fwd_speed, double turn_speed, int x, int y)
+inline std::string GenerateCommand(double fwd_speed, double turn_speed, int x, int y)
 {
     std::stringstream ss;
     if(x > 2 || y > 2 || x < -2 || y < -2)
@@ -38,7 +38,7 @@ std::string GenerateCommand(double fwd_speed, double turn_speed, int x, int y)
     return ss.str();
 }
 
-std::vector<std::string> GenerateCommands(int x, int y)
+inline std::vector<std::string> GenerateCommands(int x, int y)
 {
     std::vector<std::string> result;
     double fwd_speed = 0.1;
@@ -51,7 +51,7 @@ std::vector<std::string> GenerateCommands(int x, int y)
     return result;
 }
 
-void CreateObjects(BCIInterface * bciinterface, int cross_x, int cross_y, float width, float height)
+inline void CreateObjects(BCIInterface * bciinterface, int cross_x, int cross_y, float width, float height)
 {
     float orig_x = width/2 + cross_x*width/6;
     float orig_y = height/2 - cross_y*height/6;
@@ -157,6 +157,7 @@ int main(int argc, char * argv[])
     delete bciinterface;
     delete interpreter;
     delete receiver;
+    delete out_cmd;
 
     return 0;
 }
