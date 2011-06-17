@@ -255,6 +255,11 @@ public:
             {
                 m_objects[i]->Display(m_app, frameCount);
             }
+            /* Draw non-owned objects */
+            for(size_t i = 0; i < m_objects_non_owned.size(); ++i)
+            {
+                m_objects_non_owned[i]->Display(m_app, frameCount);
+            }
 
             m_app->Display();
 
