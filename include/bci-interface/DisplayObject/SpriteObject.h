@@ -18,6 +18,8 @@ public:
     void Display(sf::RenderWindow * app, unsigned int frameCount);
 
     void SetSubRect(int left, int top, int right, int bottom);
+
+    void SetPosition(float x, float y);
 private:
     boost::shared_ptr<SpriteObjectImpl> m_impl;
 };
