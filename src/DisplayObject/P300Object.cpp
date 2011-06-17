@@ -28,7 +28,7 @@ public:
         delete m_shape;
     }
 
-    void Display(sf::RenderWindow * app, unsigned int frameCount)
+    void Display(sf::RenderWindow * app, unsigned int frameCount, sf::Clock & clock)
     {
         app->Draw(*m_shape);
         if(was_active) { Unhighlight(); } 
@@ -51,9 +51,9 @@ P300Object::P300Object(unsigned int x, unsigned int y, unsigned int size_x, unsi
     : m_impl(new P300ObjectImpl(x, y, size_x, size_y, r, g, b))
 {}
 
-void P300Object::Display(sf::RenderWindow * app, unsigned int frameCount)
+void P300Object::Display(sf::RenderWindow * app, unsigned int frameCount, sf::Clock & clock)
 {
-    m_impl->Display(app, frameCount);
+    m_impl->Display(app, frameCount, clock);
 }
 
 void P300Object::Highlight()

@@ -35,7 +35,7 @@ public:
     void Move(float diffX, float diffY);
 
     /* Display function */
-    void Display(sf::RenderWindow * app, unsigned int frameCount);
+    void Display(sf::RenderWindow * app, unsigned int frameCount, sf::Clock & clock);
 
 private:
     boost::shared_ptr<SSVEPStimulusImpl> m_impl;

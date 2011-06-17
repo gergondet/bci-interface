@@ -15,7 +15,7 @@ class P300Object : public DisplayObject
 public:
     P300Object(unsigned int x, unsigned int y, unsigned int size_x, unsigned int size_y, unsigned char r, unsigned char g, unsigned char b);
 
-    void Display(sf::RenderWindow * app, unsigned int frameCount);
+    void Display(sf::RenderWindow * app, unsigned int frameCount, sf::Clock & clock);
 
     void Highlight();
 

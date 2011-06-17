@@ -83,7 +83,7 @@ public:
         m_shape.Move(diffX, diffY);
     }
 
-    void Display(sf::RenderWindow * app, unsigned int frameCount)
+    void Display(sf::RenderWindow * app, unsigned int frameCount, sf::Clock & clock)
     {
         if(m_frameSeq[frameCount % m_screenFrequency])
         {
@@ -118,9 +118,9 @@ void SSVEPStimulus::Move(float diffX, float diffY)
     m_impl->Move(diffX, diffY);
 }
 
-void SSVEPStimulus::Display(sf::RenderWindow * app, unsigned int frameCount)
+void SSVEPStimulus::Display(sf::RenderWindow * app, unsigned int frameCount, sf::Clock & clock)
 {
-    m_impl->Display(app, frameCount);
+    m_impl->Display(app, frameCount, clock);
 }
 
 } // namespace bciinterface

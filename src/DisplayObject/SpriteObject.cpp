@@ -30,7 +30,7 @@ public:
         delete m_image;
     }
 
-    void Display(sf::RenderWindow * app, unsigned int frameCount)
+    void Display(sf::RenderWindow * app, unsigned int frameCount, sf::Clock & clock)
     {
         app->Draw(*m_sprite);
     } 
@@ -49,9 +49,9 @@ public:
 SpriteObject::SpriteObject(const std::string & image_src) : m_impl(new SpriteObjectImpl(image_src))
 {}
 
-void SpriteObject::Display(sf::RenderWindow * app, unsigned int frameCount)
+void SpriteObject::Display(sf::RenderWindow * app, unsigned int frameCount, sf::Clock & clock)
 {
-    m_impl->Display(app, frameCount);
+    m_impl->Display(app, frameCount, clock);
 }
 
 void SpriteObject::SetSubRect(int left, int top, int right, int bottom)

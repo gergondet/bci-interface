@@ -253,12 +253,12 @@ public:
             /* Draw objects */
             for(size_t i = 0; i < m_objects.size(); ++i)
             {
-                m_objects[i]->Display(m_app, frameCount);
+                m_objects[i]->Display(m_app, frameCount, clock);
             }
             /* Draw non-owned objects */
             for(size_t i = 0; i < m_objects_non_owned.size(); ++i)
             {
-                m_objects_non_owned[i]->Display(m_app, frameCount);
+                m_objects_non_owned[i]->Display(m_app, frameCount, clock);
             }
 
             m_app->Display();
