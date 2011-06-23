@@ -14,6 +14,7 @@ private:
     coshellbci::CoshellClient * m_coshell;
     bool m_initialized;
     int  m_command;
+    int  m_exit_command;
     std::vector<std::string> m_commands;
     std::string m_initialtest;
     std::vector<std::string> m_initialcommands;
@@ -21,7 +22,7 @@ private:
 public:
     CoshellInterpreterImpl(const std::string & server_name, int server_port)
         : SimpleInterpreter(), m_coshell(new coshellbci::CoshellClient(server_name.c_str(), server_port)),
-            m_initialized(false), m_command(0), 
+            m_initialized(false), m_command(0), m_exit_command(-1),
             m_commands(0), m_initialtest(""), m_initialcommands(0), m_finalcommands(0)
     {
         if(!m_coshell || !m_coshell->Initialize())
@@ -41,6 +42,11 @@ public:
         m_initialtest = "";
         m_initialcommands.resize(0);
         m_finalcommands.resize(0);
+    }
+
+    void SetExitCommand(int command)
+    {
+        m_exit_command = command;
     }
 
     void SetCommands(const std::vector<std::string> & commands)
@@ -79,7 +85,7 @@ public:
                 {
                     m_coshell->ExecuteACommand(m_commands[command]);
                     m_command = command;
-                    return true;
+                    return ( m_exit_command == -1 || m_command == m_exit_command );
                 }
             }
         }
@@ -158,6 +164,11 @@ void CoshellInterpreter::Process(sf::Event & event)
 void CoshellInterpreter::SetCommands(const std::vector<std::string> & commands)
 {
     m_impl->SetCommands(commands);
+}
+
+void CoshellInterpreter::SetExitCommand(int command)
+{
+    m_impl->SetExitCommand(command);
 }
 
 void CoshellInterpreter::SetInitialTest(const std::string & test)

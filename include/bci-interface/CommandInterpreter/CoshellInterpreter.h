@@ -30,6 +30,8 @@ public:
 
     void SetCommands(const std::vector<std::string> & commands);
 
+    void SetExitCommand(int command);
+
     void SetInitialTest(const std::string & test);
 
     void SetInitialCommands(const std::vector<std::string> & commands);
