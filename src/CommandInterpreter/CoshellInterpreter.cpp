@@ -188,7 +188,7 @@ void CoshellInterpreter::SetFinalCommands(const std::vector<std::string> & comma
 
 std::string CoshellInterpreter::SendCommand(const std::string & command)
 {
-    m_impl->SendCommand(command);
+    return m_impl->SendCommand(command);
 }
 
 } // namespace bciinterface
