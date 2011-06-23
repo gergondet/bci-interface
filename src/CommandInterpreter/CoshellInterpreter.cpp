@@ -55,6 +55,11 @@ public:
         m_finalcommands = commands;
     }
 
+    void SendCommand(const std::string & command)
+    {
+        m_coshell->ExecuteACommand(command);
+    }
+
     bool InterpretCommand(int command, const std::vector<DisplayObject *> & objects)
     {
         SimpleInterpreter::InterpretCommand(command, objects);
@@ -142,6 +147,11 @@ void CoshellInterpreter::SetInitialCommands(const std::vector<std::string> & com
 void CoshellInterpreter::SetFinalCommands(const std::vector<std::string> & commands)
 {
     m_impl->SetFinalCommands(commands);
+}
+
+void CoshellInterpreter::SendCommand(const std::string & command)
+{
+    m_impl->SendCommand(command);
 }
 
 } // namespace bciinterface

@@ -31,6 +31,8 @@ public:
     void SetInitialCommands(const std::vector<std::string> & commands);
 
     void SetFinalCommands(const std::vector<std::string> & commands);
+
+    void SendCommand(const std::string & command);
 private:
     boost::shared_ptr<CoshellInterpreterImpl> m_impl;
 };
