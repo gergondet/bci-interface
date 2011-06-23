@@ -63,9 +63,9 @@ public:
         m_finalcommands = commands;
     }
 
-    void SendCommand(const std::string & command)
+    std::string SendCommand(const std::string & command)
     {
-        m_coshell->ExecuteACommand(command);
+        return m_coshell->ExecuteACommand(command);
     }
 
     bool InterpretCommand(int command, const std::vector<DisplayObject *> & objects)
@@ -175,7 +175,7 @@ void CoshellInterpreter::SetFinalCommands(const std::vector<std::string> & comma
     m_impl->SetFinalCommands(commands);
 }
 
-void CoshellInterpreter::SendCommand(const std::string & command)
+std::string CoshellInterpreter::SendCommand(const std::string & command)
 {
     m_impl->SendCommand(command);
 }
