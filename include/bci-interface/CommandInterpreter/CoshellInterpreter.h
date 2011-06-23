@@ -19,6 +19,10 @@ class CoshellInterpreter : public CommandInterpreter
 {
 public:
     CoshellInterpreter(const std::string & server_name, int server_port);
+    
+    void Initialize();
+
+    void Reset();
 
     virtual bool InterpretCommand(int command, const std::vector<DisplayObject *> & objects);
 

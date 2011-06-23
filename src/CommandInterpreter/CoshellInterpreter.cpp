@@ -35,6 +35,14 @@ public:
         delete m_coshell;
     }
 
+    void Reset()
+    {
+        m_commands.resize(0);
+        m_initialtest = "";
+        m_initialcommands.resize(0);
+        m_finalcommands.resize(0);
+    }
+
     void SetCommands(const std::vector<std::string> & commands)
     {
         m_commands = commands;
@@ -78,30 +86,38 @@ public:
         return false;
     }
 
+    void Initialize()
+    {
+        if(!m_initialized)
+        {
+            bool initial_test = true;
+            if(m_initialtest.size() != 0)
+            {
+                std::string answer = m_coshell->ExecuteACommand(m_initialtest);
+                std::string prefix = "Catch ";
+                if(answer.compare(0, prefix.length(), prefix) != 0)
+                {
+                    initial_test = false;
+                }
+            }
+            if(initial_test)
+            {
+                    for(size_t i = 0; i < m_initialcommands.size(); ++i)
+                    {   
+                        m_coshell->ExecuteACommand(m_initialcommands[i]);
+                    }
+            }
+            m_initialized = true;
+        }
+    }
+
     void Process(sf::Event & event)
     {
         if(event.Type == sf::Event::KeyPressed && event.Key.Code == sf::Key::Space)
         {
             if(!m_initialized)
             {
-                bool initial_test = true;
-                if(m_initialtest.size() != 0)
-                {
-                    std::string answer = m_coshell->ExecuteACommand(m_initialtest);
-                    std::string prefix = "Catch ";
-                    if(answer.compare(0, prefix.length(), prefix) != 0)
-                    {
-                        initial_test = false;
-                    }
-                }
-                if(initial_test)
-                {
-                        for(size_t i = 0; i < m_initialcommands.size(); ++i)
-                        {   
-                            m_coshell->ExecuteACommand(m_initialcommands[i]);
-                        }
-                }
-                m_initialized = true;
+                Initialize();
             }
             else
             {
@@ -117,6 +133,16 @@ public:
 CoshellInterpreter::CoshellInterpreter(const std::string & server_name, int server_port)
     : m_impl(new CoshellInterpreterImpl(server_name, server_port))
 {
+}
+
+void CoshellInterpreter::Initialize()
+{
+    m_impl->Initialize();
+}
+
+void CoshellInterpreter::Reset()
+{
+    m_impl->Reset();
 }
 
 bool CoshellInterpreter::InterpretCommand(int command, const std::vector<DisplayObject *> & objects)
