@@ -64,9 +64,19 @@ public:
         m_initialcommands = commands;
     }
 
+    void SetInitialCommands(const std::string & command)
+    {
+        SetInitialCommands(std::vector<std::string>(1, command));
+    }
+
     void SetFinalCommands(const std::vector<std::string> & commands)
     {
         m_finalcommands = commands;
+    }
+
+    void SetFinalCommands(const std::string & command)
+    {
+        SetFinalCommands(std::vector<std::string>(1, command));
     }
 
     std::string SendCommand(const std::string & command)
@@ -134,6 +144,14 @@ public:
             }
         }
     }
+
+    void ExecuteFinalCommands()
+    {
+        for(size_t i = 0; i < m_finalcommands.size(); ++i)
+        {
+            m_coshell->ExecuteACommand(m_finalcommands[i]);
+        }
+    }
 };
 
 CoshellInterpreter::CoshellInterpreter(const std::string & server_name, int server_port)
@@ -181,9 +199,24 @@ void CoshellInterpreter::SetInitialCommands(const std::vector<std::string> & com
     m_impl->SetInitialCommands(commands);
 }
 
+void CoshellInterpreter::SetInitialCommands(const std::string & command)
+{
+    m_impl->SetInitialCommands(command);
+}
+
 void CoshellInterpreter::SetFinalCommands(const std::vector<std::string> & commands)
 {
     m_impl->SetFinalCommands(commands);
+}
+
+void CoshellInterpreter::SetFinalCommands(const std::string & command)
+{
+    m_impl->SetFinalCommands(command);
+}
+
+void CoshellInterpreter::ExecuteFinalCommands()
+{
+    m_impl->ExecuteFinalCommands();
 }
 
 std::string CoshellInterpreter::SendCommand(const std::string & command)

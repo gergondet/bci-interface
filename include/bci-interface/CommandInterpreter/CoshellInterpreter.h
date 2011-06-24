@@ -36,7 +36,13 @@ public:
 
     void SetInitialCommands(const std::vector<std::string> & commands);
 
+    void SetInitialCommands(const std::string & command);
+
     void SetFinalCommands(const std::vector<std::string> & commands);
+
+    void SetFinalCommands(const std::string & command);
+
+    void ExecuteFinalCommands();
 
     std::string SendCommand(const std::string & command);
 private:
