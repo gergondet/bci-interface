@@ -174,7 +174,7 @@ public:
             m_app = app;
         }
 
-        m_app->UseVerticalSync(true);
+        m_app->UseVerticalSync(true);    
 
         DisplayLoop(cmd, timeout);
 
@@ -295,6 +295,11 @@ public:
     {
         m_close = true;
     }
+
+    sf::RenderWindow * GetRenderWindow()
+    {
+        return m_app;
+    }
 };
 
 BCIInterface::BCIInterface(unsigned int width, unsigned int height) : m_impl(new BCIInterfaceImpl(width, height))
@@ -348,6 +353,11 @@ sf::RenderWindow * BCIInterface::DisplayLoop(sf::RenderWindow * app, int * cmd, 
 void BCIInterface::Close()
 {
     m_impl->Close();
+}
+
+sf::RenderWindow * BCIInterface::GetRenderWindow()
+{
+    return m_impl->GetRenderWindow();
 }
 
 } // namespace bciinterface

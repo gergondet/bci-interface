@@ -50,6 +50,8 @@ public:
     /* DisplayLoop function for interface chaining alternate proto */
     sf::RenderWindow * DisplayLoop(sf::RenderWindow * app, int * cmd, float timeout = 0);
 
+    sf::RenderWindow * GetRenderWindow();
+
     /* Close the interface */
     void Close();
 

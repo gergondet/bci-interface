@@ -95,7 +95,7 @@ public:
                 {
                     m_coshell->ExecuteACommand(m_commands[command]);
                     m_command = command;
-                    return ( m_exit_command == -1 || m_command == m_exit_command );
+                    return ( m_command != 0 && (m_exit_command == -1 || m_command == m_exit_command) );
                 }
             }
         }
