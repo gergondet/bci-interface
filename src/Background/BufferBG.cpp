@@ -49,6 +49,7 @@ public:
 
     void Draw(sf::RenderWindow * app)
     {
+        m_sprite->Resize(app->GetWidth(), app->GetHeight());
         app->Draw(*m_sprite);
     }
 
