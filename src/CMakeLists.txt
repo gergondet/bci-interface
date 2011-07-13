@@ -4,6 +4,7 @@ SET(${LIB_NAME}_src
 CommandReceiver/UDPReceiver.cpp
 Utils/square-function.cpp
 BCIInterface.cpp
+Background/BufferBG.cpp
 Background/VisionServerBG.cpp
 DisplayObject/SSVEPStimulus.cpp
 DisplayObject/P300Object.cpp
