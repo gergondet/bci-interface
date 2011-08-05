@@ -2,6 +2,7 @@ SET(LIB_NAME bci-interface)
 
 SET(${LIB_NAME}_src
 CommandReceiver/UDPReceiver.cpp
+Utils/UDPServer.cpp
 Utils/square-function.cpp
 BCIInterface.cpp
 Background/BufferBG.cpp
@@ -14,9 +15,7 @@ CommandInterpreter/SimpleInterpreter.cpp
 CommandInterpreter/P300Interpreter.cpp
 )
 
-INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include)
-
-INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include)
+INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include ${Boost_INCLUDE_DIRS})
 
 ADD_LIBRARY(${LIB_NAME} 
   SHARED
@@ -31,7 +30,7 @@ SET_TARGET_PROPERTIES(${LIB_NAME}
   INSTALL_RPATH lib)
 
 ADD_DEFINITIONS(${${PROJECT_NAME}_CXXFLAGS})
-TARGET_LINK_LIBRARIES(${LIB_NAME} ${${PROJECT_NAME}_LDFLAGS})
+TARGET_LINK_LIBRARIES(${LIB_NAME} ${${PROJECT_NAME}_LDFLAGS} ${Boost_SYSTEM_LIBRARY} ${Boost_THREAD_LIBRARY} ${BCIMIDDLEWARE_LIBS})
 
 INSTALL(TARGETS ${LIB_NAME}
     DESTINATION lib)

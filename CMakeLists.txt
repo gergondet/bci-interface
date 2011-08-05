@@ -82,6 +82,8 @@ ADD_SUBDIRECTORY(include)
 ADD_SUBDIRECTORY(test)
 ADD_SUBDIRECTORY(application)
 
+find_package( Boost 1.40.0 COMPONENTS thread system)
+
 #
 # pkg-config file
 #
