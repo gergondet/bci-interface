@@ -12,6 +12,7 @@ struct CoshellInterpreterImpl : public SimpleInterpreter
 {
 private:
     coshellbci::CoshellClient * m_coshell;
+    bool m_own_coshell;
     bool m_initialized;
     int  m_command;
     int  m_exit_command;
@@ -22,6 +23,7 @@ private:
 public:
     CoshellInterpreterImpl(const std::string & server_name, int server_port)
         : SimpleInterpreter(), m_coshell(new coshellbci::CoshellClient(server_name.c_str(), server_port)),
+            m_own_coshell(true),
             m_initialized(false), m_command(0), m_exit_command(-1),
             m_commands(0), m_initialtest(""), m_initialcommands(0), m_finalcommands(0)
     {
@@ -31,9 +33,20 @@ public:
         }
     }
 
+    CoshellInterpreterImpl(coshellbci::CoshellClient * coshell)
+        : SimpleInterpreter(), m_coshell(coshell),
+            m_own_coshell(false),
+            m_initialized(false), m_command(0), m_exit_command(-1),
+            m_commands(0), m_initialtest(""), m_initialcommands(0), m_finalcommands(0)
+    {
+    }
+
     ~CoshellInterpreterImpl()
     {
-        delete m_coshell;
+        if(m_own_coshell)
+        {
+            delete m_coshell;
+        }
     }
 
     void Reset()
@@ -156,6 +169,11 @@ public:
 
 CoshellInterpreter::CoshellInterpreter(const std::string & server_name, int server_port)
     : m_impl(new CoshellInterpreterImpl(server_name, server_port))
+{
+}
+
+CoshellInterpreter::CoshellInterpreter(coshellbci::CoshellClient * coshell)
+    : m_impl(new CoshellInterpreterImpl(coshell))
 {
 }
 
