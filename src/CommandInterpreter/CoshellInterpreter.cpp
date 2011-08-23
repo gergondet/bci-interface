@@ -150,10 +150,7 @@ public:
             }
             else
             {
-                for(size_t i = 0; i < m_finalcommands.size(); ++i)
-                {
-                    m_coshell->ExecuteACommand(m_finalcommands[i]);
-                }
+                ExecuteFinalCommands();
             }
         }
     }
