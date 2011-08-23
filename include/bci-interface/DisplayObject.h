@@ -26,6 +26,8 @@ public:
     /* Process an event */
     virtual void Process(sf::Event & event) {}
 
+    virtual void SetPosition(float X, float Y) {}
+
     virtual void Highlight() {}
 
     virtual void Unhighlight() {}
