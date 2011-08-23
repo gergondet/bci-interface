@@ -34,6 +34,9 @@ public:
     /*Change position of the square*/
     void Move(float diffX, float diffY);
 
+    /* Set absolute position */
+    void SetPosition(float X, float Y);
+
     /* Display function */
     void Display(sf::RenderWindow * app, unsigned int frameCount, sf::Clock & clock);
 
