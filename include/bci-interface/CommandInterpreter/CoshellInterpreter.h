@@ -26,6 +26,8 @@ public:
     CoshellInterpreter(const std::string & server_name, int server_port);
 
     CoshellInterpreter(coshellbci::CoshellClient * coshell);
+
+    coshellbci::CoshellClient * GetCoshell();
     
     void Initialize();
 

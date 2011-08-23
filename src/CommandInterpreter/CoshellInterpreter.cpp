@@ -49,6 +49,11 @@ public:
         }
     }
 
+    coshellbci::CoshellClient * GetCoshell()
+    {
+        return m_coshell;
+    }
+
     void Reset()
     {
         m_commands.resize(0);
@@ -172,6 +177,11 @@ CoshellInterpreter::CoshellInterpreter(const std::string & server_name, int serv
 CoshellInterpreter::CoshellInterpreter(coshellbci::CoshellClient * coshell)
     : m_impl(new CoshellInterpreterImpl(coshell))
 {
+}
+
+coshellbci::CoshellClient * CoshellInterpreter::GetCoshell()
+{
+    return m_impl->GetCoshell();
 }
 
 void CoshellInterpreter::Initialize()

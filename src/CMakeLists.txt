@@ -13,6 +13,7 @@ DisplayObject/SpriteObject.cpp
 CommandInterpreter/CoshellInterpreter.cpp
 CommandInterpreter/SimpleInterpreter.cpp
 CommandInterpreter/P300Interpreter.cpp
+CommandInterpreter/CoshellApplications/CupboardLookout.cpp
 )
 
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include ${Boost_INCLUDE_DIRS})
