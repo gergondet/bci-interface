@@ -1,7 +1,7 @@
 /* Rely on CoshellInterpreter to provide head steering + object recognition */
 
-#ifndef _H_COSHELLINTERPRETER_H_
-#define _H_COSHELLINTERPRETER_H_
+#ifndef _H_CUPBOARDLOOKOUT_H_
+#define _H_CUPBOARDLOOKOUT_H_
 
 #include <bci-interface/CommandInterpreter.h>
 
