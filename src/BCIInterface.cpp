@@ -21,6 +21,7 @@ struct BCIInterfaceImpl
 private:
     unsigned int m_width;
     unsigned int m_height;
+    bool m_in_paradigm;
     bool m_close;
     sf::RenderWindow * m_app;
     std::ofstream m_fpslog;
@@ -38,7 +39,7 @@ private:
 
 public:
     BCIInterfaceImpl(unsigned int width, unsigned int height)
-    : m_width(width), m_height(height), m_close(false), m_app(0), m_fpslog("/tmp/bciinterface_fps.log"), 
+    : m_width(width), m_height(height), m_in_paradigm(false), m_close(false), m_app(0), m_fpslog("/tmp/bciinterface_fps.log"), 
         m_background(0), m_backgroundth(0),
         m_objects(0), m_objects_non_owned(0),
         m_receiver(0), m_receiverth(0),
@@ -47,6 +48,7 @@ public:
 
     ~BCIInterfaceImpl()
     {
+        m_fpslog.close();
         m_objects_non_owned.resize(0);
         for(size_t i = 0; i < m_objects.size(); ++i)
         {
@@ -176,7 +178,10 @@ public:
 
         m_app->UseVerticalSync(true);    
 
-        DisplayLoop(cmd, timeout);
+        while(!m_close)
+        {
+            DisplayLoop(cmd, timeout);
+        }
 
         return m_app;
     }
@@ -185,6 +190,7 @@ public:
     void DisplayLoop(int * cmd = 0, float timeout = 0)
     {
         unsigned int frameCount = 0;
+        bool in_paradigm = m_in_paradigm;
         sf::Clock clock;
         m_close = false;
 
@@ -202,7 +208,7 @@ public:
             m_receiverth = new boost::thread(boost::bind(&CommandReceiver::CommandLoop, m_receiver));
         }
 
-        while(!m_close && m_app->IsOpened())
+        while(!m_close && in_paradigm == m_in_paradigm && m_app->IsOpened())
         {
             unsigned int newFrameCount = (unsigned int)floor(clock.GetElapsedTime()*60);
             /* cheat when missing a frame */
@@ -236,7 +242,7 @@ public:
                 {
                     in_cmd = m_receiver->GetCommand();
                     bool interpreter_status = m_interpreter->InterpretCommand(in_cmd, m_objects);
-                    if(cmd && interpreter_status) { *cmd = in_cmd; m_close = true; }
+                    if(cmd && interpreter_status) { *cmd = in_cmd; m_in_paradigm = m_in_paradigm = false; }
                 }
                 else
                 {
@@ -264,36 +270,46 @@ public:
             m_app->Display();
 
             /* Log fps regularly */
-            if(frameCount % 60 == 0)
+/*            if(frameCount % 60 == 0)
             {
                 m_fpslog << 1/m_app->GetFrameTime() << " fps" << std::endl;
-            }
+            } */
         }
-        m_fpslog.close();
+//        m_fpslog.close();
 
-        if(!cmd)
-        {
-            /* Actual and final exit */
-            if(m_background)
-            {
-                m_background->Close();
-                m_backgroundth->join();
-                delete m_backgroundth;
-                m_backgroundth = 0;
-            }
-            if(m_receiver)
-            {
-                m_receiver->Close();
-                m_receiverth->join();
-                delete m_receiverth;
-                m_receiverth = 0;
-            }
-        }
-    }
+/*        if(!cmd)
+*        {
+*            // Actual and final exit
+*            if(m_background)
+*            {
+*                m_background->Close();
+*                m_backgroundth->join();
+*                delete m_backgroundth;
+*                m_backgroundth = 0;
+*            }
+*            if(m_receiver)
+*            {
+*                m_receiver->Close();
+*                m_receiverth->join();
+*                delete m_receiverth;
+*                m_receiverth = 0;
+*            }
+*        } */
+    }  
 
     void Close()
     {
         m_close = true;
+    }
+
+    void StopParadigm()
+    {
+        m_in_paradigm = false;
+    }
+
+    void StartParadigm()
+    {
+        m_in_paradigm = true;
     }
 
     sf::RenderWindow * GetRenderWindow()
