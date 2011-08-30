@@ -23,6 +23,12 @@ class BCIInterface
 public:
     BCIInterface(unsigned int width, unsigned int height);
 
+    bool ParadigmStatus();
+    
+    void StartParadigm();
+
+    void StopParadigm();
+
     /* Set Background */
     void SetBackground(Background * background);
 

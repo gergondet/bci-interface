@@ -181,6 +181,8 @@ public:
         while(!m_close)
         {
             DisplayLoop(cmd, timeout);
+            SetCommandInterpreter(0);
+            Clean();
         }
 
         return m_app;
@@ -193,9 +195,6 @@ public:
         bool in_paradigm = m_in_paradigm;
         sf::Clock clock;
         m_close = false;
-
-        /* Reset cmd to handle exit properly when chaining interface */
-        if(cmd) { *cmd = 0; }
 
         /* Launch Background thread */
         if(m_background && !m_backgroundth)
@@ -302,6 +301,11 @@ public:
         m_close = true;
     }
 
+    bool ParadigmStatus()
+    {
+        return m_in_paradigm;
+    }
+
     void StopParadigm()
     {
         m_in_paradigm = false;
@@ -320,6 +324,21 @@ public:
 
 BCIInterface::BCIInterface(unsigned int width, unsigned int height) : m_impl(new BCIInterfaceImpl(width, height))
 {}
+
+bool BCIInterface::ParadigmStatus()
+{
+    return m_impl->ParadigmStatus();
+}
+
+void BCIInterface::StartParadigm()
+{
+    m_impl->StartParadigm();
+}
+
+void BCIInterface::StopParadigm()
+{
+    m_impl->StopParadigm();
+}
 
 void BCIInterface::SetBackground(Background * background)
 {
