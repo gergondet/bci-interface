@@ -25,7 +25,7 @@ struct ObjectsLookoutImpl;
 class ObjectsLookout : public CommandInterpreter 
 {
 public:
-    ObjectsLookout(coshellbci::CoshellClient * coshell, Recognition * recognition_plugin, const std::vector<std::string> & objects);
+    ObjectsLookout(unsigned int width, unsigned int height, coshellbci::CoshellClient * coshell, Recognition * recognition_plugin, const std::vector<std::string> & objects);
 
     virtual bool InterpretCommand(int command, const std::vector<DisplayObject *> & objects);
 
