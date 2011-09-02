@@ -181,8 +181,6 @@ public:
         while(!m_close)
         {
             DisplayLoop(cmd, timeout);
-            SetCommandInterpreter(0);
-            Clean();
         }
 
         return m_app;

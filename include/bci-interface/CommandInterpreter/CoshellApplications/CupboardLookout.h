@@ -25,7 +25,7 @@ struct CupboardLookoutImpl;
 class CupboardLookout : public CommandInterpreter 
 {
 public:
-    CupboardLookout(coshellbci::CoshellClient * coshell, Recognition * recognition_plugin);
+    CupboardLookout(unsigned int widht, unsigned int height, coshellbci::CoshellClient * coshell, Recognition * recognition_plugin);
 
     virtual bool InterpretCommand(int command, const std::vector<DisplayObject *> & objects);
 

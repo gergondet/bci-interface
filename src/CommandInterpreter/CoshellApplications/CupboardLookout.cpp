@@ -15,9 +15,11 @@ private:
     coshellbci::CoshellClient * m_coshell;
     Recognition * m_recognition;
     float m_head_lr;
+    unsigned int m_width;
+    unsigned int m_height;
 public:
-    CupboardLookoutImpl(coshellbci::CoshellClient * coshell, Recognition * recognition)
-        : m_coshell(coshell), m_recognition(recognition), m_head_lr(0)
+    CupboardLookoutImpl(unsigned int width, unsigned int height, coshellbci::CoshellClient * coshell, Recognition * recognition)
+        : m_coshell(coshell), m_recognition(recognition), m_head_lr(0), m_width(width), m_height(height)
     {}
 
     bool InterpretCommand(int command, const std::vector<DisplayObject *> & objects)
@@ -27,17 +29,18 @@ public:
         vision::ImageRef cupboard_pos = m_recognition->GetObjectPosition("cupboard");
         if(cupboard_pos.x != 0 && cupboard_pos.y != 0)
         {
-            objects[2]->SetPosition(cupboard_pos.x, cupboard_pos.y);
+            objects[2]->SetPosition(cupboard_pos.x*m_width/640, cupboard_pos.y*m_height/480);
         }
         else
         {
             objects[2]->Unhighlight();
         }
         /* 1: left, 2: right, 3: cupboard stim */
+        if(command == 0) { return false; }
         std::stringstream cmd;
         if(command == 1)
         {
-            if(m_head_lr == 0.6)
+            if(m_head_lr > 0.5)
             {
                 cmd << "pg.parsecmd :stepseq 0 0 0 0 -0.19 10 0 0.19 10 0 -0.19 0";
             }
@@ -49,7 +52,7 @@ public:
         }
         if(command == 2)
         {
-            if(m_head_lr == -0.6)
+            if(m_head_lr < -0.5)
             {
                 cmd << "pg.parsecmd :stepseq 0 0 0 0 -0.19 -10 0 0.19 -10 0 -0.19 0";
             }
@@ -68,8 +71,8 @@ public:
     }
 };
 
-CupboardLookout::CupboardLookout(coshellbci::CoshellClient * coshell, Recognition * recognition_plugin)
-: m_impl(new CupboardLookoutImpl(coshell, recognition_plugin))
+CupboardLookout::CupboardLookout(unsigned int width, unsigned int height, coshellbci::CoshellClient * coshell, Recognition * recognition_plugin)
+: m_impl(new CupboardLookoutImpl(width, height, coshell, recognition_plugin))
 {}
 
 bool CupboardLookout::InterpretCommand(int command, const std::vector<DisplayObject *> & objects)

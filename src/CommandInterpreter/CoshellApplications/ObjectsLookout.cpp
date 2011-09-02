@@ -37,6 +37,7 @@ public:
                 objects[2+i]->Unhighlight();
             }
         }
+        if(command == 0) { return false; }
         /* 1: left, 2: right, 3-x: objects stims */
         std::stringstream cmd;
         if(command == 1)
