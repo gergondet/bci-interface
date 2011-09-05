@@ -15,8 +15,10 @@ private:
     unsigned int m_height;
 
     sf::Uint8 * m_dataImage;
-    sf::Image * m_image;
-    sf::Sprite * m_sprite;
+    sf::Texture * m_texture_display;
+    sf::Texture * m_texture_load;
+    sf::Sprite * m_sprite_display;
+    sf::Sprite * m_sprite_load;
 
     bool m_close;
 
@@ -24,18 +26,24 @@ public:
     BufferBGImpl(unsigned int width, unsigned int height)
        :    m_width(width), m_height(height),
             m_dataImage(new sf::Uint8[width*height*4]),
-            m_image(new sf::Image), m_sprite(new sf::Sprite), m_close(false)
+            m_texture_display(new sf::Texture), m_texture_load(new sf::Texture),
+            m_sprite_display(new sf::Sprite), m_sprite_load(new sf::Sprite),
+            m_close(false)
     {
         memset(m_dataImage, 0, width*height*4);
-        m_image->LoadFromPixels(width, height, m_dataImage);
-        m_sprite->SetImage(*m_image);
+        m_texture_display->Create(width, height);
+        m_texture_load->Create(width, height);
+        m_sprite_display->SetTexture(*m_texture_display);
+        m_sprite_load->SetTexture(*m_texture_display);
     }
 
     ~BufferBGImpl()
     {
+        delete m_sprite_display;
+        delete m_sprite_load;
+        delete m_texture_display;
+        delete m_texture_load;
         delete[] m_dataImage;
-        delete m_image;
-        delete m_sprite;
     }
 
     void UpdateLoop()
@@ -49,14 +57,19 @@ public:
 
     void Draw(sf::RenderWindow * app)
     {
-        m_sprite->Resize(app->GetWidth(), app->GetHeight());
-        app->Draw(*m_sprite);
+        m_sprite_display->Resize(app->GetWidth(), app->GetHeight());
+        app->Draw(*m_sprite_display);
     }
 
     void LoadImageFromPixels()
     {
-        m_image->LoadFromPixels(m_width, m_height, m_dataImage);
-        m_sprite->SetImage(*m_image);
+        m_texture_load->Update(m_dataImage);
+        sf::Sprite * sprite_tmp = m_sprite_display;
+        sf::Texture * texture_tmp = m_texture_display;
+        m_sprite_display = m_sprite_load;
+        m_texture_display = m_texture_load;
+        m_sprite_load = sprite_tmp;
+        m_texture_load = texture_tmp;
     }
 
     void UpdateFromBuffer_MONO(unsigned char * img)

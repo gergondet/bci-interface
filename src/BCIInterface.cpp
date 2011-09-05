@@ -149,7 +149,7 @@ public:
         }
 
 
-        m_app->UseVerticalSync(true);
+        m_app->EnableVerticalSync(true);
 
         DisplayLoop();
 
@@ -169,14 +169,13 @@ public:
             {
                 m_app = new sf::RenderWindow(sf::VideoMode(m_width, m_height), "bci-interface");
             }
-            m_app->UseVerticalSync(true);    
         }
         else
         {
             m_app = app;
         }
 
-        m_app->UseVerticalSync(true);    
+        m_app->EnableVerticalSync(true);    
 
         while(!m_close)
         {
@@ -215,11 +214,11 @@ public:
 
             /* Process events */
             sf::Event event;
-            while(m_app->GetEvent(event))
+            while(m_app->PollEvent(event))
             {
                 if(event.Type == sf::Event::Closed)
                 {   m_app->Close(); }
-                if(event.Type == sf::Event::KeyPressed && ( event.Key.Code == sf::Key::Escape || event.Key.Code == sf::Key::Q ) )
+                if(event.Type == sf::Event::KeyPressed && ( event.Key.Code == sf::Keyboard::Escape || event.Key.Code == sf::Keyboard::Q ) )
                 {   m_app->Close(); }
                 for(size_t i = 0; i < m_objects.size(); ++i)
                 {
@@ -239,7 +238,7 @@ public:
                 {
                     in_cmd = m_receiver->GetCommand();
                     bool interpreter_status = m_interpreter->InterpretCommand(in_cmd, m_objects);
-                    if(cmd && interpreter_status) { *cmd = in_cmd; m_in_paradigm = m_in_paradigm = false; }
+                    if(cmd && interpreter_status) { *cmd = in_cmd; m_in_paradigm = false; }
                 }
                 else
                 {

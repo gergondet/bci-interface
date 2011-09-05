@@ -28,11 +28,11 @@ public:
 
     void Process(sf::Event & event)
     {
-        if(event.Type == sf::Event::KeyPressed && event.Key.Code == sf::Key::Left)
+        if(event.Type == sf::Event::KeyPressed && event.Key.Code == sf::Keyboard::Left)
         {
             SetPosition(0,0);
         }
-        if(event.Type == sf::Event::KeyPressed && event.Key.Code == sf::Key::Right)
+        if(event.Type == sf::Event::KeyPressed && event.Key.Code == sf::Keyboard::Right)
         {
             SetPosition(400, 400);
         }

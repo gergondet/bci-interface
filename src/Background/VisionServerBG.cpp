@@ -25,8 +25,8 @@ private:
     struct sockaddr_in m_bindaddr;
     struct sockaddr_in m_serveraddr;
     unsigned char * m_dataFromSocket;
-    sf::Uint8 * m_dataImage;
-    sf::Image * m_image;
+    sf::Uint8 * m_datatexture;
+    sf::Texture * m_texture;
     sf::Sprite * m_sprite;
 
     bool m_close;
@@ -34,8 +34,8 @@ private:
 public:
     VisionServerBGImpl(const std::string & vision_name, unsigned short vision_port, unsigned int width, unsigned int height)
        :    m_width(width), m_height(height),
-            m_dataFromSocket(new unsigned char[50001]), m_dataImage(new sf::Uint8[width*height*4]),
-            m_image(new sf::Image), m_sprite(new sf::Sprite), m_close(false)
+            m_dataFromSocket(new unsigned char[50001]), m_datatexture(new sf::Uint8[width*height*4]),
+            m_texture(new sf::Texture), m_sprite(new sf::Sprite), m_close(false)
     {
         struct hostent * hent;
         hent = gethostbyname(vision_name.c_str());
@@ -49,9 +49,10 @@ public:
         {
             std::cerr << strerror(errno) << std::endl;
         }
-        memset(m_dataImage, 0, width*height*4);
-        m_image->LoadFromPixels(width, height, m_dataImage);
-        m_sprite->SetImage(*m_image);
+        memset(m_datatexture, 0, width*height*4);
+        m_texture->Create(width, height);
+        m_texture->Update(m_datatexture);
+        m_sprite->SetTexture(*m_texture);
 
         m_sockfd = socket(AF_INET, SOCK_DGRAM, 0);
         if(m_sockfd < 0)
@@ -73,8 +74,8 @@ public:
     ~VisionServerBGImpl()
     {
         delete[] m_dataFromSocket;
-        delete[] m_dataImage;
-        delete m_image;
+        delete[] m_datatexture;
+        delete m_texture;
         delete m_sprite;
         close(m_sockfd);
     }
@@ -88,7 +89,7 @@ public:
 
             int receivedData = 0;
             unsigned char packetId = '\0';
-            memset(m_dataImage, 0, m_width*m_height*4);
+            memset(m_datatexture, 0, m_width*m_height*4);
             while(receivedData < m_width*m_height && receivedData != -1)
             {
                 FD_ZERO(&recvset);
@@ -112,13 +113,13 @@ public:
                     {
                         packetId = newPacketId;
                         receivedData += n;
-                        /* Copy new data in m_dataImage */
+                        /* Copy new data in m_datatexture */
                         for(int i = 0; i < n - 1; ++i)
                         {
-                            m_dataImage[4*50000*packetId + 4*i]   = m_dataFromSocket[i+1];
-                            m_dataImage[4*50000*packetId + 4*i+1] = m_dataFromSocket[i+1];
-                            m_dataImage[4*50000*packetId + 4*i+2] = m_dataFromSocket[i+1];
-                            m_dataImage[4*50000*packetId + 4*i+3] = 255;
+                            m_datatexture[4*50000*packetId + 4*i]   = m_dataFromSocket[i+1];
+                            m_datatexture[4*50000*packetId + 4*i+1] = m_dataFromSocket[i+1];
+                            m_datatexture[4*50000*packetId + 4*i+2] = m_dataFromSocket[i+1];
+                            m_datatexture[4*50000*packetId + 4*i+3] = 255;
                         }
                     }
                 }
@@ -129,9 +130,8 @@ public:
             }
             if(receivedData != -1)
             {
-                /* m_dataImage has a full image worth of data, update the sprite */
-                m_image->LoadFromPixels(m_width, m_height, m_dataImage);
-                m_sprite->SetImage(*m_image);
+                /* m_datatexture has a full texture worth of data, update the sprite */
+                m_texture->Update(m_datatexture);
             }
         }
     }

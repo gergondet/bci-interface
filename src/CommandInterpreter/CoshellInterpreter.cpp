@@ -147,7 +147,7 @@ public:
 
     void Process(sf::Event & event)
     {
-        if(event.Type == sf::Event::KeyPressed && event.Key.Code == sf::Key::Space)
+        if(event.Type == sf::Event::KeyPressed && event.Key.Code == sf::Keyboard::Space)
         {
             if(!m_initialized)
             {
