@@ -21,9 +21,15 @@ using namespace bciinterface;
 
 class TestStimulus : public SSVEPStimulus
 {
+private:
+    bool hl;
 public:
+    TestStimulus(int frequency, int screenFrequency, float x, float y, float size_x, float size_y, const std::string & tx, const std::string & tx_hl)
+        : SSVEPStimulus(frequency, screenFrequency, x, y, size_x, size_y, tx, tx_hl), hl(false)
+    {}
+
     TestStimulus(int frequency, int screenFrequency, float x, float y, float size_x, float size_y, int r, int g, int b, int a)
-        : SSVEPStimulus(frequency, screenFrequency, x, y, size_x, size_y, r, g, b, a)
+        : SSVEPStimulus(frequency, screenFrequency, x, y, size_x, size_y, r, g, b, a), hl(false)
     {} 
 
     void Process(sf::Event & event)
@@ -36,6 +42,18 @@ public:
         {
             SetPosition(400, 400);
         }
+        if(event.Type == sf::Event::KeyPressed && event.Key.Code == sf::Keyboard::Space)
+        {
+            hl = !hl;
+            if(hl)
+            {
+                Highlight();
+            }
+            else
+            {
+                Unhighlight();
+            }
+        }
     }
 };
 
@@ -46,20 +64,14 @@ int main(int argc, char * argv[])
     unsigned int height = 800;
 
     BCIInterface * bciinterface = new BCIInterface(width, height);
-    UDPReceiver * receiver = new UDPReceiver(1111);
-    SimpleInterpreter * interpreter = new SimpleInterpreter();
-    bciinterface->SetCommandReceiver(receiver);
-    bciinterface->SetCommandInterpreter(interpreter);
 
     bciinterface->SetBackground(new VisionServerBG("localhost", 4242, 640, 480));
     
-    bciinterface->AddObject(new TestStimulus(7,60, width/2, 150, 150, 150, 255, 0, 0, 255));
+    bciinterface->AddObject(new TestStimulus(7,60, width/2, 150, 100, 100, "UP.png", "UP_HL.png"));
 
     bciinterface->DisplayLoop(fullscreen);
 
     delete bciinterface;
-    delete interpreter;
-    delete receiver;
 
     return 0;
 }
