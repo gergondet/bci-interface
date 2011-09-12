@@ -224,6 +224,10 @@ public:
                 {
                     m_objects[i]->Process(event);
                 }
+                for(size_t i = 0; i < m_objects_non_owned.size(); ++i)
+                {
+                    m_objects_non_owned[i]->Process(event);
+                }
                 if(m_interpreter)
                 {
                     m_interpreter->Process(event);

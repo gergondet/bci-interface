@@ -47,7 +47,7 @@ public:
             if(m_head_lr < 0.6)
             {
                 m_head_lr += 0.2;
-                cmd << "set featureHeadDes.errorIN [2](" << m_head_lr << ",0.3)"; 
+                cmd << "set featureHeadDes.errorIN [2](" << m_head_lr << ",0.45)"; 
             }
         }
         if(command == 2)
@@ -55,7 +55,7 @@ public:
             if(m_head_lr > -0.6)
             {
                 m_head_lr -= 0.2;
-                cmd << "set featureHeadDes.errorIN [2](" << m_head_lr << ",0.3)"; 
+                cmd << "set featureHeadDes.errorIN [2](" << m_head_lr << ",0.45)"; 
             }
         }
         if(command > 2) { return true; }

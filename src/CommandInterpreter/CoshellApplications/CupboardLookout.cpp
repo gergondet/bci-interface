@@ -26,7 +26,7 @@ public:
     {
         SimpleInterpreter::InterpretCommand(command, objects);
         /* Update cupboard stim position according to recognition plugin */
-        vision::ImageRef cupboard_pos = m_recognition->GetObjectPosition("cupboard");
+        vision::ImageRef cupboard_pos = m_recognition->GetObjectPosition("coca");
         if(cupboard_pos.x != 0 && cupboard_pos.y != 0)
         {
             objects[2]->SetPosition(cupboard_pos.x*m_width/640, cupboard_pos.y*m_height/480);

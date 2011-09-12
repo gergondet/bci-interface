@@ -26,7 +26,6 @@ public:
 
     bool InterpretCommand(int command, const std::vector<DisplayObject *> & objects)
     {
-        SimpleInterpreter::InterpretCommand(command, objects);
         /* Update table stim position according to recognition plugin */
         vision::ImageRef cupboard_pos = m_recognition->GetObjectPosition("table");
         if(cupboard_pos.x != 0 && cupboard_pos.y != 0)
@@ -57,6 +56,7 @@ public:
             m_time_in = 1000000*tv.tv_sec + tv.tv_usec;
         }
         prev_cmd = command;
+        SimpleInterpreter::InterpretCommand(command, objects);
         /* 1: Up, 2: Right, 3: Down, 4: Left, 5: table stim */
         std::stringstream cmd;
         switch(command)
