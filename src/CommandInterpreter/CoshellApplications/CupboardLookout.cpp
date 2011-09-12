@@ -47,7 +47,7 @@ public:
             else
             {
                 m_head_lr += 0.2;
-                cmd << "set featureHeadDes.errorIN [2](" << m_head_lr << ",0)"; 
+                cmd << "set featureHeadDes.errorIN [2](" << m_head_lr << ",0.45)"; 
             }
         }
         if(command == 2)
@@ -59,7 +59,7 @@ public:
             else
             {
                 m_head_lr -= 0.2;
-                cmd << "set featureHeadDes.errorIN [2](" << m_head_lr << ",0)"; 
+                cmd << "set featureHeadDes.errorIN [2](" << m_head_lr << ",0.45)"; 
             }
         }
         if(command == 3)
