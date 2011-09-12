@@ -22,8 +22,11 @@ public:
     /*! \brief Constructor: x and y are stimulus centers, can provide an image as graphic for the stim */
     SSVEPStimulus(int frequency, int screenFrequency, float x, float y, float size_x, float size_y, const std::string & tx, const std::string & tx_hl);
 
+    /*! \brief Constructor: x and y are stimulus centers, circle shape */
+    SSVEPStimulus(int frequency, int screenFrequency, float x, float y, float radius, int r, int g, int b, int a);
+
     /*! \brief Constructor: x and y are stimulus centers */ 
-    SSVEPStimulus(int frequency, int screenFrequency, float x = 0, float y = 0, float size_x = 100, float size_y = 100, int r = 255, int g = 0, int b = 0, int a = 255);
+    SSVEPStimulus(int frequency, int screenFrequency, float x, float y, float size_x, float size_y, int r, int g, int b, int a);
 
     /* \brief Change flickering frequency */
     bool ChangeFrequency(int frequency, int screenFrequency);

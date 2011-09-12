@@ -30,6 +30,13 @@ public:
         m_shape.EnableOutline(false);
     }
 
+    ShapeImpl(float x, float y, float radius, int r, int g, int b, int a) : 
+        m_shape(sf::Shape::Circle(0, 0, radius, sf::Color(r, g, b, a), 6, sf::Color(0, 255, 0, 128))) 
+    {
+        m_shape.SetPosition(x,y);
+        m_shape.EnableOutline(false);
+    }
+
     void Highlight()
     {
         m_shape.EnableOutline(true);
@@ -112,6 +119,27 @@ private:
 public:
     SSVEPStimulusImpl(int frequency, int screenFrequency, float x, float y, float size_x, float size_y, const std::string & texture, const std::string & texture_hl) : 
         m_graph(new SpriteImpl(x, y, size_x, size_y, texture, texture_hl)),
+        m_frequency(frequency) , m_screenFrequency(screenFrequency)
+    {
+        std::vector< std::pair<int, int> > tmpSeq;
+        if(squarefunction(m_frequency, m_screenFrequency, tmpSeq))
+        {
+            for(unsigned int i = 0; i < tmpSeq.size(); ++i)
+            {
+                for(int j = 0; j < tmpSeq[i].first; ++j)
+                {
+                    m_frameSeq.push_back(true);
+                }
+                for(int j = 0; j < tmpSeq[i].second; ++j)
+                {
+                    m_frameSeq.push_back(false);
+                }
+            }
+        }
+    }
+
+    SSVEPStimulusImpl(int frequency, int screenFrequency, float x, float y, float radius, int r, int g, int b, int a) : 
+        m_graph(new ShapeImpl(x, y, radius, r, g, b, a)),
         m_frequency(frequency) , m_screenFrequency(screenFrequency)
     {
         std::vector< std::pair<int, int> > tmpSeq;
@@ -216,6 +244,11 @@ public:
 
 SSVEPStimulus::SSVEPStimulus(int frequency, int screenFrequency, float x, float y, float size_x, float size_y, const std::string & tx, const std::string & tx_hl) :
     m_impl(new SSVEPStimulusImpl(frequency, screenFrequency, x, y, size_x, size_y, tx, tx_hl))
+{
+}
+
+SSVEPStimulus::SSVEPStimulus(int frequency, int screenFrequency, float x, float y, float radius, int r, int g, int b, int a) :
+    m_impl(new SSVEPStimulusImpl(frequency, screenFrequency, x, y, radius, r, g, b, a))
 {
 }
 

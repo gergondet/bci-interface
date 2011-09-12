@@ -28,6 +28,10 @@ public:
         : SSVEPStimulus(frequency, screenFrequency, x, y, size_x, size_y, tx, tx_hl), hl(false)
     {}
 
+    TestStimulus(int frequency, int screenFrequency, float x, float y, float radius, int r, int g, int b, int a)
+        : SSVEPStimulus(frequency, screenFrequency, x, y, radius, r, g, b, a), hl(false)
+    {} 
+
     TestStimulus(int frequency, int screenFrequency, float x, float y, float size_x, float size_y, int r, int g, int b, int a)
         : SSVEPStimulus(frequency, screenFrequency, x, y, size_x, size_y, r, g, b, a), hl(false)
     {} 
@@ -67,7 +71,8 @@ int main(int argc, char * argv[])
 
     bciinterface->SetBackground(new VisionServerBG("localhost", 4242, 640, 480));
     
-    bciinterface->AddObject(new TestStimulus(7,60, width/2, 150, 100, 100, "UP.png", "UP_HL.png"));
+    //bciinterface->AddObject(new TestStimulus(7,60, width/2, 150, 100, 100, "UP.png", "UP_HL.png"));
+    bciinterface->AddObject(new TestStimulus(7,60, width/2, 150, 50, 255, 0, 0, 255));
 
     bciinterface->DisplayLoop(fullscreen);
 
