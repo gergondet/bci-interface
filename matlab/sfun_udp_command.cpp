@@ -1,0 +1,147 @@
+/*  File    : sfun_keytest_trigger.cpp
+ *  Abstract:
+ *
+ *    Used to add a remote trigger channel to bci datas
+ *
+ */
+
+#include <fstream>
+#include <sstream>
+#include <windows.h>
+#include <winsock.h>
+
+#pragma comment (lib, "ws2_32.lib")
+
+#define S_FUNCTION_LEVEL 2
+#define S_FUNCTION_NAME  sfun_udp_command
+
+unsigned int IN_cmd = 0;
+unsigned int OUT_cmd = 0;
+
+std::ofstream debug("debug.log");
+
+class UDPClient
+{
+public:
+    UDPClient(const char * srv_name, unsigned short port)
+    {
+        WSAStartup(0x0202, &w);
+        sendaddr.sin_family = AF_INET;
+        sendaddr.sin_port = htons(port);
+        sendaddr.sin_addr.s_addr = inet_addr (srv_name);
+        sSocket = socket(AF_INET, SOCK_DGRAM, 0);
+    }
+
+    ~UDPClient()
+    {
+        closesocket(sSocket);
+        WSACleanup();
+    }
+
+    void SendMessage()
+	{
+		/* Send IN_cmd to remote server */
+		std::stringstream ss;
+		ss << IN_cmd;
+		sendto(sSocket, ss.str().c_str(), ss.str().length() + 1, 0, (struct sockaddr *)&sendaddr, sizeof(sendaddr));
+	}
+
+private:
+    SOCKET sSocket;
+    WSADATA w;
+    sockaddr_in sendaddr;
+};
+
+UDPClient * m_udp_client = 0;
+
+/*
+ * Need to include simstruc.h for the definition of the SimStruct and
+ * its associated macro definitions.
+ */
+#include "simstruc.h"
+
+#define IS_PARAM_DOUBLE(pVal) (mxIsNumeric(pVal) && !mxIsLogical(pVal) &&\
+!mxIsEmpty(pVal) && !mxIsSparse(pVal) && !mxIsComplex(pVal) && mxIsDouble(pVal))
+
+static void mdlInitializeSizes(SimStruct *S)
+{
+
+    ssSetNumSFcnParams(S, 0);  /* Number of expected parameters */
+
+    ssSetNumContStates(S, 0);
+    ssSetNumDiscStates(S, 0);
+
+    if (!ssSetNumInputPorts(S, 1)) return;
+	for(int i = 0; i < 1; ++i)
+    {
+        ssSetInputPortWidth(S, i, 1);
+		ssSetInputPortDirectFeedThrough(S, i, 1);
+		ssSetInputPortRequiredContiguous(S,i,1);
+    }
+
+    if (!ssSetNumOutputPorts(S, 1)) return;
+    for(int i = 0; i < 1; ++i)
+    {
+        ssSetOutputPortWidth(S, i, 1);
+    }
+
+    ssSetNumSampleTimes(S, 1);
+    ssSetNumRWork(S, 0);
+    ssSetNumIWork(S, 0);
+    ssSetNumPWork(S, 0);
+    ssSetNumModes(S, 0);
+    ssSetNumNonsampledZCs(S, 0);
+
+    ssSetSimStateCompliance(S, USE_CUSTOM_SIM_STATE);
+
+    ssSetOptions(S, 0);
+}
+
+
+static void mdlInitializeSampleTimes(SimStruct *S)
+{
+    ssSetSampleTime(S, 0, INHERITED_SAMPLE_TIME);
+    ssSetOffsetTime(S, 0, FIXED_IN_MINOR_STEP_OFFSET);
+    ssSetModelReferenceSampleTimeDefaultInheritance(S);
+}
+
+#define MDL_START  /* Change to #undef to remove function */
+#if defined(MDL_START)
+static void mdlStart(SimStruct *S)
+{
+    delete m_udp_client;
+    m_udp_client = new UDPClient("150.29.145.73", 1111);
+
+	IN_cmd = 0;
+    OUT_cmd = 0;
+
+}
+#endif /*  MDL_START */
+
+
+static void mdlOutputs(SimStruct *S, int_T tid)
+{
+	const real_T * x = ssGetInputPortRealSignal(S, 0);
+	IN_cmd = x[0];
+	m_udp_client->SendMessage();
+
+    real_T * y = ssGetOutputPortRealSignal(S,0);
+    y[0] = IN_cmd;
+
+    UNUSED_ARG(tid);
+}
+
+#ifdef MATLAB_MEX_FILE
+
+static void mdlTerminate(SimStruct *S)
+{
+}
+
+#endif
+
+#ifdef  MATLAB_MEX_FILE
+#include "simulink.c"
+#else
+#include "cg_sfun.h"
+#endif
+
