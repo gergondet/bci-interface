@@ -4,7 +4,9 @@
 #include <bci-interface/DisplayObject.h>
 
 #include <coshell-bci/CoshellClient.h>
-#include <visionsystem/vs_plugins/recognition/recognition.h>
+
+#include <sys/time.h>
+#include <sstream>
 
 namespace bciinterface
 {
@@ -13,12 +15,11 @@ struct AdaptiveSteeringImpl : public SimpleInterpreter
 {
 private:
     coshellbci::CoshellClient * m_coshell;
-    Recognition * m_recognition;
     double m_time_in;
     int prev_cmd;
 public:
-    AdaptiveSteeringImpl(coshellbci::CoshellClient * coshell, Recognition * recognition)
-        : m_coshell(coshell), m_recognition(recognition), m_time_in(0), prev_cmd(-1)
+    AdaptiveSteeringImpl(coshellbci::CoshellClient * coshell)
+        : m_coshell(coshell), m_time_in(0), prev_cmd(-1)
     {
         m_coshell->ExecuteACommand("StartWalking");
         m_coshell->ExecuteACommand("set pg.velocitydes [3](-0.0001,0.0,0.0)");
@@ -26,16 +27,6 @@ public:
 
     bool InterpretCommand(int command, const std::vector<DisplayObject *> & objects)
     {
-        /* Update table stim position according to recognition plugin */
-        vision::ImageRef cupboard_pos = m_recognition->GetObjectPosition("table");
-        if(cupboard_pos.x != 0 && cupboard_pos.y != 0)
-        {
-            objects[4]->SetPosition(cupboard_pos.x, cupboard_pos.y);
-        }
-        else
-        {
-            objects[4]->Unhighlight();
-        }
         if(prev_cmd == command) 
         { 
             return false; 
@@ -84,8 +75,8 @@ public:
     }
 };
 
-AdaptiveSteering::AdaptiveSteering(coshellbci::CoshellClient * coshell, Recognition * recognition_plugin)
-: m_impl(new AdaptiveSteeringImpl(coshell, recognition_plugin))
+AdaptiveSteering::AdaptiveSteering(coshellbci::CoshellClient * coshell)
+: m_impl(new AdaptiveSteeringImpl(coshell))
 {}
 
 bool AdaptiveSteering::InterpretCommand(int command, const std::vector<DisplayObject *> & objects)

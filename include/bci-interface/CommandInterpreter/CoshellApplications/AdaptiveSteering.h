@@ -15,8 +15,6 @@ namespace coshellbci
     class CoshellClient;
 }
 
-class Recognition;
-
 namespace bciinterface
 {
 
@@ -25,7 +23,7 @@ struct AdaptiveSteeringImpl;
 class AdaptiveSteering : public CommandInterpreter 
 {
 public:
-    AdaptiveSteering(coshellbci::CoshellClient * coshell, Recognition * recognition_plugin);
+    AdaptiveSteering(coshellbci::CoshellClient * coshell);
 
     virtual bool InterpretCommand(int command, const std::vector<DisplayObject *> & objects);
 
