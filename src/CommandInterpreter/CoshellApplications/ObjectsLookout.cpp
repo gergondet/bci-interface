@@ -4,7 +4,9 @@
 #include <bci-interface/DisplayObject.h>
 
 #include <coshell-bci/CoshellClient.h>
-#include <visionsystem/vs_plugins/recognition/recognition.h>
+#include <visionsystem/vs_plugins/xmlrpc/xmlrpc-client.h>
+
+using namespace visionsystem;
 
 namespace bciinterface
 {
@@ -13,14 +15,14 @@ struct ObjectsLookoutImpl : public SimpleInterpreter
 {
 private:
     coshellbci::CoshellClient * m_coshell;
-    Recognition * m_recognition;
+    XMLRPCClient * m_client;
     std::vector<std::string> m_objects;
     float m_head_lr;
     unsigned int m_width;
     unsigned int m_height;
 public:
-    ObjectsLookoutImpl(unsigned int width, unsigned int height, coshellbci::CoshellClient * coshell, Recognition * recognition, const std::vector<std::string> & objects)
-        : m_coshell(coshell), m_recognition(recognition), m_objects(objects), m_head_lr(0), m_width(width), m_height(height)
+    ObjectsLookoutImpl(unsigned int width, unsigned int height, coshellbci::CoshellClient * coshell, XMLRPCClient * client, const std::vector<std::string> & objects)
+        : m_coshell(coshell), m_client(client), m_objects(objects), m_head_lr(0), m_width(width), m_height(height)
     {}
 
     bool InterpretCommand(int command, const std::vector<DisplayObject *> & objects)
@@ -29,7 +31,12 @@ public:
         /* Update objects stim position according to recognition plugin */
         for(size_t i = 0; i < m_objects.size(); ++i)
         {
-            vision::ImageRef object_pos = m_recognition->GetObjectPosition(m_objects[i]);
+            XmlRpcValue params = m_objects[i];
+            XmlRpcValue result;
+            m_client->execute("GetObjectPosition", params, result);
+            vision::ImageRef object_pos;
+            object_pos.x = (int)result["left"][0];
+            object_pos.y = (int)result["left"][1];
             if(object_pos.x != 0 && object_pos.y != 0)
             {
                 objects[2+i]->SetPosition(object_pos.x*m_width/640, object_pos.y*m_height/480);
@@ -64,8 +71,8 @@ public:
     }
 };
 
-ObjectsLookout::ObjectsLookout(unsigned int width, unsigned int height, coshellbci::CoshellClient * coshell, Recognition * recognition_plugin, const std::vector<std::string> & objects)
-: m_impl(new ObjectsLookoutImpl(width, height, coshell, recognition_plugin, objects))
+ObjectsLookout::ObjectsLookout(unsigned int width, unsigned int height, coshellbci::CoshellClient * coshell, XMLRPCClient * client_plugin, const std::vector<std::string> & objects)
+: m_impl(new ObjectsLookoutImpl(width, height, coshell, client_plugin, objects))
 {}
 
 bool ObjectsLookout::InterpretCommand(int command, const std::vector<DisplayObject *> & objects)

@@ -15,7 +15,10 @@ namespace coshellbci
     class CoshellClient;
 }
 
-class Recognition;
+namespace visionsystem
+{
+    class XMLRPCClient;
+}
 
 namespace bciinterface
 {
@@ -25,7 +28,7 @@ struct CupboardLookoutImpl;
 class CupboardLookout : public CommandInterpreter 
 {
 public:
-    CupboardLookout(unsigned int widht, unsigned int height, coshellbci::CoshellClient * coshell, Recognition * recognition_plugin);
+    CupboardLookout(unsigned int widht, unsigned int height, coshellbci::CoshellClient * coshell, visionsystem::XMLRPCClient * xmlrpc_client);
 
     virtual bool InterpretCommand(int command, const std::vector<DisplayObject *> & objects);
 
