@@ -2,6 +2,7 @@ SET(LIB_NAME bci-interface)
 
 SET(${LIB_NAME}_src
 CommandReceiver/UDPReceiver.cpp
+CommandReceiver/TCPReceiver.cpp
 Utils/UDPServer.cpp
 Utils/square-function.cpp
 BCIInterface.cpp
