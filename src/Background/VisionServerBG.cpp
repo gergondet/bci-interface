@@ -34,7 +34,7 @@ private:
 public:
     VisionServerBGImpl(const std::string & vision_name, unsigned short vision_port, unsigned int width, unsigned int height)
        :    m_width(width), m_height(height),
-            m_dataFromSocket(new unsigned char[50001]), m_datatexture(new sf::Uint8[width*height*4]),
+            m_dataFromSocket(new unsigned char[16385]), m_datatexture(new sf::Uint8[width*height*4]),
             m_texture(new sf::Texture), m_sprite(new sf::Sprite), m_close(false)
     {
         struct hostent * hent;
@@ -85,49 +85,42 @@ public:
         while(!m_close)
         {
             sendto(m_sockfd, "get", 4, 0, (struct sockaddr *)&m_serveraddr, sizeof(m_serveraddr));
-            fd_set recvset;
 
             int receivedData = 0;
-            unsigned char packetId = '\0';
+            char packetId = -1;
             memset(m_datatexture, 0, m_width*m_height*4);
-            while(receivedData < m_width*m_height && receivedData != -1)
+            while(receivedData < m_width*m_height*4 && receivedData != -1)
             {
-                FD_ZERO(&recvset);
-                FD_SET(m_sockfd, &recvset);
-
-                struct timeval tv;
-                tv.tv_sec = 0;
-                tv.tv_usec = 100000; /* 100 ms wait */
-                int ret = select(m_sockfd + 1, &recvset, 0, 0, &tv);
-                if(ret > 0)
+                memset(m_dataFromSocket, '\0', 16385);
+                int n = recvfrom(m_sockfd, m_dataFromSocket, 16385, 0, 0, 0);
+                if(n <= 0)
                 {
-                    memset(m_dataFromSocket, '\0', 50001);
-                    int n = recvfrom(m_sockfd, m_dataFromSocket, 50001, 0, 0, 0);
-                    unsigned char newPacketId = m_dataFromSocket[0];
-                    if(newPacketId != packetId && newPacketId != packetId + 1)
-                    {
-                        /* Lost part of the frame on the road, reset */
-                        receivedData = -1;
-                    }
-                    else
-                    {
-                        packetId = newPacketId;
-                        receivedData += n;
-                        /* Copy new data in m_datatexture */
-                        for(int i = 0; i < n - 1; ++i)
-                        {
-                            m_datatexture[4*50000*packetId + 4*i]   = m_dataFromSocket[i+1];
-                            m_datatexture[4*50000*packetId + 4*i+1] = m_dataFromSocket[i+1];
-                            m_datatexture[4*50000*packetId + 4*i+2] = m_dataFromSocket[i+1];
-                            m_datatexture[4*50000*packetId + 4*i+3] = 255;
-                        }
-                    }
+                    receivedData = -1;
+                    break;
+                }
+                unsigned char newPacketId = m_dataFromSocket[0];
+                if(newPacketId != packetId + 1)
+                {
+                    /* Lost part of the frame on the road, reset */
+                    receivedData = -1;
                 }
                 else
                 {
-                    receivedData = -1;
+                    packetId = newPacketId;
+                    receivedData += n;
+                    /* Copy new data in m_datatexture */
+                    for(int i = 0; i < n - 1; ++i)
+                    {
+                        m_datatexture[16384*packetId + i] = m_dataFromSocket[i+1];
+                        if( (16384*packetId + i) % 4  == 3 ) { m_datatexture[16384*packetId + i] = 255; }
+                    }
+                }
+                if(receivedData < m_width*m_height*4 && receivedData != -1)
+                {
+                    sendto(m_sockfd, "more", 5, 0, (struct sockaddr *)&m_serveraddr, sizeof(m_serveraddr));
                 }
             }
+            usleep(50000);
             if(receivedData != -1)
             {
                 /* m_datatexture has a full texture worth of data, update the sprite */
