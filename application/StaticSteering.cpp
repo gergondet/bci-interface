@@ -23,7 +23,7 @@ int main(int argc, char * argv[])
 {
     bool fullscreen = true;
     unsigned int width = 1280;
-    unsigned int height = 800;
+    unsigned int height = 1024;
 
     BCIInterface * bciinterface = new BCIInterface(width, height);
 
