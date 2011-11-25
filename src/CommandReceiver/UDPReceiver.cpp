@@ -53,9 +53,7 @@ public:
 
     int GetCommand()
     {
-        int command = m_command;
-        m_command = 0;
-        return command;
+        return m_command;
     }
 };
 
