@@ -20,6 +20,8 @@ private:
     sf::Sprite * m_sprite_display;
     sf::Sprite * m_sprite_load;
 
+    bool m_color_enabled;
+
     bool m_close;
 
 public:
@@ -28,7 +30,7 @@ public:
             m_dataImage(new sf::Uint8[width*height*4]),
             m_texture_display(new sf::Texture), m_texture_load(new sf::Texture),
             m_sprite_display(new sf::Sprite), m_sprite_load(new sf::Sprite),
-            m_close(false)
+            m_color_enabled(true), m_close(false)
     {
         memset(m_dataImage, 0, width*height*4);
         m_texture_display->Create(width, height);
@@ -86,14 +88,34 @@ public:
 
     void UpdateFromBuffer_RGB(unsigned char * img)
     {
-        for(size_t i = 0; i < m_width*m_height; ++i)
+        if(m_color_enabled)
         {
-            m_dataImage[4*i] = img[4*i];
-            m_dataImage[4*i+1] = img[4*i+1];
-            m_dataImage[4*i+2] = img[4*i+2];
-            m_dataImage[4*i+3] = 255;
-        }
+            for(size_t i = 0; i < m_width*m_height; ++i)
+            {
+                m_dataImage[4*i] = img[4*i];
+                m_dataImage[4*i+1] = img[4*i+1];
+                m_dataImage[4*i+2] = img[4*i+2];
+                m_dataImage[4*i+3] = 255;
+            }
+        }    
+        else
+        {
+            sf::Uint32 gray;
+            for(size_t i = 0; i < m_width*m_height; ++i)
+            {
+                gray = (img[4*i] + img[4*i+1] + img[4*i+2])/3;
+                m_dataImage[4*i]   = gray;
+                m_dataImage[4*i+1] = gray;
+                m_dataImage[4*i+2] = gray;
+                m_dataImage[4*i+3] = 255;
+            }
+        }    
         LoadImageFromPixels();
+    }
+
+    void SwitchColorMode()
+    {
+        m_color_enabled = !m_color_enabled;
     }
 };
 
@@ -125,6 +147,11 @@ void BufferBG::UpdateFromBuffer_MONO(unsigned char * img)
 void BufferBG::UpdateFromBuffer_RGB(unsigned char * img)
 {
     m_impl->UpdateFromBuffer_RGB(img);
+}
+
+void BufferBG::SwitchColorMode()
+{
+    m_impl->SwitchColorMode();
 }
 
 } // namespace bciinterface

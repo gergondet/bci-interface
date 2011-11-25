@@ -28,6 +28,8 @@ public:
 
     void UpdateFromBuffer_RGB(unsigned char * img);
 
+    void SwitchColorMode();
+
 private:
     boost::shared_ptr<BufferBGImpl> m_impl;
 };
