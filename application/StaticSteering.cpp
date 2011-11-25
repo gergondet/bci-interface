@@ -21,7 +21,7 @@ using namespace bciinterface;
 
 int main(int argc, char * argv[])
 {
-    bool fullscreen = false;
+    bool fullscreen = true;
     unsigned int width = 1280;
     unsigned int height = 800;
 
@@ -30,19 +30,19 @@ int main(int argc, char * argv[])
     UDPReceiver * receiver = new UDPReceiver(1111);
     bciinterface->SetCommandReceiver(receiver);
 
-    CoshellInterpreter * interpreter = new CoshellInterpreter("localhost", 2809);
+    CoshellInterpreter * interpreter = new CoshellInterpreter("hrp2010c", 2809);
     std::vector<std::string> commands;
-    commands.push_back("set pg.velocitydes [3](0.0001,0.0,0.0)");
-    commands.push_back("set pg.velocitydes [3](0.20,0.0,0.0)");
-    commands.push_back("set pg.velocitydes [3](0.0001,0.0,-0.2)");
-    commands.push_back("set pg.velocitydes [3](-0.20,0.0,0.0)");
-    commands.push_back("set pg.velocitydes [3](0.0001,0.0,0.2)");
+    commands.push_back("set pg.velocitydes [3](-0.0001,0.0,0.0)");
+    commands.push_back("set pg.velocitydes [3](0.15,0.0,0.0)");
+    commands.push_back("set pg.velocitydes [3](-0.0001,0.0,-0.15)");
+    commands.push_back("set pg.velocitydes [3](-0.15,0.0,0.0)");
+    commands.push_back("set pg.velocitydes [3](-0.0001,0.0,0.15)");
     interpreter->SetCommands(commands);
     std::string initialtest = "pg.velocitydes";
     interpreter->SetInitialTest(initialtest);
     std::vector<std::string> initialcommands;
     initialcommands.push_back("import walking/startherdt");
-    initialcommands.push_back("set pg.velocitydes [3](0.0001,0.0,0.0)");
+    initialcommands.push_back("set pg.velocitydes [3](-0.0001,0.0,0.0)");
     interpreter->SetInitialCommands(initialcommands);
     std::vector<std::string> finalcommands;
     finalcommands.push_back("set pg.velocitydes [3](0.0,0.0,0.0)");
@@ -56,6 +56,7 @@ int main(int argc, char * argv[])
     bciinterface->AddObject(new SSVEPStimulus(5,60, width/2, height-150, 150, 150, 255, 0, 0, 255));
     bciinterface->AddObject(new SSVEPStimulus(9,60, 150, height/2, 150, 150, 255, 0, 0, 255));
 
+    bciinterface->StartParadigm();
     bciinterface->DisplayLoop(fullscreen);
 
     delete bciinterface;
