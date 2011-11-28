@@ -1,5 +1,7 @@
 #include <bci-interface/BCIInterface.h>
 
+#include <bci-interface/EventHandler.h>
+
 #include <bci-interface/Background.h>
 #include <bci-interface/DisplayObject.h>
 
@@ -19,12 +21,15 @@ namespace bciinterface
 struct BCIInterfaceImpl
 {
 private:
+    const BCIInterface & m_ref;
     unsigned int m_width;
     unsigned int m_height;
     bool m_in_paradigm;
     bool m_close;
     sf::RenderWindow * m_app;
     std::ofstream m_fpslog;
+
+    std::vector<EventHandler *> m_handlers;
 
     Background * m_background;
     boost::thread * m_backgroundth;
@@ -38,8 +43,9 @@ private:
     CommandInterpreter * m_interpreter;
 
 public:
-    BCIInterfaceImpl(unsigned int width, unsigned int height)
-    : m_width(width), m_height(height), m_in_paradigm(false), m_close(false), m_app(0), m_fpslog("/tmp/bciinterface_fps.log"), 
+    BCIInterfaceImpl(const BCIInterface & ref, unsigned int width, unsigned int height)
+    : m_ref(ref), m_width(width), m_height(height), m_in_paradigm(false), m_close(false), m_app(0), m_fpslog("/tmp/bciinterface_fps.log"), 
+        m_handlers(0),
         m_background(0), m_backgroundth(0),
         m_objects(0), m_objects_non_owned(0),
         m_receiver(0), m_receiverth(0),
@@ -76,6 +82,11 @@ public:
         delete m_app;
     }
 
+    void AddEventHandler(EventHandler * handler)
+    {
+        m_handlers.push_back(handler);
+    }
+
     void SetBackground(Background * background)
     {
         if(m_backgroundth)
@@ -91,6 +102,11 @@ public:
         {
             m_background = background;
         }
+    }
+
+    Background * GetBackground() const
+    {
+        return m_background;
     }
 
     void AddObject(DisplayObject * object)
@@ -127,6 +143,12 @@ public:
 
     void Clean()
     {
+        while(m_handlers.size() > 0)
+        {
+            EventHandler * tmp = m_handlers.back();
+            delete tmp;
+            m_handlers.pop_back();
+        }
         while(m_objects.size() > 0)
         {
             DisplayObject * tmp = m_objects.back();
@@ -222,13 +244,17 @@ public:
                 {   m_app->Close(); }
                 if(event.Type == sf::Event::KeyPressed && ( event.Key.Code == sf::Keyboard::Escape || event.Key.Code == sf::Keyboard::Q ) )
                 {   m_app->Close(); }
+                for(size_t i = 0; i < m_handlers.size(); ++i)
+                {
+                    m_handlers[i]->Process(event);
+                }
                 for(size_t i = 0; i < m_objects.size(); ++i)
                 {
-                    m_objects[i]->Process(event);
+                    m_objects[i]->Process(event, m_ref);
                 }
                 for(size_t i = 0; i < m_objects_non_owned.size(); ++i)
                 {
-                    m_objects_non_owned[i]->Process(event);
+                    m_objects_non_owned[i]->Process(event, m_ref);
                 }
                 if(m_interpreter)
                 {
@@ -325,7 +351,7 @@ public:
     }
 };
 
-BCIInterface::BCIInterface(unsigned int width, unsigned int height) : m_impl(new BCIInterfaceImpl(width, height))
+BCIInterface::BCIInterface(unsigned int width, unsigned int height) : m_impl(new BCIInterfaceImpl(*this, width, height))
 {}
 
 bool BCIInterface::ParadigmStatus()
@@ -343,9 +369,19 @@ void BCIInterface::StopParadigm()
     m_impl->StopParadigm();
 }
 
+void BCIInterface::AddEventHandler(EventHandler * handler)
+{
+    m_impl->AddEventHandler(handler);
+}
+
 void BCIInterface::SetBackground(Background * background)
 {
     m_impl->SetBackground(background);
+}
+
+Background * BCIInterface::GetBackground() const
+{
+    return m_impl->GetBackground();
 }
 
 void BCIInterface::AddObject(DisplayObject * object)

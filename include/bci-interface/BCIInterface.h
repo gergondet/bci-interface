@@ -10,6 +10,7 @@ namespace sf
 
 namespace bciinterface
 {
+class EventHandler;
 class Background;
 class DisplayObject;
 
@@ -29,8 +30,14 @@ public:
 
     void StopParadigm();
 
+    /* Add an event handler, the interface assumes ownership of the object */
+    void AddEventHandler(EventHandler * handler);
+
     /* Set Background */
     void SetBackground(Background * background);
+
+    /* Get Background, can be zero */
+    Background * GetBackground() const;
 
     /* Add a display object to the interface, the interface assumes ownership of the object */
     void AddObject(DisplayObject * object);
