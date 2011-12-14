@@ -14,6 +14,7 @@ private:
     coshellbci::CoshellClient * m_coshell;
     bool m_own_coshell;
     bool m_initialized;
+    bool m_end_paradigm;
     int  m_command;
     int  m_exit_command;
     std::vector<std::string> m_commands;
@@ -24,7 +25,7 @@ public:
     CoshellInterpreterImpl(const std::string & server_name, int server_port)
         : SimpleInterpreter(), m_coshell(new coshellbci::CoshellClient(server_name.c_str(), server_port)),
             m_own_coshell(true),
-            m_initialized(false), m_command(0), m_exit_command(-1),
+            m_initialized(false), m_end_paradigm(false), m_command(0), m_exit_command(-1),
             m_commands(0), m_initialtest(""), m_initialcommands(0), m_finalcommands(0)
     {
         if(!m_coshell || !m_coshell->Initialize())
@@ -60,6 +61,7 @@ public:
         m_initialtest = "";
         m_initialcommands.resize(0);
         m_finalcommands.resize(0);
+        m_end_paradigm = false;
     }
 
     void SetExitCommand(int command)
@@ -107,6 +109,10 @@ public:
         SimpleInterpreter::InterpretCommand(command, objects);
         if(m_initialized)
         {
+            if(m_end_paradigm)
+            {
+                return true;
+            }
             if(command >= 0 && command < (int)m_commands.size())
             {
                 if(command != m_command)
@@ -166,6 +172,7 @@ public:
         {
             m_coshell->ExecuteACommand(m_finalcommands[i]);
         }
+        m_end_paradigm = true;
     }
 };
 
