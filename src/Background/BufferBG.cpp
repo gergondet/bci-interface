@@ -36,7 +36,7 @@ public:
         m_texture_display->Create(width, height);
         m_texture_load->Create(width, height);
         m_sprite_display->SetTexture(*m_texture_display);
-        m_sprite_load->SetTexture(*m_texture_display);
+        m_sprite_load->SetTexture(*m_texture_load);
     }
 
     ~BufferBGImpl()
@@ -65,7 +65,7 @@ public:
 
     void LoadImageFromPixels()
     {
-        m_texture_load->Update(m_dataImage);
+        m_texture_load->Update(m_dataImage, m_width, m_height, 0, 0);
         sf::Sprite * sprite_tmp = m_sprite_display;
         sf::Texture * texture_tmp = m_texture_display;
         m_sprite_display = m_sprite_load;
