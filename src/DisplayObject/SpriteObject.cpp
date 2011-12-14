@@ -44,6 +44,11 @@ public:
     {
         m_sprite->SetPosition(x, y);
     }
+
+    void Resize(float size_x, float size_y)
+    {
+        m_sprite->Resize(size_x, size_y);
+    }
 };
 
 SpriteObject::SpriteObject(const std::string & texture_src) : m_impl(new SpriteObjectImpl(texture_src))
@@ -62,6 +67,11 @@ void SpriteObject::SetSubRect(int left, int top, int right, int bottom)
 void SpriteObject::SetPosition(float x, float y)
 {
     m_impl->SetPosition(x, y);
+}
+
+void SpriteObject::Resize(float x, float y)
+{
+    m_impl->Resize(x,y);
 }
 
 } // namespace bciinterface

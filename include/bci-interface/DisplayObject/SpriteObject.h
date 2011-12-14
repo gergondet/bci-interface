@@ -20,6 +20,8 @@ public:
     void SetSubRect(int left, int top, int right, int bottom);
 
     void SetPosition(float x, float y);
+
+    void Resize(float size_x, float size_y);
 private:
     boost::shared_ptr<SpriteObjectImpl> m_impl;
 };
