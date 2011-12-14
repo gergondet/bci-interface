@@ -171,8 +171,7 @@ public:
         }
 
 
-        m_app->EnableVerticalSync(false);
-        m_app->SetFramerateLimit(60);
+        m_app->EnableVerticalSync(true);
 
         DisplayLoop();
 
@@ -198,8 +197,7 @@ public:
             m_app = app;
         }
 
-        m_app->EnableVerticalSync(false);
-        m_app->SetFramerateLimit(60);
+        m_app->EnableVerticalSync(true);
 
         while(!m_close)
         {
@@ -269,12 +267,13 @@ public:
                 if(clock.GetElapsedTime() > timeout)
                 {
                     in_cmd = m_receiver->GetCommand();
-                    bool interpreter_status = m_interpreter->InterpretCommand(in_cmd, m_objects);
-                    if(cmd && interpreter_status) { *cmd = in_cmd; m_in_paradigm = false; }
                 }
-                else
-                {
-                    m_interpreter->InterpretCommand(0, m_objects);
+                bool interpreter_status = m_interpreter->InterpretCommand(in_cmd, m_objects);
+                if(cmd && interpreter_status) 
+                { 
+                    *cmd = in_cmd; 
+                    m_in_paradigm = false; 
+                    SetCommandInterpreter(0);
                 }
             }
 
