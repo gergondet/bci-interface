@@ -13,6 +13,10 @@ struct BufferBGImpl
 private:
     unsigned int m_width;
     unsigned int m_height;
+    unsigned int m_wwidth;
+    unsigned int m_wheight;
+    unsigned int m_iwidth;
+    unsigned int m_iheight;
 
     sf::Uint8 * m_dataImage;
     sf::Texture * m_texture_display;
@@ -25,8 +29,10 @@ private:
     bool m_close;
 
 public:
-    BufferBGImpl(unsigned int width, unsigned int height)
+    BufferBGImpl(unsigned int width, unsigned int height,
+                    unsigned int wwidth, unsigned wheight, unsigned iwidth, unsigned iheight)
        :    m_width(width), m_height(height),
+            m_wwidth(wwidth), m_wheight(wheight), m_iwidth(iwidth), m_iheight(iheight),
             m_dataImage(new sf::Uint8[width*height*4]),
             m_texture_display(new sf::Texture), m_texture_load(new sf::Texture),
             m_sprite_display(new sf::Sprite), m_sprite_load(new sf::Sprite),
@@ -37,6 +43,15 @@ public:
         m_texture_load->Create(width, height);
         m_sprite_display->SetTexture(*m_texture_display);
         m_sprite_load->SetTexture(*m_texture_load);
+        if(iwidth == 0 || iheight == 0)
+        {
+            m_iwidth = m_wwidth;
+            m_iheight = m_wheight;
+        }
+        m_sprite_load->Resize(m_iwidth, m_iheight);
+        m_sprite_load->SetPosition(m_wwidth/2 - m_iwidth/2, m_wheight/2 - m_iheight/2);
+        m_sprite_display->Resize(m_iwidth, m_iheight);
+        m_sprite_display->SetPosition(m_wwidth/2 - m_iwidth/2, m_wheight/2 - m_iheight/2);
     }
 
     ~BufferBGImpl()
@@ -119,8 +134,9 @@ public:
     }
 };
 
-BufferBG::BufferBG(unsigned int width, unsigned int height)
-    : m_impl(new BufferBGImpl(width, height))
+BufferBG::BufferBG(unsigned int width, unsigned int height,
+    unsigned int wwidth, unsigned int wheight, unsigned int iwidth, unsigned int iheight)
+    : m_impl(new BufferBGImpl(width, height, wwidth, wheight, iwidth, iheight))
 {
 }
 

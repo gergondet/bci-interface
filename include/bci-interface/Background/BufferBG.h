@@ -16,7 +16,8 @@ struct BufferBGImpl;
 class BufferBG : public Background
 {
 public:
-    BufferBG(unsigned int width, unsigned int height);
+    BufferBG(unsigned int width, unsigned int height, 
+        unsigned int wwidth, unsigned int wheight, unsigned int iwidth = 0, unsigned int iheight = 0);
 
     void UpdateLoop();
 

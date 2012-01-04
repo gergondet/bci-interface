@@ -37,7 +37,7 @@ int main(int argc, char * argv[])
 
     unsigned char * bgcolor = new unsigned char[640*480*4];
     std::memset(bgcolor, 0x77, 640*480*4); 
-    BufferBG * bg = new BufferBG(640,480);
+    BufferBG * bg = new BufferBG(640,480, width, height);
     bg->UpdateFromBuffer_RGB(bgcolor);
     bciinterface->SetBackground(bg);
 
