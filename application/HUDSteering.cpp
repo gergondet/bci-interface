@@ -123,7 +123,7 @@ int main(int argc, char * argv[])
     SimpleInterpreter * sinterpreter = new SimpleInterpreter();
     bciinterface->SetCommandInterpreter(sinterpreter);
 
-    bciinterface->SetBackground(new VisionServerBG("localhost", 4242, 640, 480));
+    bciinterface->SetBackground(new VisionServerBG("localhost", 4242, 640, 480, width, height));
     
     int * out_cmd = new int(-1);
     float timeout = 2;

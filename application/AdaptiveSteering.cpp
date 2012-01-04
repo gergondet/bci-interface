@@ -116,7 +116,7 @@ int main(int argc, char * argv[])
     interpreter->SetFinalCommands(finalcommands);
     bciinterface->SetCommandInterpreter(interpreter);
 
-    bciinterface->SetBackground(new VisionServerBG("hrp2010v", 4242, 640, 480));
+    bciinterface->SetBackground(new VisionServerBG("hrp2010v", 4242, 640, 480, width, height));
     
     int * out_cmd = new int(-1);
     float timeout = 2;

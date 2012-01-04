@@ -20,6 +20,10 @@ struct VisionServerBGImpl
 private:
     unsigned int m_width;
     unsigned int m_height;
+    unsigned int m_wwidth;
+    unsigned int m_wheight;
+    unsigned int m_iwidth;
+    unsigned int m_iheight;
 
     int m_sockfd;
     struct sockaddr_in m_bindaddr;
@@ -32,8 +36,10 @@ private:
     bool m_close;
 
 public:
-    VisionServerBGImpl(const std::string & vision_name, unsigned short vision_port, unsigned int width, unsigned int height)
+    VisionServerBGImpl(const std::string & vision_name, unsigned short vision_port, unsigned int width, unsigned int height, 
+        unsigned int wwidth, unsigned wheight, unsigned iwidth, unsigned iheight)
        :    m_width(width), m_height(height),
+            m_wwidth(wwidth), m_wheight(wheight), m_iwidth(iwidth), m_iheight(iheight),
             m_dataFromSocket(new unsigned char[16385]), m_datatexture(new sf::Uint8[width*height*4]),
             m_texture(new sf::Texture), m_sprite(new sf::Sprite), m_close(false)
     {
@@ -53,6 +59,13 @@ public:
         m_texture->Create(width, height);
         m_texture->Update(m_datatexture);
         m_sprite->SetTexture(*m_texture);
+        if(iwidth == 0 || iheight == 0)
+        {
+            m_iwidth = m_wwidth;
+            m_iheight = m_wheight;
+        }
+        m_sprite->Resize(m_iwidth, m_iheight);
+        m_sprite->SetPosition(m_wwidth/2 - m_iwidth/2, m_wheight/2 - m_iheight/2);
 
         m_sockfd = socket(AF_INET, SOCK_DGRAM, 0);
         if(m_sockfd < 0)
@@ -136,13 +149,14 @@ public:
 
     void Draw(sf::RenderWindow * app)
     {
-        m_sprite->Resize(app->GetWidth(), app->GetHeight());
+//        m_sprite->Resize(app->GetWidth(), app->GetHeight());
         app->Draw(*m_sprite);
     }
 };
 
-VisionServerBG::VisionServerBG(const std::string & vs_name, unsigned short vs_port, unsigned int width, unsigned int height)
-    : m_impl(new VisionServerBGImpl(vs_name, vs_port, width, height))
+VisionServerBG::VisionServerBG(const std::string & vs_name, unsigned short vs_port, unsigned int width, unsigned int height,
+    unsigned int wwidth, unsigned int wheight, unsigned iwidth, unsigned int iheight)
+    : m_impl(new VisionServerBGImpl(vs_name, vs_port, width, height, wwidth, wheight, iwidth, iheight))
 {
 }
 

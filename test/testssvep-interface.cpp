@@ -21,9 +21,9 @@ using namespace bciinterface;
 
 int main(int argc, char * argv[])
 {
-    bool fullscreen = false;
+    bool fullscreen = true;
     unsigned int width = 1280;
-    unsigned int height = 800;
+    unsigned int height = 1024; 
 
     BCIInterface * bciinterface = new BCIInterface(width, height);
     UDPReceiver * receiver = new UDPReceiver(1111);
@@ -31,12 +31,12 @@ int main(int argc, char * argv[])
     bciinterface->SetCommandReceiver(receiver);
     bciinterface->SetCommandInterpreter(interpreter);
 
-    bciinterface->SetBackground(new VisionServerBG("localhost", 4242, 640, 480));
+    bciinterface->SetBackground(new VisionServerBG("localhost", 4242, 640, 480, width, height, 1024, 768));
     
-    bciinterface->AddObject(new SSVEPStimulus(7,60, width/2, 150, 150, 150, 255, 0, 0, 255));
-    bciinterface->AddObject(new SSVEPStimulus(12,60, width-150, height/2, 150, 150, 255, 0, 0, 255));
-    bciinterface->AddObject(new SSVEPStimulus(5,60, width/2, height-150, 150, 150, 255, 0, 0, 255));
-    bciinterface->AddObject(new SSVEPStimulus(9,60, 150, height/2, 150, 150, 255, 0, 0, 255));
+    bciinterface->AddObject(new SSVEPStimulus(6,60, width/2, 80, 150, 150, 255, 0, 0, 255));
+    bciinterface->AddObject(new SSVEPStimulus(8,60, width-80, height/2, 150, 150, 255, 0, 0, 255));
+    bciinterface->AddObject(new SSVEPStimulus(11,60, width/2, height-80, 150, 150, 255, 0, 0, 255));
+    bciinterface->AddObject(new SSVEPStimulus(9,60, 80, height/2, 150, 150, 255, 0, 0, 255));
 
     bciinterface->DisplayLoop(fullscreen);
 

@@ -16,7 +16,8 @@ struct VisionServerBGImpl;
 class VisionServerBG : public Background
 {
 public:
-    VisionServerBG(const std::string & vs_name, unsigned short vs_port, unsigned int width, unsigned int height);
+    VisionServerBG(const std::string & vs_name, unsigned short vs_port, unsigned int width, unsigned int height,
+                    unsigned int wwidth, unsigned int wheight, unsigned int iwidth = 0, unsigned int iheight = 0);
 
     void UpdateLoop();
 
