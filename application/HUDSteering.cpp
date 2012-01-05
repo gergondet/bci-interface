@@ -87,7 +87,7 @@ inline void CreateObjects(BCIInterface * bciinterface, int cross_x, int cross_y,
 
 inline void GenerateHUD(BCIInterface * bciinterface, SpriteObject * m_hud_sprite, int cross_x, int cross_y)
 {
-    m_hud_sprite->SetSubRect((cross_x+2)*100+1, (-cross_y+2)*100+1, (cross_x+3)*100, (-cross_y+3)*100);
+    m_hud_sprite->SetSubRect((cross_x+2)*100+1, (-cross_y+2)*100+1, 100, 100);
     bciinterface->AddNonOwnedObject(m_hud_sprite);
 }
 
