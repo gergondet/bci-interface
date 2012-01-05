@@ -11,6 +11,7 @@ Background/VisionServerBG.cpp
 DisplayObject/SSVEPStimulus.cpp
 DisplayObject/P300Object.cpp
 DisplayObject/SpriteObject.cpp
+DisplayObject/TextObject.cpp
 CommandInterpreter/CoshellInterpreter.cpp
 CommandInterpreter/SimpleInterpreter.cpp
 CommandInterpreter/P300Interpreter.cpp
