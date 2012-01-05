@@ -35,9 +35,9 @@ public:
         app->Draw(*m_sprite);
     } 
 
-    void SetSubRect(int left, int top, int right, int bottom)
+    void SetSubRect(int left, int top, int width, int height)
     {
-        m_sprite->SetSubRect(sf::IntRect(left, top, right, bottom));
+        m_sprite->SetSubRect(sf::IntRect(left, top, width, height));
     }
 
     void SetPosition(float x, float y)
@@ -59,9 +59,9 @@ void SpriteObject::Display(sf::RenderWindow * app, unsigned int frameCount, sf::
     m_impl->Display(app, frameCount, clock);
 }
 
-void SpriteObject::SetSubRect(int left, int top, int right, int bottom)
+void SpriteObject::SetSubRect(int left, int top, int width, int height)
 {
-    m_impl->SetSubRect(left, top, right, bottom);
+    m_impl->SetSubRect(left, top, width, height);
 }
 
 void SpriteObject::SetPosition(float x, float y)

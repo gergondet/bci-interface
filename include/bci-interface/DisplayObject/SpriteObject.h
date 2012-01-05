@@ -17,7 +17,7 @@ public:
 
     void Display(sf::RenderWindow * app, unsigned int frameCount, sf::Clock & clock);
 
-    void SetSubRect(int left, int top, int right, int bottom);
+    void SetSubRect(int left, int top, int width, int height);
 
     void SetPosition(float x, float y);
 
