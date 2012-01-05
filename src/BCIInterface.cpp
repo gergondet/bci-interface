@@ -232,7 +232,7 @@ public:
             /* cheat when missing a frame */
             frameCount = newFrameCount > frameCount+1?frameCount+1:newFrameCount;
 
-            m_app->Clear();
+            m_app->Clear(sf::Color(255,255,255,255));
 
             /* Process events */
             sf::Event event;
