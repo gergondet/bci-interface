@@ -2,13 +2,19 @@
 #include <bci-interface/Background/BufferBG.h>
 #include <bci-interface/DisplayObject/SSVEPStimulus.h>
 #include <bci-interface/DisplayObject/SpriteObject.h>
+#include <bci-interface/DisplayObject/TextObject.h>
 #include <bci-interface/CommandReceiver/UDPReceiver.h>
-#include <bci-interface/CommandInterpreter/SimpleInterpreter.h>
+
+#include "WhackInterpreter.h"
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
+
+#include <boost/thread.hpp>
 
 #include <iostream>
 #include <sstream>
+#include <cstdlib>
 #include <cstring>
 
 #ifdef WIN32
@@ -26,13 +32,20 @@ int main(int argc, char * argv[])
     bool fullscreen = true;
     unsigned int width = 1280;
     unsigned int height = 1024;
+    if(!fullscreen)
+    {
+        width = 1024;
+        height = 768;
+    }
+
+    srand(time(0));
 
     BCIInterface * bciinterface = new BCIInterface(width, height);
 
     UDPReceiver * receiver = new UDPReceiver(1111);
     bciinterface->SetCommandReceiver(receiver);
 
-    SimpleInterpreter * interpreter = new SimpleInterpreter();
+    WhackInterpreter * interpreter = new WhackInterpreter();
     bciinterface->SetCommandInterpreter(interpreter);
 
     unsigned char * bgcolor = new unsigned char[640*480*4];
@@ -47,12 +60,61 @@ int main(int argc, char * argv[])
     bciinterface->AddObject(new SSVEPStimulus(13, 60, 150, height/2,300, 300, "data/mole_4.png", "data/mole_4_HL.png"));
 
     SpriteObject * target = new SpriteObject("data/wanted.png");
-    target->SetSubRect(0,0,300,400);
     target->SetPosition(width/2-150, height/2-200);
+    unsigned int targetid = rand() % 4;
+    interpreter->SetCurrentTarget(targetid);
+    unsigned int line = targetid / 2;
+    unsigned int clmn = targetid % 2;
+    target->SetSubRect(clmn*300,line*400,300,400);
     bciinterface->AddObject(target);
 
-    bciinterface->StartParadigm();
-    bciinterface->DisplayLoop(fullscreen);
+    TextObject * txtobj = new TextObject("Score: 0");
+    txtobj->SetPosition(width-150, height-50);
+    bciinterface->AddObject(txtobj);
+
+    int * out_cmd = new int(-1);
+    float timeout = 2;
+    sf::RenderWindow * app = 0;
+    boost::thread th(boost::bind(&bciinterface::BCIInterface::DisplayLoop, bciinterface, app, fullscreen, out_cmd, timeout));
+
+    unsigned int score = 0;
+    sf::SoundBuffer buffer;
+    buffer.LoadFromFile("data/score.wav");
+
+    sf::Sound scoreSound;
+    scoreSound.SetBuffer(buffer);
+
+    while(*out_cmd != 0)
+    {
+        targetid = rand() % 4;
+        interpreter->SetCurrentTarget(targetid+1);
+        line = targetid / 2;
+        clmn = targetid % 2;
+        std::cout << "targetid " << targetid << " line " << line << " clmn " << clmn << std::endl;
+        std::cout << clmn*300<< " " <<line*400<< " " <<clmn*300+300<< " " <<line*400+400 << std::endl;
+        target->SetSubRect(clmn*300,line*400,300,400);
+
+        bciinterface->StartParadigm();
+        bciinterface->SetCommandInterpreter(interpreter);
+
+        while(bciinterface->ParadigmStatus())
+        {
+            usleep(100000);
+        }
+        bciinterface->SetCommandInterpreter(0);
+        score++;
+        scoreSound.Play();
+        std::stringstream ss;
+        ss << "Score: " << score;
+        txtobj->SetText(ss.str());
+        target->SetSubRect(0, 800, 300, 400);
+        sleep(5);
+    }
+
+    if(app)
+    {
+        app->Close();
+    }
 
     delete bciinterface;
     delete interpreter;
