@@ -214,6 +214,7 @@ public:
         bool in_paradigm = m_in_paradigm;
         sf::Clock clock;
         m_close = false;
+        if(cmd) { *cmd = 0; }
 
         /* Launch Background thread */
         if(m_background && !m_backgroundth)
@@ -238,10 +239,15 @@ public:
             sf::Event event;
             while(m_app->PollEvent(event))
             {
-                if(event.Type == sf::Event::Closed)
-                {   m_app->Close(); }
-                if(event.Type == sf::Event::KeyPressed && ( event.Key.Code == sf::Keyboard::Escape || event.Key.Code == sf::Keyboard::Q ) )
-                {   m_app->Close(); }
+                if(event.Type == sf::Event::Closed || 
+                    ( event.Type == sf::Event::KeyPressed && ( event.Key.Code == sf::Keyboard::Escape || event.Key.Code == sf::Keyboard::Q ) ))
+                {   
+                    if(cmd)
+                    {
+                        *cmd = -1;
+                    }
+                    Close(); 
+                }
                 for(size_t i = 0; i < m_handlers.size(); ++i)
                 {
                     m_handlers[i]->Process(event);
@@ -327,6 +333,8 @@ public:
     void Close()
     {
         m_close = true;
+        m_in_paradigm = false;
+        m_app->Close(); 
     }
 
     bool ParadigmStatus()
@@ -341,7 +349,10 @@ public:
 
     void StartParadigm()
     {
-        m_in_paradigm = true;
+        if(!m_close)
+        {
+            m_in_paradigm = true;
+        }
     }
 
     sf::RenderWindow * GetRenderWindow()

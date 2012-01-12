@@ -21,7 +21,8 @@ public:
     AdaptiveSteeringImpl(coshellbci::CoshellClient * coshell)
         : m_coshell(coshell), m_time_in(0), prev_cmd(-1)
     {
-        m_coshell->ExecuteACommand("StartWalking");
+//        m_coshell->ExecuteACommand("StartWalking");
+        m_coshell->ExecuteACommand("import walking/startherdt");
         m_coshell->ExecuteACommand("set pg.velocitydes [3](-0.0001,0.0,0.0)");
     }
 
@@ -63,6 +64,7 @@ public:
                 break;
             case 3:
                 m_coshell->ExecuteACommand("set pg.velocitydes [3](-0.15,0.0,0.0)");
+//                return true;
                 break;
             case 4:
                 m_coshell->ExecuteACommand("set pg.velocitydes [3](-0.0001,0.0,0.15)");

@@ -39,33 +39,37 @@ public:
             object_pos.y = (int)result["left"][1];
             if(object_pos.x != 0 && object_pos.y != 0)
             {
-                objects[2+i]->SetPosition(object_pos.x*m_width/640, object_pos.y*m_height/480);
+                objects[i]->SetPosition(object_pos.x*m_width/640, object_pos.y*m_height/480);
             }
             else
             {
-                objects[2+i]->Unhighlight();
+                objects[i]->Unhighlight();
             }
         }
         if(command == 0) { return false; }
         /* 1: left, 2: right, 3-x: objects stims */
         std::stringstream cmd;
-        if(command == 1)
-        {
-            if(m_head_lr < 0.6)
-            {
-                m_head_lr += 0.2;
-                cmd << "set featureHeadDes.errorIN [2](" << m_head_lr << ",0.45)"; 
-            }
+//        if(command == 1)
+//        {
+//            if(m_head_lr < 0.6)
+//            {
+//                m_head_lr += 0.2;
+//                cmd << "set featureHeadDes.errorIN [2](" << m_head_lr << ",0.45)"; 
+//            }
+//        }
+//        if(command == 2)
+//        {
+//            if(m_head_lr > -0.6)
+//            {
+//                m_head_lr -= 0.2;
+//                cmd << "set featureHeadDes.errorIN [2](" << m_head_lr << ",0.45)"; 
+//            }
+//        }
+        if(command > 0) 
+        { 
+            m_objects.resize(0);
+            return true; 
         }
-        if(command == 2)
-        {
-            if(m_head_lr > -0.6)
-            {
-                m_head_lr -= 0.2;
-                cmd << "set featureHeadDes.errorIN [2](" << m_head_lr << ",0.45)"; 
-            }
-        }
-        if(command > 2) { return true; }
         m_coshell->ExecuteACommand(cmd.str());
         return false;
     }
