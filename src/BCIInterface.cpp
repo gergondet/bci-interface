@@ -171,7 +171,7 @@ public:
         }
 
 
-        m_app->EnableVerticalSync(true);
+//        m_app->EnableVerticalSync(true);
 
         DisplayLoop();
 
@@ -197,7 +197,7 @@ public:
             m_app = app;
         }
 
-        m_app->EnableVerticalSync(true);
+//        m_app->EnableVerticalSync(true);
 
         while(!m_close)
         {
@@ -228,7 +228,7 @@ public:
 
         while(!m_close && in_paradigm == m_in_paradigm && m_app->IsOpened())
         {
-            unsigned int newFrameCount = clock.GetElapsedTime()/16;
+            unsigned int newFrameCount = 6*clock.GetElapsedTime()/100;
             /* cheat when missing a frame */
             frameCount = newFrameCount > frameCount+1?frameCount+1:newFrameCount;
 
@@ -295,9 +295,9 @@ public:
             }
 
             /* Log fps regularly */
-            if(frameCount % 60 == 0)
+            if(frameCount % 1000 == 999)
             {
-                m_fpslog << 1000/((m_app->GetFrameTime()+1)) << " fps" << std::endl;
+                m_fpslog << 1000/((m_app->GetFrameTime())) << " fps" << std::endl;
             } 
 
             m_app->Display();
