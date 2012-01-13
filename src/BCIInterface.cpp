@@ -214,7 +214,7 @@ public:
         bool in_paradigm = m_in_paradigm;
         sf::Clock clock;
         m_close = false;
-        if(cmd) { *cmd = 0; }
+//        if(cmd) { *cmd = 0; }
 
         /* Launch Background thread */
         if(m_background && !m_backgroundth)
@@ -229,7 +229,7 @@ public:
 
         while(!m_close && in_paradigm == m_in_paradigm && m_app->IsOpened())
         {
-            unsigned int newFrameCount = 6*clock.GetElapsedTime()/100;
+            unsigned int newFrameCount = 6*clock.GetElapsedTime()*0.01;
             /* cheat when missing a frame */
             frameCount = newFrameCount > frameCount+1?frameCount+1:newFrameCount;
 
@@ -301,9 +301,17 @@ public:
             }
 
             /* Log fps regularly */
-            if(frameCount % 1000 == 999)
+            if(frameCount % 100 == 99)
             {
-                m_fpslog << 1000/((m_app->GetFrameTime())) << " fps" << std::endl;
+                uint32_t frametime = m_app->GetFrameTime();
+                if(frametime != 0)
+                {
+                    m_fpslog << 1000/frametime << " fps" << std::endl;
+                }
+                else
+                {
+                    m_fpslog << "2000 fps" << std::endl;
+                }
             } 
 
             m_app->Display();
