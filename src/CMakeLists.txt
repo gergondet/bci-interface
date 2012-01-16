@@ -13,6 +13,7 @@ DisplayObject/P300Object.cpp
 DisplayObject/SpriteObject.cpp
 DisplayObject/TextObject.cpp
 CommandInterpreter/CoshellInterpreter.cpp
+CommandInterpreter/HoldInterpreter.cpp
 CommandInterpreter/SimpleInterpreter.cpp
 CommandInterpreter/P300Interpreter.cpp
 CommandInterpreter/CoshellApplications/CupboardLookout.cpp
