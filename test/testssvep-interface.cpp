@@ -31,13 +31,13 @@ int main(int argc, char * argv[])
     bciinterface->SetCommandReceiver(receiver);
     bciinterface->SetCommandInterpreter(interpreter);
 
-    bciinterface->SetBackground(new VisionServerBG("localhost", 4242, 640, 480, width, height, 1024, 768));
+    bciinterface->SetBackground(new VisionServerBG("hrp2010v", 4242, 640, 480, width, height, 1024, 768));
     
-    bciinterface->AddObject(new SSVEPStimulus(6,60, width/2, 80, 150, 150, 255, 0, 0, 255));
-    bciinterface->AddObject(new SSVEPStimulus(8,60, width-80, height/2, 150, 150, 255, 0, 0, 255));
-    bciinterface->AddObject(new SSVEPStimulus(11,60, width/2, height-80, 150, 150, 255, 0, 0, 255));
-    bciinterface->AddObject(new SSVEPStimulus(9,60, 80, height/2, 150, 150, 255, 0, 0, 255));
-
+    bciinterface->AddObject(new SSVEPStimulus(6, 60, width/2, 100, 200,200, "UP.png", "UP_HL.png"));
+    bciinterface->AddObject(new SSVEPStimulus(8, 60, width-100, height/2, 200, 200, "RIGHT.png", "RIGHT_HL.png"));
+    bciinterface->AddObject(new SSVEPStimulus(11, 60, width/2, height-100, 200, 200, "DOWN.png", "DOWN_HL.png"));
+    bciinterface->AddObject(new SSVEPStimulus(13, 60, 100, height/2,200, 200, "LEFT.png", "LEFT_HL.png"));
+    
     bciinterface->DisplayLoop(fullscreen);
 
     delete bciinterface;

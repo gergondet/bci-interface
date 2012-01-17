@@ -24,6 +24,11 @@ int main(int argc, char * argv[])
     bool fullscreen = true;
     unsigned int width = 1280;
     unsigned int height = 1024;
+    if(!fullscreen)
+    {
+        width = 1024;
+        height = 768;
+    }
 
     BCIInterface * bciinterface = new BCIInterface(width, height);
 
@@ -49,7 +54,7 @@ int main(int argc, char * argv[])
     interpreter->SetFinalCommands(finalcommands);
     bciinterface->SetCommandInterpreter(interpreter);
 
-    bciinterface->SetBackground(new VisionServerBG("localhost", 4242, 640, 480, width, height, 1024, 768));
+    bciinterface->SetBackground(new VisionServerBG("hrp2010v", 4242, 640, 480, width, height, 1024, 768));
     
     bciinterface->AddObject(new SSVEPStimulus(6, 60, width/2, 100, 200,200, "UP.png", "UP_HL.png"));
     bciinterface->AddObject(new SSVEPStimulus(8, 60, width-100, height/2, 200, 200, "RIGHT.png", "RIGHT_HL.png"));
