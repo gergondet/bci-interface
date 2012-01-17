@@ -2,7 +2,8 @@
 #include <bci-interface/Background/VisionServerBG.h>
 #include <bci-interface/DisplayObject/SSVEPStimulus.h>
 #include <bci-interface/CommandReceiver/UDPReceiver.h>
-#include <bci-interface/CommandInterpreter/CoshellInterpreter.h>
+#include <coshell-bci/CoshellClient.h>
+#include <bci-interface/CommandInterpreter/CoshellApplications/StaticSteering.h>
 
 #include <SFML/Graphics.hpp>
 
@@ -35,23 +36,8 @@ int main(int argc, char * argv[])
     UDPReceiver * receiver = new UDPReceiver(1111);
     bciinterface->SetCommandReceiver(receiver);
 
-    CoshellInterpreter * interpreter = new CoshellInterpreter("hrp2010c", 2809);
-    std::vector<std::string> commands;
-    commands.push_back("set pg.velocitydes [3](-0.0001,0.0,0.0)");
-    commands.push_back("set pg.velocitydes [3](0.15,0.0,0.0)");
-    commands.push_back("set pg.velocitydes [3](-0.0001,0.0,-0.15)");
-    commands.push_back("set pg.velocitydes [3](-0.15,0.0,0.0)");
-    commands.push_back("set pg.velocitydes [3](-0.0001,0.0,0.15)");
-    interpreter->SetCommands(commands);
-    std::string initialtest = "pg.velocitydes";
-    interpreter->SetInitialTest(initialtest);
-    std::vector<std::string> initialcommands;
-    initialcommands.push_back("import walking/startherdt");
-    initialcommands.push_back("set pg.velocitydes [3](-0.0001,0.0,0.0)");
-    interpreter->SetInitialCommands(initialcommands);
-    std::vector<std::string> finalcommands;
-    finalcommands.push_back("set pg.velocitydes [3](0.0,0.0,0.0)");
-    interpreter->SetFinalCommands(finalcommands);
+    coshellbci::CoshellClient * m_client = new coshellbci::CoshellClient("hrp2010c", 2809);
+    StaticSteering * interpreter = new StaticSteering(m_client);
     bciinterface->SetCommandInterpreter(interpreter);
 
     bciinterface->SetBackground(new VisionServerBG("hrp2010v", 4242, 640, 480, width, height, 1024, 768));
@@ -67,6 +53,7 @@ int main(int argc, char * argv[])
 
     delete bciinterface;
     delete interpreter;
+    delete m_client;
     delete receiver;
 
     return 0;
