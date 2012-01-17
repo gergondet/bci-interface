@@ -19,6 +19,7 @@ CommandInterpreter/P300Interpreter.cpp
 CommandInterpreter/CoshellApplications/CupboardLookout.cpp
 CommandInterpreter/CoshellApplications/ObjectsLookout.cpp
 CommandInterpreter/CoshellApplications/AdaptiveSteering.cpp
+CommandInterpreter/CoshellApplications/StaticSteering.cpp
 )
 
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include ${Boost_INCLUDE_DIRS})
