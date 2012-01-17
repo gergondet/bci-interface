@@ -1,3 +1,5 @@
+ADD_DEFINITIONS(${${PROJECT_NAME}_CXXFLAGS})
+
 # -------------------------
 #  StaticSteering App
 # -------------------------
