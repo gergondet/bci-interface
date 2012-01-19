@@ -7,6 +7,7 @@ Utils/UDPServer.cpp
 Utils/square-function.cpp
 BCIInterface.cpp
 Background/BufferBG.cpp
+Background/StaticBG.cpp
 Background/VisionServerBG.cpp
 DisplayObject/SSVEPStimulus.cpp
 DisplayObject/P300Object.cpp
