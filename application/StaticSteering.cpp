@@ -22,7 +22,7 @@ using namespace bciinterface;
 
 int main(int argc, char * argv[])
 {
-    bool fullscreen = true;
+    bool fullscreen = false;
     unsigned int width = 1280;
     unsigned int height = 1024;
     if(!fullscreen)

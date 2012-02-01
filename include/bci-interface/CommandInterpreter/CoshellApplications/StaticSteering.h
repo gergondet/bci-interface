@@ -30,6 +30,7 @@ public:
 
     virtual bool InterpretCommand(int command, const std::vector<DisplayObject *> & objects);
 
+    void Process(sf::Event & event);
 private:
     boost::shared_ptr<StaticSteeringImpl> m_impl;
 };

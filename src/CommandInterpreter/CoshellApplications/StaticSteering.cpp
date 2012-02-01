@@ -5,6 +5,8 @@
 
 #include <coshell-bci/CoshellClient.h>
 
+#include <SFML/Graphics.hpp>
+
 #include <sys/time.h>
 #include <sstream>
 
@@ -15,10 +17,11 @@ struct StaticSteeringImpl
 {
 private:
     coshellbci::CoshellClient * m_coshell;
+    bool m_stop;
     int prev_cmd;
 public:
     StaticSteeringImpl(coshellbci::CoshellClient * coshell)
-        : m_coshell(coshell)
+        : m_coshell(coshell), m_stop(false)
     {
         m_coshell->ExecuteACommand("import walking/startherdt");
         m_coshell->ExecuteACommand("set pg.velocitydes [3](-0.0001,0.0,0.0)");
@@ -26,10 +29,16 @@ public:
 
     bool InterpretCommand(int command, const std::vector<DisplayObject *> & objects)
     {
+        if(m_stop)
+        {
+            m_coshell->ExecuteACommand("set pg.velocitydes [3](0,0,0)");
+            return true;
+        }
         if(prev_cmd == command) 
         { 
             return false; 
         }
+        prev_cmd = command;
         /* 1: Up, 2: Right, 3: Down, 4: Left, 5: stop */
         std::stringstream cmd;
         switch(command)
@@ -56,7 +65,20 @@ public:
         }
         return false;
     }
+
+    void Process(sf::Event & event)
+    {
+        if(event.Type == sf::Event::KeyPressed && event.Key.Code == sf::Keyboard::Space)
+        {
+            m_stop = true;
+        }
+    }
 };
+
+void StaticSteering::Process(sf::Event & event)
+{
+    m_impl->Process(event);
+}
 
 StaticSteering::StaticSteering(coshellbci::CoshellClient * coshell)
 : m_impl(new StaticSteeringImpl(coshell))
