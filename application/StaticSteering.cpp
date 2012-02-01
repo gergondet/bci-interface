@@ -37,6 +37,7 @@ int main(int argc, char * argv[])
     bciinterface->SetCommandReceiver(receiver);
 
     coshellbci::CoshellClient * m_client = new coshellbci::CoshellClient("hrp2010c", 2809);
+    m_client->Initialize();
     StaticSteering * interpreter = new StaticSteering(m_client);
     bciinterface->SetCommandInterpreter(interpreter);
 
