@@ -12,12 +12,36 @@
 #include <cerrno>
 #include <cstring>
 
+#include <zlib.h>
+
+void unpack(unsigned char * data_in, unsigned int data_in_size, unsigned char * data_out, unsigned int data_out_size)
+{
+    z_stream strm;
+    strm.zalloc = Z_NULL;
+    strm.zfree  = Z_NULL;
+    strm.opaque = Z_NULL;
+    strm.avail_in = 0;
+    strm.next_in = Z_NULL;
+
+    int ret = inflateInit(&strm);
+
+    strm.avail_in = data_in_size;
+    strm.next_in = data_in;
+    strm.avail_out = data_out_size;
+    strm.next_out = data_out;
+
+    ret = inflate(&strm, Z_NO_FLUSH);
+
+    inflateEnd(&strm);
+}
+
 namespace bciinterface
 {
 
 struct VisionServerBGImpl
 {
 private:
+    bool m_rcv_compressed_data;
     unsigned int m_width;
     unsigned int m_height;
     unsigned int m_wwidth;
@@ -29,6 +53,7 @@ private:
     struct sockaddr_in m_bindaddr;
     struct sockaddr_in m_serveraddr;
     unsigned char * m_dataFromSocket;
+    sf::Uint8 * m_compressed_data;
     sf::Uint8 * m_datatexture;
     sf::Texture * m_texture;
     sf::Sprite * m_sprite;
@@ -36,13 +61,22 @@ private:
     bool m_close;
 
 public:
-    VisionServerBGImpl(const std::string & vision_name, unsigned short vision_port, unsigned int width, unsigned int height, 
+    VisionServerBGImpl(const std::string & vision_name, unsigned short vision_port, bool compressed_data,
+        unsigned int width, unsigned int height, 
         unsigned int wwidth, unsigned wheight, unsigned iwidth, unsigned iheight)
-       :    m_width(width), m_height(height),
+       :    m_rcv_compressed_data(compressed_data), m_width(width), m_height(height),
             m_wwidth(wwidth), m_wheight(wheight), m_iwidth(iwidth), m_iheight(iheight),
             m_dataFromSocket(new unsigned char[16385]), m_datatexture(new sf::Uint8[width*height*4]),
             m_texture(new sf::Texture), m_sprite(new sf::Sprite), m_close(false)
     {
+        if(m_rcv_compressed_data)
+        {
+            m_compressed_data = new sf::Uint8[width*height*4];
+        }
+        else
+        {
+            m_compressed_data = m_datatexture;
+        }
         struct hostent * hent;
         hent = gethostbyname(vision_name.c_str());
         if(hent)
@@ -86,6 +120,10 @@ public:
 
     ~VisionServerBGImpl()
     {
+        if(m_rcv_compressed_data)
+        {
+            delete[] m_compressed_data;
+        }
         delete[] m_dataFromSocket;
         delete[] m_datatexture;
         delete m_texture;
@@ -102,10 +140,11 @@ public:
             int receivedData = 0;
             char packetId = -1;
             memset(m_datatexture, 0, m_width*m_height*4);
-            while(receivedData < m_width*m_height*4 && receivedData != -1)
+            int n = 16385;
+            while(n == 16385 && receivedData != -1)
             {
                 memset(m_dataFromSocket, '\0', 16385);
-                int n = recvfrom(m_sockfd, m_dataFromSocket, 16385, 0, 0, 0);
+                n = recvfrom(m_sockfd, m_dataFromSocket, 16385, 0, 0, 0);
                 if(n <= 0)
                 {
                     receivedData = -1;
@@ -124,18 +163,25 @@ public:
                     /* Copy new data in m_datatexture */
                     for(int i = 0; i < n - 1; ++i)
                     {
-                        m_datatexture[16384*packetId + i] = m_dataFromSocket[i+1];
-                        if( (16384*packetId + i) % 4  == 3 ) { m_datatexture[16384*packetId + i] = 255; }
+                        m_compressed_data[16384*packetId + i] = m_dataFromSocket[i+1];
+                        if( !m_rcv_compressed_data && (16384*packetId + i) % 4  == 3 ) { m_datatexture[16384*packetId + i] = 255; }
                     }
                 }
-                if(receivedData < m_width*m_height*4 && receivedData != -1)
+                if(n == 16385 && receivedData != -1)
                 {
                     sendto(m_sockfd, "more", 5, 0, (struct sockaddr *)&m_serveraddr, sizeof(m_serveraddr));
                 }
             }
-            usleep(50000);
             if(receivedData != -1)
             {
+                if(m_rcv_compressed_data)
+                {
+                    unpack((unsigned char*)m_compressed_data, packetId*16384 + (n-1), m_datatexture, m_width*m_height*4);
+                    for(unsigned int i = 0; i < m_width*m_height; ++i)
+                    {
+                        m_datatexture[4*i+3] = 255;
+                    }
+                }
                 /* m_datatexture has a full texture worth of data, update the sprite */
                 m_texture->Update(m_datatexture);
             }
@@ -155,8 +201,9 @@ public:
 };
 
 VisionServerBG::VisionServerBG(const std::string & vs_name, unsigned short vs_port, unsigned int width, unsigned int height,
+    bool compressed_data,
     unsigned int wwidth, unsigned int wheight, unsigned iwidth, unsigned int iheight)
-    : m_impl(new VisionServerBGImpl(vs_name, vs_port, width, height, wwidth, wheight, iwidth, iheight))
+    : m_impl(new VisionServerBGImpl(vs_name, vs_port, compressed_data, width, height, wwidth, wheight, iwidth, iheight))
 {
 }
 

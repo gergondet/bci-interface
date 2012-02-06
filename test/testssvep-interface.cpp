@@ -21,9 +21,14 @@ using namespace bciinterface;
 
 int main(int argc, char * argv[])
 {
-    bool fullscreen = true;
+    bool fullscreen = false;
     unsigned int width = 1280;
     unsigned int height = 1024; 
+    if(!fullscreen)
+    {
+        width = 1024;
+        height = 768;
+    }
 
     BCIInterface * bciinterface = new BCIInterface(width, height);
     UDPReceiver * receiver = new UDPReceiver(1111);
@@ -31,7 +36,8 @@ int main(int argc, char * argv[])
     bciinterface->SetCommandReceiver(receiver);
     bciinterface->SetCommandInterpreter(interpreter);
 
-    bciinterface->SetBackground(new VisionServerBG("hrp2010v", 4242, 640, 480, width, height, 1024, 768));
+    bool data_compressed = true;
+    bciinterface->SetBackground(new VisionServerBG("hrp2010v", 4242, 640, 480, data_compressed, width, height, 1024, 768));
     
     bciinterface->AddObject(new SSVEPStimulus(6, 60, width/2, 100, 200,200, "UP.png", "UP_HL.png"));
     bciinterface->AddObject(new SSVEPStimulus(8, 60, width-100, height/2, 200, 200, "RIGHT.png", "RIGHT_HL.png"));

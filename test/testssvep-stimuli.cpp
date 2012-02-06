@@ -69,7 +69,8 @@ int main(int argc, char * argv[])
 
     BCIInterface * bciinterface = new BCIInterface(width, height);
 
-    bciinterface->SetBackground(new VisionServerBG("localhost", 4242, 640, 480, width, height));
+    bool data_compressed = true;
+    bciinterface->SetBackground(new VisionServerBG("localhost", 4242, 640, 480, data_compressed, width, height));
     
     //bciinterface->AddObject(new TestStimulus(7,60, width/2, 150, 100, 100, "UP.png", "UP_HL.png"));
     bciinterface->AddObject(new TestStimulus(7,60, width/2, 150, 50, 255, 0, 0, 255));

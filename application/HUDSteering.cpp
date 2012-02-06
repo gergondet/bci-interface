@@ -96,6 +96,7 @@ int main(int argc, char * argv[])
     bool fullscreen = false;
     unsigned int width = 1280;
     unsigned int height = 800;
+    bool compressed_data = true;
 
     /* Get data path with a "good enough" version of basename */
     std::string app_path(argv[0]);
@@ -123,7 +124,7 @@ int main(int argc, char * argv[])
     SimpleInterpreter * sinterpreter = new SimpleInterpreter();
     bciinterface->SetCommandInterpreter(sinterpreter);
 
-    bciinterface->SetBackground(new VisionServerBG("localhost", 4242, 640, 480, width, height));
+    bciinterface->SetBackground(new VisionServerBG("localhost", 4242, 640, 480, compressed_data, width, height));
     
     int * out_cmd = new int(-1);
     float timeout = 2;

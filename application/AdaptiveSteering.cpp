@@ -98,6 +98,7 @@ int main(int argc, char * argv[])
     bool fullscreen = true;
     unsigned int width = 1280;
     unsigned int height = 800;
+    bool compressed_data = true;
 
     BCIInterface * bciinterface = new BCIInterface(width, height);
 
@@ -116,7 +117,7 @@ int main(int argc, char * argv[])
     interpreter->SetFinalCommands(finalcommands);
     bciinterface->SetCommandInterpreter(interpreter);
 
-    bciinterface->SetBackground(new VisionServerBG("hrp2010v", 4242, 640, 480, width, height));
+    bciinterface->SetBackground(new VisionServerBG("hrp2010v", 4242, 640, 480, compressed_data, width, height));
     
     int * out_cmd = new int(-1);
     float timeout = 2;
