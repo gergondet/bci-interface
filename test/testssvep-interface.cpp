@@ -36,7 +36,7 @@ int main(int argc, char * argv[])
     bciinterface->SetCommandReceiver(receiver);
     bciinterface->SetCommandInterpreter(interpreter);
 
-    bool data_compressed = true;
+    bool data_compressed = false;
     bciinterface->SetBackground(new VisionServerBG("hrp2010v", 4242, 640, 480, data_compressed, width, height, 1024, 768));
     
     bciinterface->AddObject(new SSVEPStimulus(6, 60, width/2, 100, 200,200, "UP.png", "UP_HL.png"));

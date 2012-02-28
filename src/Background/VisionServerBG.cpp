@@ -66,7 +66,7 @@ public:
         unsigned int wwidth, unsigned wheight, unsigned iwidth, unsigned iheight)
        :    m_rcv_compressed_data(compressed_data), m_width(width), m_height(height),
             m_wwidth(wwidth), m_wheight(wheight), m_iwidth(iwidth), m_iheight(iheight),
-            m_dataFromSocket(new unsigned char[16385]), m_datatexture(new sf::Uint8[width*height*4]),
+            m_dataFromSocket(new unsigned char[32769]), m_datatexture(new sf::Uint8[width*height*4]),
             m_texture(new sf::Texture), m_sprite(new sf::Sprite), m_close(false)
     {
         if(m_rcv_compressed_data)
@@ -140,11 +140,11 @@ public:
             int receivedData = 0;
             char packetId = -1;
             memset(m_datatexture, 0, m_width*m_height*4);
-            int n = 16385;
-            while(n == 16385 && receivedData != -1)
+            int n = 32769;
+            while(n == 32769 && receivedData != -1)
             {
-                memset(m_dataFromSocket, '\0', 16385);
-                n = recvfrom(m_sockfd, m_dataFromSocket, 16385, 0, 0, 0);
+                memset(m_dataFromSocket, '\0', 32769);
+                n = recvfrom(m_sockfd, m_dataFromSocket, 32769, 0, 0, 0);
                 if(n <= 0)
                 {
                     receivedData = -1;
@@ -163,11 +163,11 @@ public:
                     /* Copy new data in m_datatexture */
                     for(int i = 0; i < n - 1; ++i)
                     {
-                        m_compressed_data[16384*packetId + i] = m_dataFromSocket[i+1];
-                        if( !m_rcv_compressed_data && (16384*packetId + i) % 4  == 3 ) { m_datatexture[16384*packetId + i] = 255; }
+                        m_compressed_data[32768*packetId + i] = m_dataFromSocket[i+1];
+                        if( !m_rcv_compressed_data && (32768*packetId + i) % 4  == 3 ) { m_datatexture[32768*packetId + i] = 255; }
                     }
                 }
-                if(n == 16385 && receivedData != -1)
+                if(n == 32769 && receivedData != -1)
                 {
                     sendto(m_sockfd, "more", 5, 0, (struct sockaddr *)&m_serveraddr, sizeof(m_serveraddr));
                 }
@@ -176,7 +176,7 @@ public:
             {
                 if(m_rcv_compressed_data)
                 {
-                    unpack((unsigned char*)m_compressed_data, packetId*16384 + (n-1), m_datatexture, m_width*m_height*4);
+                    unpack((unsigned char*)m_compressed_data, packetId*32768 + (n-1), m_datatexture, m_width*m_height*4);
                     for(unsigned int i = 0; i < m_width*m_height; ++i)
                     {
                         m_datatexture[4*i+3] = 255;

@@ -31,7 +31,6 @@ public:
     {
         if(m_stop)
         {
-            m_coshell->ExecuteACommand("set pg.velocitydes [3](0,0,0)");
             return true;
         }
         if(prev_cmd == command) 
@@ -71,6 +70,7 @@ public:
         if(event.Type == sf::Event::KeyPressed && event.Key.Code == sf::Keyboard::Space)
         {
             m_stop = true;
+            m_coshell->ExecuteACommand("set pg.velocitydes [3](0,0,0)");
         }
     }
 };
