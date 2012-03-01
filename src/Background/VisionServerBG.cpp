@@ -167,10 +167,6 @@ public:
                         if( !m_rcv_compressed_data && (32768*packetId + i) % 4  == 3 ) { m_datatexture[32768*packetId + i] = 255; }
                     }
                 }
-                if(n == 32769 && receivedData != -1)
-                {
-                    sendto(m_sockfd, "more", 5, 0, (struct sockaddr *)&m_serveraddr, sizeof(m_serveraddr));
-                }
             }
             if(receivedData != -1)
             {
