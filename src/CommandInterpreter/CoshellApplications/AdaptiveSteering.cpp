@@ -28,18 +28,18 @@ public:
 
     bool InterpretCommand(int command, const std::vector<DisplayObject *> & objects)
     {
-        if(prev_cmd == command) 
+        if(prev_cmd == command && command != 3) 
         { 
             return false; 
         }
-        else if(command == 0)
+        else if(prev_cmd == command && command == 3)
         {
             double time_now;
             timeval tv;
             gettimeofday(&tv, 0);
             time_now = 1000000*tv.tv_sec + tv.tv_usec;
             if(time_now < m_time_in + 3000000) { return false; }
-            m_time_in = time_now;
+            return true;
         }
         else
         {
