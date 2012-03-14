@@ -161,11 +161,7 @@ public:
                     packetId = newPacketId;
                     receivedData += n;
                     /* Copy new data in m_datatexture */
-                    for(int i = 0; i < n - 1; ++i)
-                    {
-                        m_compressed_data[32768*packetId + i] = m_dataFromSocket[i+1];
-                        if( !m_rcv_compressed_data && (32768*packetId + i) % 4  == 3 ) { m_datatexture[32768*packetId + i] = 255; }
-                    }
+                    memcpy(&(m_compressed_data[32768*packetId]), &(m_dataFromSocket[1]), n - 1);
                 }
             }
             if(receivedData != -1)
@@ -176,6 +172,17 @@ public:
                     for(unsigned int i = 0; i < m_width*m_height; ++i)
                     {
                         m_datatexture[4*i+3] = 255;
+                    }
+                }
+                else
+                {
+                    /* Shift data from RGB24 to RGBA in place */
+                    for(unsigned int i = m_width*m_height; i > 0; --i)
+                    {
+                        m_datatexture[4*(i-1)+3] = 255;
+                        m_datatexture[4*(i-1)+2] = m_datatexture[3*(i-1)+2];
+                        m_datatexture[4*(i-1)+1] = m_datatexture[3*(i-1)+1];
+                        m_datatexture[4*(i-1)]   = m_datatexture[3*(i-1)];
                     }
                 }
                 /* m_datatexture has a full texture worth of data, update the sprite */
