@@ -43,6 +43,15 @@ public:
         }
         return false;
     }
+
+    void Reset()
+    {
+        m_command = 0;
+        struct timeval tv_now;
+        gettimeofday(&tv_now, 0);
+        uint64_t time_now = tv_now.tv_sec*1e6 + tv_now.tv_usec;
+        m_time_reset = time_now;
+    }
 };
 
 HoldInterpreter::HoldInterpreter(unsigned int msec) :
@@ -55,6 +64,11 @@ bool HoldInterpreter::InterpretCommand(int command, const std::vector<DisplayObj
     SimpleInterpreter::InterpretCommand(command, objects);
     return m_impl->InterpretCommand(command, objects);
 }   
+
+void HoldInterpreter::Reset()
+{
+    m_impl->Reset();
+}
 
 } //namespace bciinterface
 

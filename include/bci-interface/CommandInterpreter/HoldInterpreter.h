@@ -19,6 +19,8 @@ public:
     HoldInterpreter(unsigned int msec);
 
     virtual bool InterpretCommand(int command, const std::vector<DisplayObject *> & objects);
+
+    void Reset();
 private:
     boost::shared_ptr<HoldInterpreterImpl> m_impl;
 };
