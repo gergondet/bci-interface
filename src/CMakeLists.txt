@@ -13,15 +13,21 @@ DisplayObject/SSVEPStimulus.cpp
 DisplayObject/P300Object.cpp
 DisplayObject/SpriteObject.cpp
 DisplayObject/TextObject.cpp
-CommandInterpreter/CoshellInterpreter.cpp
 CommandInterpreter/HoldInterpreter.cpp
 CommandInterpreter/SimpleInterpreter.cpp
 CommandInterpreter/P300Interpreter.cpp
+)
+
+IF(COSHELLBCI_FOUND)
+SET(${LIB_NAME}_src
+${${LIB_NAME}_src}
+CommandInterpreter/CoshellInterpreter.cpp
 CommandInterpreter/CoshellApplications/CupboardLookout.cpp
 CommandInterpreter/CoshellApplications/ObjectsLookout.cpp
 CommandInterpreter/CoshellApplications/AdaptiveSteering.cpp
 CommandInterpreter/CoshellApplications/StaticSteering.cpp
 )
+ENDIF(COSHELLBCI_FOUND)
 
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include ${Boost_INCLUDE_DIRS})
 
