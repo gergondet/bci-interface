@@ -5,6 +5,7 @@ CommandReceiver/UDPReceiver.cpp
 CommandReceiver/TCPReceiver.cpp
 Utils/UDPServer.cpp
 Utils/square-function.cpp
+Utils/Win32.cpp
 BCIInterface.cpp
 Background/BufferBG.cpp
 Background/StaticBG.cpp
@@ -37,6 +38,10 @@ ADD_LIBRARY(${LIB_NAME}
   ${${LIB_NAME}_headers}
 )
 
+IF(WIN32)
+add_library( "bci-interface-static" STATIC ${${LIB_NAME}_src} ${${LIB_NAME}_headers} )
+set_target_properties( "bci-interface-static" PROPERTIES OUTPUT_NAME "bci-interface")
+ENDIF(WIN32)
 
 SET_TARGET_PROPERTIES(${LIB_NAME} 
   PROPERTIES 
@@ -44,7 +49,10 @@ SET_TARGET_PROPERTIES(${LIB_NAME}
   INSTALL_RPATH lib)
 
 ADD_DEFINITIONS(${${PROJECT_NAME}_CXXFLAGS})
-TARGET_LINK_LIBRARIES(${LIB_NAME} ${${PROJECT_NAME}_LDFLAGS} ${Boost_SYSTEM_LIBRARY} ${Boost_THREAD_LIBRARY} ${BCIMIDDLEWARE_LIBS} XmlRpc xmlrpc-client visionsystem vision configparser)
+TARGET_LINK_LIBRARIES(${LIB_NAME} ${${PROJECT_NAME}_LDFLAGS} ${Boost_SYSTEM_LIBRARY} ${Boost_THREAD_LIBRARY} ${BCIMIDDLEWARE_LIBS})
+IF(COSHELLBCI_FOUND)
+TARGET_LINK_LIBRARIES(${LIB_NAME}  XmlRpc xmlrpc-client visionsystem vision configparser)
+ENDIF(COSHELLBCI_FOUND)
 
 INSTALL(TARGETS ${LIB_NAME}
     DESTINATION lib)

@@ -3,6 +3,8 @@
 #include <SFML/Graphics.hpp>
 
 #include <iostream>
+
+#ifndef WIN32
 #include <arpa/inet.h>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -11,11 +13,20 @@
 #include <sys/select.h>
 #include <cerrno>
 #include <cstring>
+#else
 
+#include <windows.h>
+#include <winsock.h>
+
+#endif
+
+#ifndef WIN32
 #include <zlib.h>
+#endif
 
 void unpack(unsigned char * data_in, unsigned int data_in_size, unsigned char * data_out, unsigned int data_out_size)
 {
+#ifndef WIN32
     z_stream strm;
     strm.zalloc = Z_NULL;
     strm.zfree  = Z_NULL;
@@ -33,6 +44,7 @@ void unpack(unsigned char * data_in, unsigned int data_in_size, unsigned char * 
     ret = inflate(&strm, Z_NO_FLUSH);
 
     inflateEnd(&strm);
+#endif
 }
 
 namespace bciinterface
@@ -49,7 +61,11 @@ private:
     unsigned int m_iwidth;
     unsigned int m_iheight;
 
+#ifndef WIN32
     int m_sockfd;
+#else
+	SOCKET m_sockfd;
+#endif
     struct sockaddr_in m_bindaddr;
     struct sockaddr_in m_serveraddr;
     unsigned char * m_dataFromSocket;
@@ -114,7 +130,11 @@ public:
         if(err < 0)
         {
                 std::cerr << strerror(err) << std::endl;
+#ifndef WIN32
                 close(m_sockfd);
+#else
+				closesocket(m_sockfd);
+#endif
         }
     }
 
@@ -128,7 +148,11 @@ public:
         delete[] m_datatexture;
         delete m_texture;
         delete m_sprite;
+#ifndef WIN32
         close(m_sockfd);
+#else
+		closesocket(m_sockfd);
+#endif
     }
 
     void UpdateLoop()
@@ -144,7 +168,7 @@ public:
             while(n == 32769 && receivedData != -1)
             {
                 memset(m_dataFromSocket, '\0', 32769);
-                n = recvfrom(m_sockfd, m_dataFromSocket, 32769, 0, 0, 0);
+                n = recvfrom(m_sockfd, (char*)m_dataFromSocket, 32769, 0, 0, 0);
                 if(n <= 0)
                 {
                     receivedData = -1;

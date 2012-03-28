@@ -36,7 +36,7 @@ public:
         : SSVEPStimulus(frequency, screenFrequency, x, y, size_x, size_y, r, g, b, a), hl(false)
     {} 
 
-    void Process(sf::Event & event)
+    void Process(sf::Event & event, const BCIInterface & intface)
     {
         if(event.Type == sf::Event::KeyPressed && event.Key.Code == sf::Keyboard::Left)
         {

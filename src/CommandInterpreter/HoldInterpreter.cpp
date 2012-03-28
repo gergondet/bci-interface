@@ -1,7 +1,12 @@
 #include "bci-interface/CommandInterpreter/HoldInterpreter.h"
 
 #include <stdint.h>
+
+#ifndef WIN32
 #include <sys/time.h>
+#else
+#include <bci-interface/Utils/Win32.h>
+#endif
 
 namespace bciinterface
 {

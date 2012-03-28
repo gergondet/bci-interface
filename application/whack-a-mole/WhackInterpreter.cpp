@@ -2,7 +2,11 @@
 
 #include <bci-interface/DisplayObject.h>
 
+#ifndef WIN32
 #include <sys/time.h>
+#else
+#include <bci-interface/Utils/Win32.h>
+#endif
 
 bool WhackInterpreter::InterpretCommand(int command, const std::vector<bciinterface::DisplayObject *> & objects)
 {

@@ -99,7 +99,11 @@ int main(int argc, char * argv[])
 
         while(bciinterface->ParadigmStatus())
         {
+#ifndef WIN32
             usleep(100000);
+#else
+			Sleep(100);
+#endif
         }
         bciinterface->SetCommandInterpreter(0);
         score++;
