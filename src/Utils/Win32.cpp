@@ -1,5 +1,6 @@
 #include <bci-interface/Utils/Win32.h>
 
+#ifdef WIN32
 void gettimeofday(struct timeval *tv, void *)
 {
   FILETIME ft;
@@ -21,3 +22,5 @@ void gettimeofday(struct timeval *tv, void *)
       tv->tv_usec = (long)(tmpres % 1000000UL);
     }
 }
+#endif
+
