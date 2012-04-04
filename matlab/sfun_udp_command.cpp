@@ -66,7 +66,7 @@ UDPClient * m_udp_client = 0;
 static void mdlInitializeSizes(SimStruct *S)
 {
 
-    ssSetNumSFcnParams(S, 0);  /* Number of expected parameters */
+    ssSetNumSFcnParams(S, 2);  /* Number of expected parameters */
 
     ssSetNumContStates(S, 0);
     ssSetNumDiscStates(S, 0);
@@ -110,7 +110,10 @@ static void mdlInitializeSampleTimes(SimStruct *S)
 static void mdlStart(SimStruct *S)
 {
     delete m_udp_client;
-    m_udp_client = new UDPClient("150.29.145.73", 1111);
+    char server_ip[32];
+    mxGetString(ssGetSFcnParam(S,0), server_ip, 30); 
+    short server_port = (short)(mxGetPr(ssGetSFcnParam(S,1))[0]);
+    m_udp_client = new UDPClient(server_ip, server_port);
 
 	IN_cmd = 0;
     OUT_cmd = 0;
