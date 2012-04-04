@@ -23,12 +23,16 @@ public:
     StaticSteeringImpl(coshellbci::CoshellClient * coshell)
         : m_coshell(coshell), m_stop(false)
     {
-        m_coshell->ExecuteACommand("import walking/startherdt");
-        m_coshell->ExecuteACommand("set pg.velocitydes [3](-0.0001,0.0,0.0)");
+        if(m_coshell)
+        {
+            m_coshell->ExecuteACommand("import walking/startherdt");
+            m_coshell->ExecuteACommand("set pg.velocitydes [3](-0.0001,0.0,0.0)");
+        }
     }
 
     bool InterpretCommand(int command, const std::vector<DisplayObject *> & objects)
     {
+        if(!m_coshell) { return false; }
         if(m_stop)
         {
             return true;
@@ -70,7 +74,7 @@ public:
         if(event.Type == sf::Event::KeyPressed && event.Key.Code == sf::Keyboard::Space)
         {
             m_stop = true;
-            m_coshell->ExecuteACommand("set pg.velocitydes [3](0,0,0)");
+            if(m_coshell) { m_coshell->ExecuteACommand("set pg.velocitydes [3](0,0,0)"); }
         }
     }
 };
