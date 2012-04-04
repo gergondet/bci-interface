@@ -44,7 +44,11 @@ static void mdlInitializeSizes(SimStruct *S)
 		ssSetInputPortRequiredContiguous(S,i,1);
     }
 
-	if (!ssSetNumOutputPorts(S,0)) return;
+    if (!ssSetNumOutputPorts(S, 1)) return;
+    for(int i = 0; i < 1; ++i)
+    {
+        ssSetOutputPortWidth(S, i, 1);
+    }
 	
     ssSetNumSampleTimes(S, 1);
     ssSetNumRWork(S, 0);
@@ -108,6 +112,9 @@ static void mdlOutputs(SimStruct *S, int_T tid)
 	
 	const real_T * i_trigger = ssGetInputPortRealSignal(S, 1);
 	IN_trigger = i_trigger[0]; /* trigger not really important */
+
+    real_T * y = ssGetOutputPortRealSignal(S,0);
+    y[0] = IN_class;
 
     UNUSED_ARG(tid);
 }
