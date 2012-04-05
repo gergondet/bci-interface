@@ -65,7 +65,7 @@ int main(int argc, char * argv[])
     coshellbci::CoshellClient * m_client = 0;
     if(moving_robot)
     {
-        new coshellbci::CoshellClient("hrp2010c", 2809);
+        m_client = new coshellbci::CoshellClient("hrp2010c", 2809);
         m_client->Initialize();
     }
 
