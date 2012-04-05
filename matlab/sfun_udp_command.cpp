@@ -15,11 +15,6 @@
 #define S_FUNCTION_LEVEL 2
 #define S_FUNCTION_NAME  sfun_udp_command
 
-unsigned int IN_cmd = 0;
-unsigned int OUT_cmd = 0;
-
-std::ofstream debug("debug.log");
-
 class UDPClient
 {
 public:
@@ -46,13 +41,17 @@ public:
 		sendto(sSocket, ss.str().c_str(), ss.str().length() + 1, 0, (struct sockaddr *)&sendaddr, sizeof(sendaddr));
 	}
 
+    void SetInCmd(int in)
+    {
+        IN_cmd = in;
+    }
+
 private:
     SOCKET sSocket;
     WSADATA w;
     sockaddr_in sendaddr;
+    int IN_cmd;
 };
-
-UDPClient * m_udp_client = 0;
 
 /*
  * Need to include simstruc.h for the definition of the SimStruct and
@@ -88,7 +87,7 @@ static void mdlInitializeSizes(SimStruct *S)
     ssSetNumSampleTimes(S, 1);
     ssSetNumRWork(S, 0);
     ssSetNumIWork(S, 0);
-    ssSetNumPWork(S, 0);
+    ssSetNumPWork(S, 1); /* space for 1 pointer */
     ssSetNumModes(S, 0);
     ssSetNumNonsampledZCs(S, 0);
 
@@ -109,27 +108,27 @@ static void mdlInitializeSampleTimes(SimStruct *S)
 #if defined(MDL_START)
 static void mdlStart(SimStruct *S)
 {
-    delete m_udp_client;
     char server_ip[32];
     mxGetString(ssGetSFcnParam(S,0), server_ip, 30); 
+
     short server_port = (short)(mxGetPr(ssGetSFcnParam(S,1))[0]);
-    m_udp_client = new UDPClient(server_ip, server_port);
 
-	IN_cmd = 0;
-    OUT_cmd = 0;
-
+    UDPClient * udp_client = new UDPClient(server_ip, server_port);
+    ssGetPWork(S)[0] = (void*)udp_client;    
 }
 #endif /*  MDL_START */
 
 
 static void mdlOutputs(SimStruct *S, int_T tid)
 {
+    UDPClient * udp_client = static_cast<UDPClient *>(ssGetPWork(S)[0]);
+
 	const real_T * x = ssGetInputPortRealSignal(S, 0);
-	IN_cmd = x[0];
-	m_udp_client->SendMessage();
+	udp_client->SetInCmd(x[0]);
+	udp_client->SendMessage();
 
     real_T * y = ssGetOutputPortRealSignal(S,0);
-    y[0] = IN_cmd;
+    y[0] = x[0];
 
     UNUSED_ARG(tid);
 }
@@ -138,6 +137,8 @@ static void mdlOutputs(SimStruct *S, int_T tid)
 
 static void mdlTerminate(SimStruct *S)
 {
+    UDPClient * udp_client = static_cast<UDPClient *>(ssGetPWork(S)[0]);
+    delete udp_client;
 }
 
 #endif
