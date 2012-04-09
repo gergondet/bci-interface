@@ -4,6 +4,8 @@
 
 #include <iostream>
 
+#include <vision/io/H264Decoder.h>
+
 #ifndef WIN32
 #include <arpa/inet.h>
 #include <sys/types.h>
@@ -20,33 +22,6 @@
 
 #endif
 
-#ifndef WIN32
-#include <zlib.h>
-#endif
-
-void unpack(unsigned char * data_in, unsigned int data_in_size, unsigned char * data_out, unsigned int data_out_size)
-{
-#ifndef WIN32
-    z_stream strm;
-    strm.zalloc = Z_NULL;
-    strm.zfree  = Z_NULL;
-    strm.opaque = Z_NULL;
-    strm.avail_in = 0;
-    strm.next_in = Z_NULL;
-
-    int ret = inflateInit(&strm);
-
-    strm.avail_in = data_in_size;
-    strm.next_in = data_in;
-    strm.avail_out = data_out_size;
-    strm.next_out = data_out;
-
-    ret = inflate(&strm, Z_NO_FLUSH);
-
-    inflateEnd(&strm);
-#endif
-}
-
 namespace bciinterface
 {
 
@@ -60,6 +35,8 @@ private:
     unsigned int m_wheight;
     unsigned int m_iwidth;
     unsigned int m_iheight;
+
+    vision::H264Decoder * m_decoder;
 
 #ifndef WIN32
     int m_sockfd;
@@ -82,12 +59,14 @@ public:
         unsigned int wwidth, unsigned wheight, unsigned iwidth, unsigned iheight)
        :    m_rcv_compressed_data(compressed_data), m_width(width), m_height(height),
             m_wwidth(wwidth), m_wheight(wheight), m_iwidth(iwidth), m_iheight(iheight),
+            m_decoder(0),
             m_dataFromSocket(new unsigned char[32769]), m_datatexture(new sf::Uint8[width*height*4]),
             m_texture(new sf::Texture), m_sprite(new sf::Sprite), m_close(false)
     {
         if(m_rcv_compressed_data)
         {
-            m_compressed_data = new sf::Uint8[width*height*4];
+            m_decoder = new vision::H264Decoder(width, height);
+            m_compressed_data = new sf::Uint8[640*480*4];
         }
         else
         {
@@ -140,8 +119,9 @@ public:
 
     ~VisionServerBGImpl()
     {
-        if(m_rcv_compressed_data)
+        if(m_decoder)
         {
+            delete m_decoder;
             delete[] m_compressed_data;
         }
         delete[] m_dataFromSocket;
@@ -192,7 +172,7 @@ public:
             {
                 if(m_rcv_compressed_data)
                 {
-                    unpack((unsigned char*)m_compressed_data, packetId*32768 + (n-1), m_datatexture, m_width*m_height*4);
+                    m_decoder->Decode(packetId*32768 + (n-1), (uint8_t *)m_compressed_data, (uint8_t *)m_datatexture);
                     for(unsigned int i = 0; i < m_width*m_height; ++i)
                     {
                         m_datatexture[4*i+3] = 255;
