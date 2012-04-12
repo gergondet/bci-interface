@@ -151,7 +151,7 @@ public:
         }
     }
 
-    void Process(sf::Event & event)
+    void Process(sf::Event & event, const BCIInterface & interface)
     {
         if(event.Type == sf::Event::KeyPressed && event.Key.Code == sf::Keyboard::Space)
         {
@@ -206,9 +206,9 @@ bool CoshellInterpreter::InterpretCommand(int command, const std::vector<Display
     return m_impl->InterpretCommand(command, objects);
 }
 
-void CoshellInterpreter::Process(sf::Event & event)
+void CoshellInterpreter::Process(sf::Event & event, const BCIInterface & interface)
 {
-    m_impl->Process(event);
+    m_impl->Process(event, interface);
 }
 
 void CoshellInterpreter::SetCommands(const std::vector<std::string> & commands)

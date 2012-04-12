@@ -262,7 +262,7 @@ public:
                 }
                 if(m_interpreter)
                 {
-                    m_interpreter->Process(event);
+                    m_interpreter->Process(event, m_ref);
                 }
             }
 

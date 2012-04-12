@@ -1,7 +1,9 @@
-        #ifndef _H_COMMANDINTERPRETER_H_
-        #define _H_COMMANDINTERPRETER_H_
+#ifndef _H_COMMANDINTERPRETER_H_
+#define _H_COMMANDINTERPRETER_H_
 
 #include <vector>
+
+#include <bci-interface/BCIInterface.h>
 
 namespace sf
 {
@@ -24,7 +26,7 @@ public:
     virtual bool InterpretCommand(int command, const std::vector<DisplayObject*> & objects) = 0;
 
     /* Handle events */
-    virtual void Process(sf::Event & event) {}
+    virtual void Process(sf::Event & event, const BCIInterface & interface) {}
 };
 
 } // namespace bciinterface

@@ -35,7 +35,7 @@ public:
 
     virtual bool InterpretCommand(int command, const std::vector<DisplayObject *> & objects);
 
-    virtual void Process(sf::Event & event);
+    virtual void Process(sf::Event & event, const BCIInterface & interface);
 
     void SetCommands(const std::vector<std::string> & commands);
 
