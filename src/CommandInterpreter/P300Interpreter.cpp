@@ -24,14 +24,18 @@ public:
         m_reset_flasht(0), m_flashed_objects(0), m_cmd(0)
     {
         m_trials = m_training ? 15:5;
-        m_training_words = {1, 9, 12, 7, 14};
+        m_training_words[0] = 1;
+		m_training_words[1] = 9;
+		m_training_words[2] = 12;
+		m_training_words[3] = 7;
+		m_training_words[4] = 14;
         m_flashtime = 60000; /* 60 ms in us */
         m_flash_before_cmd = m_trials*m_nb_objects;
     }
 
     bool InterpretCommand(int command, const std::vector<DisplayObject *> & objects)
     {
-
+		return false;
     }
 };
 
