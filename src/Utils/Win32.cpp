@@ -22,5 +22,10 @@ void gettimeofday(struct timeval *tv, void *)
       tv->tv_usec = (long)(tmpres % 1000000UL);
     }
 }
+
+void usleep(int t)
+{
+	Sleep(t/1000);
+}
 #endif
 
