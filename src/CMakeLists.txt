@@ -31,7 +31,8 @@ CommandInterpreter/CoshellApplications/StaticSteering.cpp
 )
 ENDIF(COSHELLBCI_FOUND)
 
-INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include ${Boost_INCLUDE_DIRS})
+INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include)
+INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
 
 ADD_LIBRARY(${LIB_NAME} 
   SHARED
@@ -50,7 +51,17 @@ SET_TARGET_PROPERTIES(${LIB_NAME}
   INSTALL_RPATH lib)
 
 ADD_DEFINITIONS(${${PROJECT_NAME}_CXXFLAGS})
-TARGET_LINK_LIBRARIES(${LIB_NAME} ${${PROJECT_NAME}_LDFLAGS} ${Boost_SYSTEM_LIBRARY} ${Boost_THREAD_LIBRARY} ${BCIMIDDLEWARE_LIBS})
+TARGET_LINK_LIBRARIES(${LIB_NAME} ${BCIMIDDLEWARE_LIBS})
+# -- Not needed in WIN32 because boost comes with autolink
+IF(NOT WIN32)
+TARGET_LINK_LIBRARIES(${LIB_NAME} ${Boost_LIBRARIES})
+ENDIF(NOT WIN32)
+
+# -- Manual link for WIN32
+IF(WIN32)
+TARGET_LINK_LIBRARIES(${LIB_NAME} "sfml-graphics.lib;sfml-window.lib;sfml-system.lib;bci-middleware.lib;vision.lib;avcodec.lib;swscale.lib;avutil.lib")
+ENDIF(WIN32)
+
 IF(COSHELLBCI_FOUND)
 TARGET_LINK_LIBRARIES(${LIB_NAME}  XmlRpc xmlrpc-client visionsystem vision configparser)
 ENDIF(COSHELLBCI_FOUND)
