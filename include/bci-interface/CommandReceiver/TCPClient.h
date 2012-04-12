@@ -29,7 +29,7 @@ public:
     virtual int GetCommand();
 
     /* Sends a message to the server */
-    void SendMessage(const std::string & message);
+    void Send(const std::string & message);
 
 private:
     boost::shared_ptr<TCPClientImpl> m_impl;

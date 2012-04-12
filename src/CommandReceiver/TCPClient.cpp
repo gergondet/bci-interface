@@ -69,7 +69,7 @@ public:
         return m_impl->GetCommand();
     }
 
-    void TCPClient::SendMessage(const std::string & message)
+    void TCPClient::Send(const std::string & message)
     {
         m_impl->SendMessage(message);
     }
