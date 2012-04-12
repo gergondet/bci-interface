@@ -3,6 +3,7 @@
 #include <bci-interface/DisplayObject/P300Object.h>
 #include <bci-interface/CommandReceiver/TCPClient.h>
 #include <bci-interface/CommandInterpreter/SimpleInterpreter.h>
+#include <bci-interface/Utils/Win32.h>
 
 #include <SFML/Graphics.hpp>
 
@@ -55,7 +56,7 @@ int main(int argc, char * argv[])
     boost::thread th(boost::bind(&bciinterface::BCIInterface::DisplayLoop, bciinterface, app, fullscreen, &out_cmd, 0));
     while(out_cmd != 0)
     {
-        receiver->SendMessage("resume");
+        receiver->Send("resume");
         while(bciinterface->ParadigmStatus())
         {
             usleep(100000);
