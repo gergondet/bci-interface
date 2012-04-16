@@ -63,7 +63,7 @@ TARGET_LINK_LIBRARIES(${LIB_NAME} "sfml-graphics.lib;sfml-window.lib;sfml-system
 ENDIF(WIN32)
 
 IF(COSHELLBCI_FOUND)
-TARGET_LINK_LIBRARIES(${LIB_NAME}  XmlRpc xmlrpc-client visionsystem vision configparser)
+TARGET_LINK_LIBRARIES(${LIB_NAME}  ${COSHELLBCI_LIBS} XmlRpc xmlrpc-client visionsystem vision configparser)
 ENDIF(COSHELLBCI_FOUND)
 
 INSTALL(TARGETS ${LIB_NAME}
