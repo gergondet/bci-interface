@@ -79,10 +79,10 @@ int main(int argc, char * argv[])
 
     unsigned int score = 0;
     sf::SoundBuffer buffer;
-    buffer.LoadFromFile("data/score.wav");
+    buffer.loadFromFile("data/score.wav");
 
     sf::Sound scoreSound;
-    scoreSound.SetBuffer(buffer);
+    scoreSound.setBuffer(buffer);
 
     while(*out_cmd != 0)
     {
@@ -107,7 +107,7 @@ int main(int argc, char * argv[])
         }
         bciinterface->SetCommandInterpreter(0);
         score++;
-        scoreSound.Play();
+        scoreSound.play();
         std::stringstream ss;
         ss << "Score: " << score;
         txtobj->SetText(ss.str());
@@ -117,7 +117,7 @@ int main(int argc, char * argv[])
 
     if(app)
     {
-        app->Close();
+        app->close();
     }
 
     delete bciinterface;

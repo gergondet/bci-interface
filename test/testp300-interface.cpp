@@ -65,7 +65,7 @@ int main(int argc, char * argv[])
 
     if(app)
     {
-        app->Close();
+        app->close();
     }
 
     delete bciinterface;

@@ -19,18 +19,19 @@ private:
     bool m_active;
     sf::Color m_active_color;
     sf::Color m_inactive_color;
-    sf::Shape * m_shape;
+    sf::ConvexShape * m_shape;
 public:
     P300ObjectImpl(unsigned int active_time, unsigned int x, unsigned int y, unsigned int size_x, unsigned int size_y, unsigned char r, unsigned char g, unsigned char b)
         : m_active_time(active_time*1000), m_active_since(0), m_active(false), 
           m_active_color(sf::Color(r,g,b,255)), m_inactive_color(sf::Color(r,g,b,60)),
-          m_shape(new sf::Shape())
+          m_shape(new sf::ConvexShape())
     {
-        m_shape->AddPoint(x-size_x/2, y-size_y/2);
-        m_shape->AddPoint(x+size_x/2, y-size_y/2);
-        m_shape->AddPoint(x+size_x/2, y+size_y/2);
-        m_shape->AddPoint(x-size_x/2, y+size_y/2);
-        m_shape->SetColor(m_inactive_color);
+        m_shape->setPointCount(4);
+        m_shape->setPoint(0, sf::Vector2f(x-size_x/2, y-size_y/2));
+        m_shape->setPoint(1, sf::Vector2f(x+size_x/2, y-size_y/2));
+        m_shape->setPoint(2, sf::Vector2f(x+size_x/2, y+size_y/2));
+        m_shape->setPoint(3, sf::Vector2f(x-size_x/2, y+size_y/2));
+        m_shape->setFillColor(m_inactive_color);
     }
 
     ~P300ObjectImpl()
@@ -40,7 +41,7 @@ public:
 
     void Display(sf::RenderWindow * app, unsigned int frameCount, sf::Clock & clock)
     {
-        app->Draw(*m_shape);
+        app->draw(*m_shape);
         if(m_active) 
         { 
             timeval tv_now;
@@ -55,7 +56,7 @@ public:
 
     void Highlight()
     {
-        m_shape->SetColor(m_active_color);
+        m_shape->setFillColor(m_active_color);
         m_active = true;
         timeval tv_now;
         gettimeofday(&tv_now, 0);
@@ -64,7 +65,7 @@ public:
 
     void Unhighlight()
     {
-        m_shape->SetColor(m_inactive_color);
+        m_shape->setFillColor(m_inactive_color);
         m_active = false;
     }
 };

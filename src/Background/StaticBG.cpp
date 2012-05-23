@@ -21,7 +21,7 @@ public:
     : m_texture(new sf::Texture), m_sprite(0),
       m_wwidth(wwidth), m_wheight(wheight), m_iwidth(iwidth), m_iheight(iheight)
     {
-        if(!m_texture->LoadFromFile(src_file))
+        if(!m_texture->loadFromFile(src_file))
         {
             std::cerr << "StaticBG, could not load texture from: " << src_file << std::endl;
         }
@@ -31,8 +31,8 @@ public:
             m_iwidth  = m_wwidth;
             m_iheight = m_wheight;
         }
-        m_sprite->Resize(m_iwidth, m_iheight);
-        m_sprite->SetPosition(m_wwidth/2 - m_iwidth/2, m_wheight/2 - m_iheight/2);
+        m_sprite->setScale((float)m_iwidth/(float)m_wwidth, (float)m_iheight/(float)m_wheight);
+        m_sprite->setPosition(m_wwidth/2 - m_iwidth/2, m_wheight/2 - m_iheight/2);
     }
 
     ~StaticBGImpl()
@@ -51,21 +51,21 @@ public:
 
     void Draw(sf::RenderWindow * app)
     {
-        app->Draw(*m_sprite);
+        app->draw(*m_sprite);
     }
 
     void ChangeImage(const std::string & new_src)
     {
         sf::Texture * new_texture = new sf::Texture();
-        if(!new_texture->LoadFromFile(new_src))
+        if(!new_texture->loadFromFile(new_src))
         {
             std::cerr << "StaticBG::ChangeImage, cannot load texture from: " << new_src << std::endl;
             delete new_texture;
             return;
         }
         sf::Sprite * new_sprite  = new sf::Sprite(*new_texture);
-        new_sprite->Resize(m_iwidth, m_iheight);
-        new_sprite->SetPosition(m_wwidth/2 - m_iwidth/2, m_wheight/2 - m_iheight/2);
+        new_sprite->setScale((float)m_iwidth/(float)m_wwidth, (float)m_iheight/(float)m_wheight);
+        new_sprite->setPosition(m_wwidth/2 - m_iwidth/2, m_wheight/2 - m_iheight/2);
 
         sf::Texture * old_texture = m_texture;
         sf::Sprite * old_sprite = m_sprite;
@@ -77,8 +77,8 @@ public:
 
     void SetSubRect(int left, int top, int width, int height)
     {
-        m_sprite->SetSubRect(sf::IntRect(left, top, width, height));
-        m_sprite->Resize(m_iwidth, m_iheight);
+        m_sprite->setScale((float)m_iwidth/(float)m_wwidth, (float)m_iheight/(float)m_wheight);
+        m_sprite->setPosition(m_wwidth/2 - m_iwidth/2, m_wheight/2 - m_iheight/2);
     }
 };
 
