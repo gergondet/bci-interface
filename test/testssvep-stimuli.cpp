@@ -38,15 +38,15 @@ public:
 
     void Process(sf::Event & event, const BCIInterface & intface)
     {
-        if(event.Type == sf::Event::KeyPressed && event.Key.Code == sf::Keyboard::Left)
+        if(event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Left)
         {
             SetPosition(0,0);
         }
-        if(event.Type == sf::Event::KeyPressed && event.Key.Code == sf::Keyboard::Right)
+        if(event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Right)
         {
             SetPosition(400, 400);
         }
-        if(event.Type == sf::Event::KeyPressed && event.Key.Code == sf::Keyboard::Space)
+        if(event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space)
         {
             hl = !hl;
             if(hl)
