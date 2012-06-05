@@ -171,7 +171,7 @@ int main(int argc, char * argv[])
 
     if(app)
     {
-        app->close();
+        app->Close();
     }
 
     delete bciinterface;

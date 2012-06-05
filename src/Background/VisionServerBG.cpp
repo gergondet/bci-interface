@@ -85,16 +85,16 @@ public:
             std::cerr << strerror(errno) << std::endl;
         }
         memset(m_datatexture, 0, width*height*4);
-        m_texture->create(width, height);
-        m_texture->update(m_datatexture);
-        m_sprite->setTexture(*m_texture);
+        m_texture->Create(width, height);
+        m_texture->Update(m_datatexture);
+        m_sprite->SetTexture(*m_texture);
         if(iwidth == 0 || iheight == 0)
         {
             m_iwidth = m_wwidth;
             m_iheight = m_wheight;
         }
-        m_sprite->setScale((float)m_iwidth/(float)m_width, (float)m_iheight/(float)m_height);
-        m_sprite->setPosition(m_wwidth/2 - m_iwidth/2, m_wheight/2 - m_iheight/2);
+        m_sprite->Resize(m_iwidth, m_iheight);
+        m_sprite->SetPosition(m_wwidth/2 - m_iwidth/2, m_wheight/2 - m_iheight/2);
 
         m_sockfd = socket(AF_INET, SOCK_DGRAM, 0);
         if(m_sockfd < 0)
@@ -190,7 +190,7 @@ public:
                     }
                 }
                 /* m_datatexture has a full texture worth of data, update the sprite */
-                m_texture->update(m_datatexture);
+                m_texture->Update(m_datatexture);
             }
         }
     }
@@ -203,7 +203,7 @@ public:
     void Draw(sf::RenderWindow * app)
     {
 //        m_sprite->Resize(app->GetWidth(), app->GetHeight());
-        app->draw(*m_sprite);
+        app->Draw(*m_sprite);
     }
 };
 

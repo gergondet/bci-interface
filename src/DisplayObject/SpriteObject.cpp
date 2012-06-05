@@ -16,12 +16,12 @@ public:
         : m_texture(0), m_sprite(0)
     {
         m_texture = new sf::Texture();
-        if(! m_texture->loadFromFile(texture_src) )
+        if(! m_texture->LoadFromFile(texture_src) )
         {
             std::cerr << "Could not load texture from: " << texture_src << std::endl;
         }
         m_sprite = new sf::Sprite(*m_texture);
-        m_sprite->setPosition(0,0);
+        m_sprite->SetPosition(0,0);
     }
 
     ~SpriteObjectImpl()
@@ -32,22 +32,22 @@ public:
 
     void Display(sf::RenderWindow * app, unsigned int frameCount, sf::Clock & clock)
     {
-        app->draw(*m_sprite);
+        app->Draw(*m_sprite);
     } 
 
     void SetSubRect(int left, int top, int width, int height)
     {
-        m_sprite->setTextureRect(sf::IntRect(left, top, width, height));
+        m_sprite->SetSubRect(sf::IntRect(left, top, width, height));
     }
 
     void SetPosition(float x, float y)
     {
-        m_sprite->setPosition(x, y);
+        m_sprite->SetPosition(x, y);
     }
 
     void Resize(float size_x, float size_y)
     {
-        m_sprite->setScale((float)size_x/(float)m_texture->getSize().x, (float)size_y/(float)m_texture->getSize().y);
+        m_sprite->Resize(size_x, size_y);
     }
 };
 

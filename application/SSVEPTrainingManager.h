@@ -14,24 +14,23 @@ using namespace bciinterface;
 class SimpleShape : public DisplayObject
 {
 public:
-    SimpleShape() : m_shape(sf::RectangleShape(sf::Vector2f(60, 60))) 
+    SimpleShape() : m_shape(sf::Shape::Rectangle(-30, -30, 60, 60, sf::Color(0,255,0,255))) 
     {
-        m_shape.setPosition(0,0);
-	m_shape.setFillColor(sf::Color(0,255,0,255));
+        m_shape.SetPosition(0,0);
     }
 
     virtual void Display(sf::RenderWindow * app, unsigned int frameCount, sf::Clock & clock)
     {
-        app->draw(m_shape);
+        app->Draw(m_shape);
     }
 
     virtual void SetPosition(float X, float Y)
     {
-        m_shape.setPosition(X,Y);
+        m_shape.SetPosition(X,Y);
     }
 
 private:
-    sf::RectangleShape m_shape;
+    sf::Shape m_shape;
 };
 
 class SSVEPTrainingManager : public CommandReceiver, public StaticSteering

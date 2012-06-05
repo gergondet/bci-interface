@@ -14,7 +14,7 @@ public:
     TextObjectImpl(const std::string & txt)
         : m_text(txt)
     {
-        m_text.setPosition(0,0);
+        m_text.SetPosition(0,0);
     }
 
     ~TextObjectImpl()
@@ -23,22 +23,22 @@ public:
 
     void Display(sf::RenderWindow * app, unsigned int frameCount, sf::Clock & clock)
     {
-        app->draw(m_text);
+        app->Draw(m_text);
     } 
 
     void SetPosition(float x, float y)
     {
-        m_text.setPosition(x, y);
+        m_text.SetPosition(x, y);
     }
 
     void SetText(const std::string & txt)
     {
-        m_text.setString(txt);
+        m_text.SetString(txt);
     }
 
     void SetCharacterSize(unsigned int size)
     {
-        m_text.setCharacterSize(size);
+        m_text.SetCharacterSize(size);
     }
 };
 
