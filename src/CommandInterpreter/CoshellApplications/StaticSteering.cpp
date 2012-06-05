@@ -50,13 +50,13 @@ public:
                 m_coshell->ExecuteACommand("set pg.velocitydes [3](-0.0001,0.0,0.0)");
                 break;
             case 1:
-                m_coshell->ExecuteACommand("set pg.velocitydes [3](0.15,0.0,0.0)");
+                m_coshell->ExecuteACommand("set pg.velocitydes [3](0.1,0.0,0.0)");
                 break;
             case 2:
                 m_coshell->ExecuteACommand("set pg.velocitydes [3](-0.0001,0.0,-0.15)");
                 break;
             case 3:
-                m_coshell->ExecuteACommand("set pg.velocitydes [3](-0.15,0.0,0.0)");
+                m_coshell->ExecuteACommand("set pg.velocitydes [3](-0.1,0.0,0.0)");
                 break;
             case 4:
                 m_coshell->ExecuteACommand("set pg.velocitydes [3](-0.0001,0.0,0.15)");

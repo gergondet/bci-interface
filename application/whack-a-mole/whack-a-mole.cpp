@@ -56,8 +56,8 @@ int main(int argc, char * argv[])
 
     bciinterface->AddObject(new SSVEPStimulus(6, 60, width/2, 150, 300, 300, "data/mole_1.png", "data/mole_1_HL.png"));
     bciinterface->AddObject(new SSVEPStimulus(8, 60, width-150, height/2, 300, 300, "data/mole_2.png", "data/mole_2_HL.png"));
-    bciinterface->AddObject(new SSVEPStimulus(11, 60, width/2, height-150, 300, 300, "data/mole_3.png", "data/mole_3_HL.png"));
-    bciinterface->AddObject(new SSVEPStimulus(13, 60, 150, height/2,300, 300, "data/mole_4.png", "data/mole_4_HL.png"));
+    bciinterface->AddObject(new SSVEPStimulus(10, 60, width/2, height-150, 300, 300, "data/mole_3.png", "data/mole_3_HL.png"));
+    bciinterface->AddObject(new SSVEPStimulus(9, 60, 150, height/2,300, 300, "data/mole_4.png", "data/mole_4_HL.png"));
 
     SpriteObject * target = new SpriteObject("data/wanted.png");
     target->SetPosition(width/2-150, height/2-200);
