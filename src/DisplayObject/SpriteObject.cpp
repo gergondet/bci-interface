@@ -11,6 +11,10 @@ struct SpriteObjectImpl
 private:
     sf::Texture * m_texture;
     sf::Sprite * m_sprite;
+    float m_x;
+    float m_y;
+    float m_size_x;
+    float m_size_y;
 public:
     SpriteObjectImpl(const std::string & texture_src)
         : m_texture(0), m_sprite(0)
@@ -22,6 +26,10 @@ public:
         }
         m_sprite = new sf::Sprite(*m_texture);
         m_sprite->setPosition(0,0);
+        m_x = 0;
+        m_y = 0;
+        m_size_x = m_texture->getSize().x;
+        m_size_y = m_texture->getSize().y;
     }
 
     ~SpriteObjectImpl()
@@ -42,12 +50,17 @@ public:
 
     void SetPosition(float x, float y)
     {
-        m_sprite->setPosition(x, y);
+        m_sprite->setPosition(x - m_size_x/2, y - m_size_y/2);
+        m_x = x;
+        m_y = y;
     }
 
     void Resize(float size_x, float size_y)
     {
         m_sprite->setScale((float)size_x/(float)m_texture->getSize().x, (float)size_y/(float)m_texture->getSize().y);
+        m_size_x = size_x;
+        m_size_y = size_y;
+        SetPosition(m_x, m_y);
     }
 };
 

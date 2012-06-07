@@ -22,23 +22,27 @@ struct ShapeImpl : public GraphImpl
 {
 private:
     sf::Shape * m_shape;
+    float size_x;
+    float size_y;
 public:
     ShapeImpl(float x, float y, float size_x, float size_y, int r, int g, int b, int a) : 
-        m_shape(new sf::RectangleShape(sf::Vector2f(size_x, size_y))) 
+        m_shape(new sf::RectangleShape(sf::Vector2f(size_x, size_y)))
+        , size_x(size_x), size_y(size_y)
     {
 	m_shape->setFillColor(sf::Color(r,g,b,a));
 	m_shape->setOutlineColor(sf::Color(0,255,0,128));
 	m_shape->setOutlineThickness(0);
-        m_shape->setPosition(x+size_x/2,y+size_y/2);
+    m_shape->setPosition(x-size_x/2,y-size_y/2);
     }
 
     ShapeImpl(float x, float y, float radius, int r, int g, int b, int a) : 
         m_shape(new sf::CircleShape(radius)) 
+        , size_x(2*radius), size_y(2*radius)
     {
 	m_shape->setFillColor(sf::Color(r,g,b,a));
 	m_shape->setOutlineColor(sf::Color(0,255,0,128));
 	m_shape->setOutlineThickness(0);
-        m_shape->setPosition(x+radius,y+radius);
+    m_shape->setPosition(x-radius,y-radius);
     }
 
     ~ShapeImpl()
@@ -63,7 +67,7 @@ public:
 
     void SetPosition(float X, float Y)
     {
-        m_shape->setPosition(X, Y);
+        m_shape->setPosition(X - size_x/2, Y - size_y/2);
     }
 
     void Draw(sf::RenderWindow * app)
