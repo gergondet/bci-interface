@@ -254,7 +254,7 @@ public:
                     }
                     Close(); 
                 }
-                if( event.Type == sf::Event::KeyPressed && event.Key.Code == sf::Keyboard::F1 ) 
+                if( event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::F1 ) 
                 {
                     m_take_screenshot = true;
                 }
@@ -310,26 +310,12 @@ public:
                 m_objects_non_owned[i]->Display(m_app, frameCount, clock);
             }
 
-            /* Log fps regularly */
-            if(frameCount % 100 == 99)
-            {
-                uint32_t frametime = m_app->GetFrameTime();
-                if(frametime != 0)
-                {
-                    m_fpslog << 1000/frametime << " fps" << std::endl;
-                }
-                else
-                {
-                    m_fpslog << "2000 fps" << std::endl;
-                }
-            } 
-
             if(m_take_screenshot)
             {
-                sf::Image screen = m_app->Capture();
+                sf::Image screen = m_app->capture();
                 std::stringstream ss;
                 ss << "/tmp/bci-interface-screen-" << std::setfill('0') << std::setw(3) << m_screenshot_index << ".png";
-                screen.SaveToFile(ss.str().c_str());
+                screen.saveToFile(ss.str().c_str());
                 m_take_screenshot = false;
                 m_screenshot_index++;
             }
