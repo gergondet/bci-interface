@@ -311,7 +311,6 @@ public:
             }
 
             /* Log fps regularly */
-<<<<<<< HEAD
             if(frameCount % 100 == 99)
             {
                 uint32_t frametime = m_app->GetFrameTime();
@@ -325,7 +324,6 @@ public:
                 }
             } 
 
-            m_app->Display();
             if(m_take_screenshot)
             {
                 sf::Image screen = m_app->Capture();
@@ -335,19 +333,6 @@ public:
                 m_take_screenshot = false;
                 m_screenshot_index++;
             }
-
-            //if(frameCount % 100 == 99)
-            //{
-            //    uint32_t frametime = m_app->getFrameTime();
-            //    if(frametime != 0)
-            //    {
-            //        m_fpslog << 1000/frametime << " fps" << std::endl;
-            //    }
-            //    else
-            //    {
-            //        m_fpslog << "2000 fps" << std::endl;
-            //    }
-            //} 
 
             m_app->display();
         }
