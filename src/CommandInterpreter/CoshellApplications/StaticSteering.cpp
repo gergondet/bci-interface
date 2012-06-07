@@ -71,7 +71,7 @@ public:
 
     void Process(sf::Event & event)
     {
-        if(event.Type == sf::Event::KeyPressed && event.Key.Code == sf::Keyboard::Space)
+        if(event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space)
         {
             m_stop = true;
             if(m_coshell) { m_coshell->ExecuteACommand("set pg.velocitydes [3](0,0,0)"); }

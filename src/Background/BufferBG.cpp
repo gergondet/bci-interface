@@ -41,21 +41,21 @@ public:
             m_color_enabled(true), m_close(false)
     {
         memset(m_dataImage, 0, width*height*4);
-        m_texture_display->Create(width, height);
-        m_texture_load->Create(width, height);
-        m_sprite_display->SetTexture(*m_texture_display);
-        m_sprite_load->SetTexture(*m_texture_load);
+        m_texture_display->create(width, height);
+        m_texture_load->create(width, height);
+        m_sprite_display->setTexture(*m_texture_display);
+        m_sprite_load->setTexture(*m_texture_load);
         if(iwidth == 0 || iheight == 0)
         {
             m_iwidth = m_wwidth;
             m_iheight = m_wheight;
         }
-        m_sprite_load->Resize(m_iwidth, m_iheight);
-        m_sprite_load->SetPosition(m_wwidth/2 - m_iwidth/2, m_wheight/2 - m_iheight/2);
-        m_sprite_display->Resize(m_iwidth, m_iheight);
-        m_sprite_display->SetPosition(m_wwidth/2 - m_iwidth/2, m_wheight/2 - m_iheight/2);
-        m_sprite_display->SetSubRect(m_subrect);
-        m_sprite_load->SetSubRect(m_subrect);
+        m_sprite_load->setScale((float)m_iwidth/(float)m_width, (float)m_iheight/(float)m_height);
+        m_sprite_load->setPosition(m_wwidth/2 - m_iwidth/2, m_wheight/2 - m_iheight/2);
+        m_sprite_display->setScale((float)m_iwidth/(float)m_width, (float)m_iheight/(float)m_height);
+        m_sprite_display->setPosition(m_wwidth/2 - m_iwidth/2, m_wheight/2 - m_iheight/2);
+        m_sprite_display->setTextureRect(m_subrect);
+        m_sprite_load->setTextureRect(m_subrect);
     }
 
     ~BufferBGImpl()
@@ -78,22 +78,22 @@ public:
 
     void Draw(sf::RenderWindow * app)
     {
-        app->Draw(*m_sprite_display);
+        app->draw(*m_sprite_display);
     }
 
     void LoadImageFromPixels()
     {
-        m_texture_load->Update(m_dataImage, m_width, m_height, 0, 0);
-        m_sprite_load->SetSubRect(m_subrect);
-        m_sprite_load->Resize(m_iwidth, m_iheight);
+        m_texture_load->update(m_dataImage, m_width, m_height, 0, 0);
+        m_sprite_load->setTextureRect(m_subrect);
+        m_sprite_load->setScale((float)m_iwidth/(float)m_width, (float)m_iheight/(float)m_height);
         sf::Sprite * sprite_tmp = m_sprite_display;
         sf::Texture * texture_tmp = m_texture_display;
         m_sprite_display = m_sprite_load;
         m_texture_display = m_texture_load;
         m_sprite_load = sprite_tmp;
         m_texture_load = texture_tmp;
-        m_sprite_load->SetSubRect(m_subrect);
-        m_sprite_load->Resize(m_iwidth, m_iheight);
+        m_sprite_load->setTextureRect(m_subrect);
+        m_sprite_load->setScale((float)m_iwidth/(float)m_width, (float)m_iheight/(float)m_height);
     }
 
     void UpdateFromBuffer_MONO(unsigned char * img)
