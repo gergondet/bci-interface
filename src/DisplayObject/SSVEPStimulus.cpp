@@ -68,7 +68,6 @@ public:
     void SetPosition(float X, float Y)
     {
         m_shape->setPosition(X - size_x/2, Y - size_y/2);
-        m_shape->setPosition(X, Y);
     }
 
     void Draw(sf::RenderWindow * app)
