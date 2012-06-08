@@ -153,7 +153,7 @@ public:
 
     void Process(sf::Event & event, const BCIInterface & interface)
     {
-        if(event.Type == sf::Event::KeyPressed && event.Key.Code == sf::Keyboard::Space)
+        if(event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space)
         {
             if(!m_initialized)
             {

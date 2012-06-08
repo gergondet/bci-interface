@@ -20,7 +20,7 @@ public:
         : m_texture(0), m_sprite(0)
     {
         m_texture = new sf::Texture();
-        if(! m_texture->LoadFromFile(texture_src) )
+        if(! m_texture->loadFromFile(texture_src) )
         {
             std::cerr << "Could not load texture from: " << texture_src << std::endl;
         }
@@ -40,12 +40,12 @@ public:
 
     void Display(sf::RenderWindow * app, unsigned int frameCount, sf::Clock & clock)
     {
-        app->Draw(*m_sprite);
+        app->draw(*m_sprite);
     } 
 
     void SetSubRect(int left, int top, int width, int height)
     {
-        m_sprite->SetSubRect(sf::IntRect(left, top, width, height));
+        m_sprite->setTextureRect(sf::IntRect(left, top, width, height));
     }
 
     void SetPosition(float x, float y)

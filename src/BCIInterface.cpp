@@ -169,7 +169,7 @@ public:
         if(fullscreen)
         {
             m_app = new sf::RenderWindow(sf::VideoMode(m_width, m_height), "bci-interface", sf::Style::Fullscreen);
-            m_app->ShowMouseCursor(false);
+            m_app->setMouseCursorVisible(false);
         }
         else
         {
@@ -181,7 +181,7 @@ public:
 
         DisplayLoop();
 
-        m_app->Close();
+        m_app->close();
     }
 
     sf::RenderWindow * DisplayLoop(sf::RenderWindow * app, bool fullscreen, int * cmd, float timeout = 0)
@@ -191,7 +191,7 @@ public:
             if(fullscreen)
             {
                 m_app = new sf::RenderWindow(sf::VideoMode(m_width, m_height), "bci-interface", sf::Style::Fullscreen);
-                m_app->ShowMouseCursor(false);
+            	m_app->setMouseCursorVisible(false);
             }
             else
             {
@@ -233,20 +233,20 @@ public:
             m_receiverth = new boost::thread(boost::bind(&CommandReceiver::CommandLoop, m_receiver));
         }
 
-        while(!m_close && in_paradigm == m_in_paradigm && m_app->IsOpened())
+        while(!m_close && in_paradigm == m_in_paradigm && m_app->isOpen())
         {
-            unsigned int newFrameCount = 6*clock.GetElapsedTime()*0.01;
+            unsigned int newFrameCount = 6*clock.getElapsedTime().asMilliseconds()*0.01;
             /* cheat when missing a frame */
             frameCount = newFrameCount > frameCount+1?frameCount+1:newFrameCount;
 
-            m_app->Clear(sf::Color(0x77, 0x77, 0x77, 255));
+            m_app->clear(sf::Color(0x77, 0x77, 0x77, 255));
 
             /* Process events */
             sf::Event event;
-            while(m_app->PollEvent(event))
+            while(m_app->pollEvent(event))
             {
-                if(event.Type == sf::Event::Closed || 
-                    ( event.Type == sf::Event::KeyPressed && ( event.Key.Code == sf::Keyboard::Escape || event.Key.Code == sf::Keyboard::Q ) ))
+                if(event.type == sf::Event::Closed || 
+                    ( event.type == sf::Event::KeyPressed && ( event.key.code == sf::Keyboard::Escape || event.key.code == sf::Keyboard::Q ) ))
                 {   
                     if(cmd)
                     {
@@ -280,7 +280,7 @@ public:
             if(m_receiver && m_interpreter)
             {
                 int in_cmd = 0;
-                if(clock.GetElapsedTime() > timeout)
+                if(clock.getElapsedTime().asMilliseconds() > timeout)
                 {
                     in_cmd = m_receiver->GetCommand();
                 }
@@ -348,7 +348,7 @@ public:
     {
         m_close = true;
         m_in_paradigm = false;
-        m_app->Close(); 
+        m_app->close(); 
     }
 
     bool ParadigmStatus()

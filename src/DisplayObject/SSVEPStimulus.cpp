@@ -29,20 +29,20 @@ public:
         m_shape(new sf::RectangleShape(sf::Vector2f(size_x, size_y)))
         , size_x(size_x), size_y(size_y)
     {
-	m_shape->setFillColor(sf::Color(r,g,b,a));
-	m_shape->setOutlineColor(sf::Color(0,255,0,128));
-	m_shape->setOutlineThickness(0);
-    m_shape->setPosition(x-size_x/2,y-size_y/2);
+	    m_shape->setFillColor(sf::Color(r,g,b,a));
+	    m_shape->setOutlineColor(sf::Color(0,255,0,128));
+	    m_shape->setOutlineThickness(0);
+        m_shape->setPosition(x-size_x/2,y-size_y/2);
     }
 
     ShapeImpl(float x, float y, float radius, int r, int g, int b, int a) : 
         m_shape(new sf::CircleShape(radius)) 
         , size_x(2*radius), size_y(2*radius)
     {
-	m_shape->setFillColor(sf::Color(r,g,b,a));
-	m_shape->setOutlineColor(sf::Color(0,255,0,128));
-	m_shape->setOutlineThickness(0);
-    m_shape->setPosition(x-radius,y-radius);
+	    m_shape->setFillColor(sf::Color(r,g,b,a));
+	    m_shape->setOutlineColor(sf::Color(0,255,0,128));
+	    m_shape->setOutlineThickness(0);
+        m_shape->setPosition(x-radius,y-radius);
     }
 
     ~ShapeImpl()
@@ -52,27 +52,28 @@ public:
 
     void Highlight()
     {
-        m_shape.EnableOutline(true);
+        m_shape->setOutlineThickness(6);
     }
 
     void Unhighlight()
     {
-        m_shape.EnableOutline(false);
+        m_shape->setOutlineThickness(0);
     }
 
     void Move(float diffX, float diffY)
     {
-        m_shape.Move(diffX, diffY);
+        m_shape->move(diffX, diffY);
     }
 
     void SetPosition(float X, float Y)
     {
         m_shape->setPosition(X - size_x/2, Y - size_y/2);
+        m_shape->setPosition(X, Y);
     }
 
     void Draw(sf::RenderWindow * app)
     {
-        app->Draw(m_shape);
+        app->draw(*m_shape);
     }
 };
 
@@ -88,36 +89,36 @@ public:
     SpriteImpl(float x, float y, float size_x, float size_y, const std::string & texture, const std::string & texture_hl)
         : size_x(size_x), size_y(size_y)
     {
-        m_texture.LoadFromFile(texture);
-        m_texture_hl.LoadFromFile(texture_hl);
-        m_sprite.SetTexture(m_texture);
-        m_sprite.SetPosition(x - size_x/2 ,y - size_y/2);
-        m_sprite.Resize(size_x, size_y);
+        m_texture.loadFromFile(texture);
+        m_texture_hl.loadFromFile(texture_hl);
+        m_sprite.setTexture(m_texture);
+        m_sprite.setPosition(x - size_x/2 ,y - size_y/2);
+        m_sprite.setScale((float)size_x/(float)m_texture.getSize().x, (float)size_y/(float)m_texture.getSize().y);
     }
 
     void Highlight()
     {
-        m_sprite.SetTexture(m_texture_hl);
+        m_sprite.setTexture(m_texture_hl);
     }
 
     void Unhighlight()
     {
-        m_sprite.SetTexture(m_texture);
+        m_sprite.setTexture(m_texture);
     }
 
     void Move(float diffX, float diffY)
     {
-        m_sprite.Move(diffX, diffY);
+        m_sprite.move(diffX, diffY);
     }
 
     void SetPosition(float X, float Y)
     {
-        m_sprite.SetPosition(X - size_x/2 ,Y - size_y/2);
+        m_sprite.setPosition(X - size_x/2 ,Y - size_y/2);
     }
 
     void Draw(sf::RenderWindow * app)
     {
-        app->Draw(m_sprite);
+        app->draw(m_sprite);
     }
 
 };
