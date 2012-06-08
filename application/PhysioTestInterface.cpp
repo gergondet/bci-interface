@@ -92,7 +92,7 @@ int main(int argc, char * argv[])
     }
 
 	
-    bool fullscreen = false;
+    bool fullscreen = true;
     unsigned int width = 1280;
     unsigned int height = 1024;
     bool compress_data = true;
@@ -126,7 +126,7 @@ bciinterface->SetCommandInterpreter(interpreter);
     bciinterface->AddObject(new SSVEPStimulus(6, 60, width/2, 100, 200,200, "data/UP.png", "data/UP_HL.png"));
     bciinterface->AddObject(new SSVEPStimulus(8, 60, width-100, height/2, 200, 200, "data/RIGHT.png", "data/RIGHT_HL.png"));
     bciinterface->AddObject(new SSVEPStimulus(10, 60, width/2, height-100, 200, 200, "data/DOWN.png", "data/DOWN_HL.png"));
-    bciinterface->AddObject(new SSVEPStimulus(14, 60, 100, height/2,200, 200, "data/LEFT.png", "data/LEFT_HL.png"));
+    bciinterface->AddObject(new SSVEPStimulus(9, 60, 100, height/2,200, 200, "data/LEFT.png", "data/LEFT_HL.png"));
 
     bciinterface->AddNonOwnedObject(&(manager->GetShape()));
     bciinterface->StartParadigm();
