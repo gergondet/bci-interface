@@ -12,8 +12,10 @@
 #include <boost/thread.hpp>
 #include <fstream>
 #include <iostream>
-#include <SFML/Graphics.hpp>
+#include <iomanip>
 #include <vector>
+
+#include <SFML/Graphics.hpp>
 
 namespace bciinterface
 {
@@ -28,6 +30,9 @@ private:
     bool m_close;
     sf::RenderWindow * m_app;
     std::ofstream m_fpslog;
+
+    bool m_take_screenshot;
+    unsigned int m_screenshot_index;
 
     std::vector<EventHandler *> m_handlers;
 
@@ -45,6 +50,7 @@ private:
 public:
     BCIInterfaceImpl(const BCIInterface & ref, unsigned int width, unsigned int height)
     : m_ref(ref), m_width(width), m_height(height), m_in_paradigm(false), m_close(false), m_app(0), m_fpslog("/tmp/bciinterface_fps.log"), 
+        m_take_screenshot(false), m_screenshot_index(0),
         m_handlers(0),
         m_background(0), m_backgroundth(0),
         m_objects(0), m_objects_non_owned(0),
@@ -248,6 +254,10 @@ public:
                     }
                     Close(); 
                 }
+                if( event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::F1 ) 
+                {
+                    m_take_screenshot = true;
+                }
                 for(size_t i = 0; i < m_handlers.size(); ++i)
                 {
                     m_handlers[i]->Process(event);
@@ -300,21 +310,17 @@ public:
                 m_objects_non_owned[i]->Display(m_app, frameCount, clock);
             }
 
-            /* Log fps regularly */
-            if(frameCount % 100 == 99)
+            if(m_take_screenshot)
             {
-                uint32_t frametime = m_app->GetFrameTime();
-                if(frametime != 0)
-                {
-                    m_fpslog << 1000/frametime << " fps" << std::endl;
-                }
-                else
-                {
-                    m_fpslog << "2000 fps" << std::endl;
-                }
-            } 
+                sf::Image screen = m_app->capture();
+                std::stringstream ss;
+                ss << "/tmp/bci-interface-screen-" << std::setfill('0') << std::setw(3) << m_screenshot_index << ".png";
+                screen.saveToFile(ss.str().c_str());
+                m_take_screenshot = false;
+                m_screenshot_index++;
+            }
 
-            m_app->Display();
+            m_app->display();
         }
 //        m_fpslog.close();
 

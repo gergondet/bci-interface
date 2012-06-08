@@ -1,6 +1,8 @@
 #include <bci-interface/BCIInterface.h>
 #include <bci-interface/Background/VisionServerBG.h>
 #include <bci-interface/DisplayObject/SSVEPStimulus.h>
+#include <bci-interface/DisplayObject/SpriteObject.h>
+#include <bci-interface/DisplayObject/TextObject.h>
 #include <bci-interface/CommandReceiver/UDPReceiver.h>
 #include <bci-interface/CommandInterpreter/SimpleInterpreter.h>
 
@@ -44,7 +46,7 @@ public:
         }
         if(event.Type == sf::Event::KeyPressed && event.Key.Code == sf::Keyboard::Right)
         {
-            SetPosition(400, 400);
+            SetPosition(1280/2, 1024/2);
         }
         if(event.Type == sf::Event::KeyPressed && event.Key.Code == sf::Keyboard::Space)
         {
@@ -63,17 +65,29 @@ public:
 
 int main(int argc, char * argv[])
 {
-    bool fullscreen = false;
+    bool fullscreen = true;
     unsigned int width = 1280;
-    unsigned int height = 800;
+    unsigned int height = 1024;
 
     BCIInterface * bciinterface = new BCIInterface(width, height);
 
     bool data_compressed = true;
-    bciinterface->SetBackground(new VisionServerBG("localhost", 4242, 640, 480, data_compressed, width, height));
-    
-    //bciinterface->AddObject(new TestStimulus(7,60, width/2, 150, 100, 100, "UP.png", "UP_HL.png"));
-    bciinterface->AddObject(new TestStimulus(7,60, width/2, 150, 50, 255, 0, 0, 255));
+    bciinterface->SetBackground(new VisionServerBG("localhost", 4242, 640, 480, data_compressed, width, height, 800, 600));
+
+    /* Sprite stimulus */
+    //bciinterface->AddObject(new TestStimulus(6,60, 50, 50, 100, 100, "TEST.png", "TEST_HL.png"));
+    /* Circle stimulus */
+    bciinterface->AddObject(new TestStimulus(6,60, 50, 50, 50, 255, 0, 0, 255));
+    /* Rectangle stimulus */
+    //bciinterface->AddObject(new TestStimulus(6, 60, 50, 50, 100, 100, 255, 0, 0, 255));
+
+    //SpriteObject sprite("TEST.png");
+    //sprite.SetPosition(100, 100);
+    //sprite.Resize(200,200);
+    //bciinterface->AddNonOwnedObject(&sprite);
+
+    //TextObject text("Here's a text!");
+    //bciinterface->AddNonOwnedObject(&text);
 
     bciinterface->DisplayLoop(fullscreen);
 
