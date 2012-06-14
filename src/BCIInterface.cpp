@@ -179,6 +179,8 @@ public:
 
 //        m_app->EnableVerticalSync(true);
 
+        m_app->setKeyRepeatEnabled(false);
+
         DisplayLoop();
 
         m_app->close();
@@ -204,6 +206,7 @@ public:
         }
 
 //        m_app->EnableVerticalSync(true);
+        m_app->setKeyRepeatEnabled(false);
 
         while(!m_close)
         {
