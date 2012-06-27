@@ -6,6 +6,7 @@
 #include <bci-interface/DisplayObject.h>
 
 #include <bci-interface/CommandReceiver.h>
+#include <bci-interface/CommandOverrider.h>
 #include <bci-interface/CommandInterpreter.h>
 
 #include <boost/bind.hpp>
@@ -45,6 +46,8 @@ private:
     CommandReceiver * m_receiver;
     boost::thread * m_receiverth;
 
+    CommandOverrider * m_overrider;
+
     CommandInterpreter * m_interpreter;
 
 public:
@@ -55,6 +58,7 @@ public:
         m_background(0), m_backgroundth(0),
         m_objects(0), m_objects_non_owned(0),
         m_receiver(0), m_receiverth(0),
+        m_overrider(0),
         m_interpreter(0)
     {}
 
@@ -140,6 +144,11 @@ public:
         {
             m_receiver = receiver;
         }
+    }
+
+    void SetCommandOverrider(CommandOverrider * overrider)
+    {
+        m_overrider = overrider;
     }
 
     void SetCommandInterpreter(CommandInterpreter * interpreter)
@@ -273,6 +282,10 @@ public:
                 {
                     m_objects_non_owned[i]->Process(event, m_ref);
                 }
+                if(m_overrider)
+                {
+                    m_overrider->Process(event, m_ref);
+                }
                 if(m_interpreter)
                 {
                     m_interpreter->Process(event, m_ref);
@@ -286,6 +299,10 @@ public:
                 if(clock.getElapsedTime().asMilliseconds() > timeout)
                 {
                     in_cmd = m_receiver->GetCommand();
+                    if(m_overrider && m_overrider->IsOverriding())
+                    {
+                        in_cmd = m_overrider->GetCommand();
+                    }
                 }
                 bool interpreter_status = m_interpreter->InterpretCommand(in_cmd, m_objects);
                 if(cmd && interpreter_status) 
@@ -424,6 +441,11 @@ void BCIInterface::AddNonOwnedObject(DisplayObject * object)
 void BCIInterface::SetCommandReceiver(CommandReceiver * receiver)
 {
     m_impl->SetCommandReceiver(receiver);
+}
+
+void BCIInterface::SetCommandOverrider(CommandOverrider * overrider)
+{
+    m_impl->SetCommandOverrider(overrider);
 }
 
 void BCIInterface::SetCommandInterpreter(CommandInterpreter * interpreter)
