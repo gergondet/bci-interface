@@ -3,6 +3,7 @@
 #include <bci-interface/DisplayObject/SSVEPStimulus.h>
 #include <bci-interface/CommandReceiver/UDPReceiver.h>
 #include <bci-interface/CommandInterpreter/SimpleInterpreter.h>
+#include <bci-interface/CommandOverrider.h>
 
 #include <SFML/Graphics.hpp>
 
@@ -35,6 +36,13 @@ int main(int argc, char * argv[])
     SimpleInterpreter * interpreter = new SimpleInterpreter();
     bciinterface->SetCommandReceiver(receiver);
     bciinterface->SetCommandInterpreter(interpreter);
+
+    CommandOverrider overrider;
+    overrider.AddOverrideCommand(sf::Keyboard::Up, 1);
+    overrider.AddOverrideCommand(sf::Keyboard::Right, 2);
+    overrider.AddOverrideCommand(sf::Keyboard::Down, 3);
+    overrider.AddOverrideCommand(sf::Keyboard::Left, 4);
+    bciinterface->SetCommandOverrider(&overrider);
 
     bool data_compressed = true;
     bciinterface->SetBackground(new VisionServerBG("hrp2010v", 4242, 640, 480, data_compressed, width, height, 800, 600));
