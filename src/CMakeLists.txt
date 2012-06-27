@@ -18,6 +18,7 @@ DisplayObject/TextObject.cpp
 CommandInterpreter/HoldInterpreter.cpp
 CommandInterpreter/SimpleInterpreter.cpp
 CommandInterpreter/P300Interpreter.cpp
+CommandOverrider.cpp
 )
 
 IF(COSHELLBCI_FOUND)
