@@ -1,4 +1,4 @@
-/*  File    : sfun_p300_interface.cpp
+/*  File    : sfun_bcixml_paradigm.cpp
  *  Abstract:
  *
  *     Interface between a remote P300 interface and matlab processing laptop 
@@ -18,20 +18,20 @@
 #pragma comment (lib, "ws2_32.lib")
 
 #define S_FUNCTION_LEVEL 2
-#define S_FUNCTION_NAME  sfun_p300_interface
+#define S_FUNCTION_NAME  sfun_bcixml_paradigm
 
 struct m_io 
 {
 public:
-    m_io() : IN_STOP(0), IN_ID(0), OUT_NbFlash(0), OUT_IDFlash(0), OUT_Flash(0), OUT_Target(0)
+    m_io() : IN_STOP(0), IN_ID(0), OUT_Init(0), OUT_FlashID(0), OUT_Target(0), OUT_SelectedID(0)
     {}
 
     unsigned int IN_STOP;
     unsigned int IN_ID;
-    unsigned int OUT_NbFlash;
-    unsigned int OUT_IDFlash;
-    unsigned int OUT_Flash;
+    unsigned int OUT_Init;
+    unsigned int OUT_FlashID;
     unsigned int OUT_Target;
+    unsigned int OUT_SelectedID;
 };
 
 
@@ -75,11 +75,10 @@ public:
     P300Server(unsigned short port) 
     : has_client(false), m_close(false), 
       m_state(WAIT_FOR_RESUME), m_idx(0), 
+      TRAIN_INIT(15,0), FREE_INIT(15, 0), 
       m_idx_limit(0), m_train_idx(0), m_stimulation_idx(0), m_reset_flash(0),
       debug("debug.log")
     {
-        TRAIN_INIT.push_back(36);
-        FREE_INIT.push_back(36);
         TRAIN_STIMULATION.resize(1);
         FREE_STIMULATION.resize(1);
         for(int i = 0; i < 15; ++i)
@@ -88,10 +87,6 @@ public:
             {
                 TRAIN_STIMULATION[0].push_back(j);
             }
-            for(int j = 17; j < 37; ++j)
-            {
-                TRAIN_INIT.push_back(j);
-            }
         }
         for(int i = 0; i < 5; ++i)
         {
@@ -99,11 +94,18 @@ public:
             {
                 FREE_STIMULATION[0].push_back(j);
             }
-            for(int j = 17; j < 37; ++j)
-            {
-                FREE_INIT.push_back(j);
-            }
         }
+        TRAIN_INIT[5] = 1;
+        TRAIN_INIT[6] = 2;
+        TRAIN_INIT[8] = 2;
+        TRAIN_INIT[9] = 4040016;
+        TRAIN_INIT[11] = 4;
+        FREE_INIT[5] = 1;
+        FREE_INIT[6] = 2;
+        FREE_INIT[8] = 2;
+        FREE_INIT[9] = 4040016;
+        FREE_INIT[11] = 4;
+
 		srand(time(0));
         WSAStartup(0x0202, &w);
         addr.sin_family = AF_INET;
@@ -186,12 +188,13 @@ public:
             case WAIT_FOR_RESUME:
                 break;
             case INITIALIZE:
-                if( m_idx_limit == m_idx && (m_reset_flash % params.PARAM_TicksBeforeNext) == 0 )
+                io.OUT_Init = FREE_INIT[m_idx];
+                m_idx++;
+                if(m_idx == m_idx_limit)
                 {
-					debug << "Switching to state STIMULATE" << std::endl;
+				    debug << "Switching to state STIMULATE" << std::endl;
                     m_state = STIMULATE;
-                    //FIXME
-                    m_stimulation_idx = 0;//rand() % 256;
+                    m_stimulation_idx = 0; //rand() % 256;
                     m_idx = 0;
                     if(params.PARAM_mode == 1)
                     {
@@ -202,38 +205,6 @@ public:
                         m_idx_limit = 80;
                     }
                 }
-                else
-                {
-                    if((m_reset_flash % params.PARAM_TicksBeforeNext) == 0)
-                    {
-                        m_reset_flash = 1;
-                        if(params.PARAM_mode == 1)
-                        {
-                            io.OUT_IDFlash = TRAIN_INIT[m_idx];
-                            io.OUT_Flash = TRAIN_INIT[m_idx];
-                        }
-                        else
-                        {
-                            io.OUT_IDFlash = FREE_INIT[m_idx];
-                            io.OUT_Flash = FREE_INIT[m_idx];
-                        }
-						if(m_idx == 0)
-						{
-							io.OUT_NbFlash = 36;
-							io.OUT_IDFlash = 0;
-							io.OUT_Flash = 0;
-                            m_reset_flash = 4;
-						}
-                        m_idx++;
-                    }
-                    else
-                    {
-						io.OUT_NbFlash = 0;
-                        io.OUT_IDFlash = 0;
-                        io.OUT_Flash   = 0;
-                        m_reset_flash++;
-                    }
-                }
                 break;
             case STIMULATE:
                 if(io.IN_STOP != 0)
@@ -242,8 +213,8 @@ public:
                     m_state = SHOW_SELECTION;
                     m_idx = 0;
                     m_reset_flash = 0;
-					io.OUT_IDFlash = 0;
-					io.OUT_Flash   = 0;
+					io.OUT_FlashID = 0;
+                    io.OUT_Target = 0;
                 }
                 else
                 {
@@ -251,19 +222,17 @@ public:
                     {
                         if(params.PARAM_mode == 1)
                         {
-                            io.OUT_IDFlash = TRAIN_STIMULATION[m_stimulation_idx][m_idx];
-                            io.OUT_Flash = TRAIN_STIMULATION[m_stimulation_idx][m_idx];
-                            SendFlashID(io.OUT_Flash);
-                            if(io.OUT_Flash == params.PARAM_TrainingWord[m_train_idx]) 
+                            io.OUT_FlashID = TRAIN_STIMULATION[m_stimulation_idx][m_idx];
+                            SendFlashID(io.OUT_FlashID);
+                            if(io.OUT_FlashID == params.PARAM_TrainingWord[m_train_idx]) 
                             {
                                 io.OUT_Target = 1;
                             }
                         }
                         else
                         {
-                            io.OUT_IDFlash = FREE_STIMULATION[m_stimulation_idx][m_idx];
-                            io.OUT_Flash = FREE_STIMULATION[m_stimulation_idx][m_idx];
-                            SendFlashID(io.OUT_Flash);
+                            io.OUT_FlashID = FREE_STIMULATION[m_stimulation_idx][m_idx];
+                            SendFlashID(io.OUT_FlashID);
                         }
                         m_idx++;
 				    	if(m_idx == m_idx_limit)
@@ -274,8 +243,7 @@ public:
                     }
                     else
                     {
-                        io.OUT_IDFlash = 0;
-                        io.OUT_Flash = 0;
+                        io.OUT_FlashID = 0;
                         io.OUT_Target = 0;
                         m_reset_flash++;
                     }
@@ -339,13 +307,19 @@ static void mdlInitializeSizes(SimStruct *S)
     ssSetNumContStates(S, 0);
     ssSetNumDiscStates(S, 0);
 
-    if (!ssSetNumInputPorts(S, 1)) return;
-    ssSetInputPortWidth(S, 0, 2);
-    ssSetInputPortDirectFeedThrough(S, 0, 1);
-    ssSetInputPortRequiredContiguous(S,0,1);
+    if (!ssSetNumInputPorts(S, 2)) return;
+    for(int i = 0; i < 2; ++i)
+    {
+        ssSetInputPortWidth(S, i, 1);
+        ssSetInputPortDirectFeedThrough(S, i, 1);
+        ssSetInputPortRequiredContiguous(S,i,1);
+    }
     
-    if (!ssSetNumOutputPorts(S, 1)) return;
-    ssSetOutputPortWidth(S, 0, 4);
+    if (!ssSetNumOutputPorts(S, 4)) return;
+    for(int i = 0; i < 4; ++i)
+    {
+        ssSetOutputPortWidth(S, i, 1);
+    }
 
     ssSetNumSampleTimes(S, 1);
     ssSetNumRWork(S, 0);
@@ -392,7 +366,8 @@ static void mdlOutputs(SimStruct *S, int_T tid)
     {
         p300server->io.IN_STOP = stop;
     }
-    unsigned int ID = (unsigned int)u1[1];
+    const real_T * u2  = ssGetInputPortRealSignal(S,1);
+    unsigned int ID = (unsigned int)u2[0];
     if( ID != p300server->io.IN_ID)
     {
         p300server->io.IN_ID = ID;
@@ -401,10 +376,13 @@ static void mdlOutputs(SimStruct *S, int_T tid)
     p300server->ComputeStates();
 
 	real_T * y = ssGetOutputPortRealSignal(S,0);
-    y[0] = p300server->io.OUT_NbFlash;
-    y[1] = p300server->io.OUT_IDFlash;
-    y[2] = p300server->io.OUT_Flash;
-    y[3] = p300server->io.OUT_Target;
+    y[0] = p300server->io.OUT_Init;
+	y = ssGetOutputPortRealSignal(S,1);
+    y[0] = p300server->io.OUT_FlashID;
+	y = ssGetOutputPortRealSignal(S,2);
+    y[0] = p300server->io.OUT_Target;
+	y = ssGetOutputPortRealSignal(S,3);
+    y[0] = ID;
     
     UNUSED_ARG(tid);                             
 }                                                
