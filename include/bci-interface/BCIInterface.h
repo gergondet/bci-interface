@@ -15,6 +15,7 @@ class Background;
 class DisplayObject;
 
 class CommandReceiver;
+class CommandOverrider;
 class CommandInterpreter;
 
 struct BCIInterfaceImpl;
@@ -47,6 +48,9 @@ public:
 
     /* Set the current command receiver: BCIInterface does NOT assume ownership of the receiver */
     void SetCommandReceiver(CommandReceiver * receiver);
+
+    /* Set the current command overrider: BCIInterface does NOT assume ownership of the overrider */
+    void SetCommandOverrider(CommandOverrider * overrider);
 
     /* Set the current command interpreter: BCIInterface does NOT assume ownership of the interpreter */
     void SetCommandInterpreter(CommandInterpreter * interpreter);
