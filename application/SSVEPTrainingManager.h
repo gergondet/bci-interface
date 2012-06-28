@@ -27,7 +27,7 @@ public:
 
     virtual void SetPosition(float X, float Y)
     {
-        m_shape.setPosition(X,Y);
+        m_shape.setPosition(X - 30,Y - 30);
     }
 
 private:

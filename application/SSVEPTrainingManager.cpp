@@ -1,5 +1,7 @@
 #include "SSVEPTrainingManager.h"
 
+#include <iostream>
+
 using namespace bciinterface;
 
 SSVEPTrainingManager::SSVEPTrainingManager(unsigned int width, unsigned int height, short port_command, short port_training, coshellbci::CoshellClient * coshell)
