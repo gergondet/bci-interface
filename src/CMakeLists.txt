@@ -55,7 +55,7 @@ ADD_DEFINITIONS(${${PROJECT_NAME}_CXXFLAGS})
 TARGET_LINK_LIBRARIES(${LIB_NAME} ${BCIMIDDLEWARE_LIBS})
 # -- Not needed in WIN32 because boost comes with autolink
 IF(NOT WIN32)
-TARGET_LINK_LIBRARIES(${LIB_NAME} ${Boost_LIBRARIES})
+TARGET_LINK_LIBRARIES(${LIB_NAME} ${Boost_LIBRARIES} sfml-graphics sfml-window sfml-system)
 ENDIF(NOT WIN32)
 
 # -- Manual link for WIN32

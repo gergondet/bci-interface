@@ -19,11 +19,11 @@ SET_TARGET_PROPERTIES(${PROJECT_NAME_LIB}
   LINK_FLAGS "${${PROJECT_NAME}_src_LDFLAGS} -pthread"}
 )
 
-IF(UNIX)
-TARGET_LINK_LIBRARIES(${EXEC_NAME} "${PROJECT_NAME} -lsfml-graphics -lsfml-window -lsfml-system")
-ELSE(UNIX)
+IF(WIN32)
 TARGET_LINK_LIBRARIES(${EXEC_NAME} "bci-interface.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;bci-middleware.lib;vision.lib;avcodec.lib;swscale.lib;avutil.lib;ws2_32.lib")
-ENDIF(UNIX)
+ELSE(WIN32)
+TARGET_LINK_LIBRARIES(${EXEC_NAME} bci-interface)
+ENDIF(WIN32)
 TARGET_LINK_LIBRARIES(${EXEC_NAME} ${Boost_LIBRARIES})
 
 SET(EXEC_NAME testssvep-interface)
@@ -46,11 +46,11 @@ SET_TARGET_PROPERTIES(${PROJECT_NAME_LIB}
   LINK_FLAGS "${${PROJECT_NAME}_src_LDFLAGS} -pthread"}
 )
 
-IF(UNIX)
-TARGET_LINK_LIBRARIES(${EXEC_NAME} "${PROJECT_NAME} -lsfml-graphics -lsfml-window -lsfml-system")
-ELSE(UNIX)
-TARGET_LINK_LIBRARIES(${EXEC_NAME} "bci-interface.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;bci-middleware.lib;vision.lib;avcodec.lib;swscale.lib;avutil.lib")
-ENDIF(UNIX)
+IF(WIN32)
+TARGET_LINK_LIBRARIES(${EXEC_NAME} "bci-interface.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;bci-middleware.lib;vision.lib;avcodec.lib;swscale.lib;avutil.lib;ws2_32.lib")
+ELSE(WIN32)
+TARGET_LINK_LIBRARIES(${EXEC_NAME} bci-interface)
+ENDIF(WIN32)
 TARGET_LINK_LIBRARIES(${EXEC_NAME} ${Boost_LIBRARIES})
 
 SET(EXEC_NAME testsquare-function)
@@ -73,11 +73,11 @@ SET_TARGET_PROPERTIES(${PROJECT_NAME_LIB}
   LINK_FLAGS "${${PROJECT_NAME}_src_LDFLAGS}"}
 )
 
-IF(UNIX)
-TARGET_LINK_LIBRARIES(${EXEC_NAME} "${PROJECT_NAME} -lsfml-graphics -lsfml-window -lsfml-system")
-ELSE(UNIX)
-TARGET_LINK_LIBRARIES(${EXEC_NAME} "bci-interface.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib")
-ENDIF(UNIX)
+IF(WIN32)
+TARGET_LINK_LIBRARIES(${EXEC_NAME} "bci-interface.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;bci-middleware.lib;vision.lib;avcodec.lib;swscale.lib;avutil.lib;ws2_32.lib")
+ELSE(WIN32)
+TARGET_LINK_LIBRARIES(${EXEC_NAME} bci-interface)
+ENDIF(WIN32)
 TARGET_LINK_LIBRARIES(${EXEC_NAME} ${Boost_LIBRARIES})
 
 SET(EXEC_NAME EchoServer)
@@ -100,11 +100,11 @@ SET_TARGET_PROPERTIES(${PROJECT_NAME_LIB}
   LINK_FLAGS "${${PROJECT_NAME}_src_LDFLAGS}"}
 )
 
-IF(UNIX)
-TARGET_LINK_LIBRARIES(${EXEC_NAME} "${PROJECT_NAME} -lsfml-graphics -lsfml-window -lsfml-system")
-ELSE(UNIX)
-TARGET_LINK_LIBRARIES(${EXEC_NAME} "bci-interface.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib")
-ENDIF(UNIX)
+IF(WIN32)
+TARGET_LINK_LIBRARIES(${EXEC_NAME} "bci-interface.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;bci-middleware.lib;vision.lib;avcodec.lib;swscale.lib;avutil.lib;ws2_32.lib")
+ELSE(WIN32)
+TARGET_LINK_LIBRARIES(${EXEC_NAME} bci-interface)
+ENDIF(WIN32)
 TARGET_LINK_LIBRARIES(${EXEC_NAME} ${Boost_LIBRARIES})
 
 #SET(EXEC_NAME testp300-interface)

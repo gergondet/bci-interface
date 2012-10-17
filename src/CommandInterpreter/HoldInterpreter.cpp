@@ -15,11 +15,17 @@ class HoldInterpreterImpl
 {
 private:
     int m_command;
+    std::vector<int> m_ign_cmds;
     uint64_t m_time_reset;
     uint64_t m_time_hold;
 public:
-    HoldInterpreterImpl(unsigned int msec) :
-    m_command(0), m_time_reset(0), m_time_hold(msec*1000)
+    HoldInterpreterImpl(unsigned int msec, int ign_cmd) :
+    m_command(0), m_ign_cmds(1, ign_cmd), m_time_reset(0), m_time_hold(msec*1000)
+    {        
+    }
+
+    HoldInterpreterImpl(unsigned int msec, const std::vector<int> &  ign_cmds) :
+    m_command(0), m_ign_cmds(ign_cmds), m_time_reset(0), m_time_hold(msec*1000)
     {        
     }
 
@@ -29,6 +35,14 @@ public:
         {
             m_command = 0;
             return false;
+        }
+        for(size_t i = 0; i < m_ign_cmds.size(); ++i)
+        {
+            if(command == m_ign_cmds[i])
+            {
+                m_command = 0;
+                return false;
+            }
         }
         struct timeval tv_now;
         gettimeofday(&tv_now, 0);
@@ -59,8 +73,13 @@ public:
     }
 };
 
-HoldInterpreter::HoldInterpreter(unsigned int msec) :
-    m_impl(new HoldInterpreterImpl(msec))
+HoldInterpreter::HoldInterpreter(unsigned int msec, int ign_cmd) :
+    m_impl(new HoldInterpreterImpl(msec, ign_cmd))
+{
+}
+
+HoldInterpreter::HoldInterpreter(unsigned int msec, const std::vector<int> & ign_cmds) :
+    m_impl(new HoldInterpreterImpl(msec, ign_cmds))
 {
 }
 

@@ -16,7 +16,9 @@ class HoldInterpreter : public SimpleInterpreter
 {
 public:
     /* Time to hold a command before triggering switch */
-    HoldInterpreter(unsigned int msec);
+    HoldInterpreter(unsigned int msec, int ign_cmd = -1);
+
+    HoldInterpreter(unsigned int msec, const std::vector<int> & ign_cmds);
 
     virtual bool InterpretCommand(int command, const std::vector<DisplayObject *> & objects);
 
