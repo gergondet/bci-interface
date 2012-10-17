@@ -137,10 +137,10 @@ public:
 
     void UpdateLoop()
     {
+        sendto(m_sockfd, "get", 4, 0, (struct sockaddr *)&m_serveraddr, sizeof(m_serveraddr));
+
         while(!m_close)
         {
-            sendto(m_sockfd, "get", 4, 0, (struct sockaddr *)&m_serveraddr, sizeof(m_serveraddr));
-
             int receivedData = 0;
             char packetId = -1;
             memset(m_datatexture, 0, m_width*m_height*4);
