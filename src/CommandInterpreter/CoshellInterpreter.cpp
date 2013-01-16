@@ -1,7 +1,7 @@
 #include <bci-interface/CommandInterpreter/CoshellInterpreter.h>
 
 #include <bci-interface/CommandInterpreter/SimpleInterpreter.h>
-#include <coshell-bci/CoshellClient.h>
+#include <coshell-client/CoshellClient.h>
 #include <ctime>
 #include <SFML/Window/Event.hpp>
 
@@ -11,7 +11,7 @@ namespace bciinterface
 struct CoshellInterpreterImpl : public SimpleInterpreter
 {
 private:
-    coshellbci::CoshellClient * m_coshell;
+    coshell::CoshellClient * m_coshell;
     bool m_own_coshell;
     bool m_initialized;
     bool m_end_paradigm;
@@ -23,7 +23,7 @@ private:
     std::vector<std::string> m_finalcommands;
 public:
     CoshellInterpreterImpl(const std::string & server_name, int server_port)
-        : SimpleInterpreter(), m_coshell(new coshellbci::CoshellClient(server_name.c_str(), server_port)),
+        : SimpleInterpreter(), m_coshell(new coshell::CoshellClient(server_name.c_str(), server_port)),
             m_own_coshell(true),
             m_initialized(false), m_end_paradigm(false), m_command(0), m_exit_command(-1),
             m_commands(0), m_initialtest(""), m_initialcommands(0), m_finalcommands(0)
@@ -34,7 +34,7 @@ public:
         }
     }
 
-    CoshellInterpreterImpl(coshellbci::CoshellClient * coshell)
+    CoshellInterpreterImpl(coshell::CoshellClient * coshell)
         : SimpleInterpreter(), m_coshell(coshell),
             m_own_coshell(false),
             m_initialized(false), m_command(0), m_exit_command(-1),
@@ -50,7 +50,7 @@ public:
         }
     }
 
-    coshellbci::CoshellClient * GetCoshell()
+    coshell::CoshellClient * GetCoshell()
     {
         return m_coshell;
     }
@@ -181,12 +181,12 @@ CoshellInterpreter::CoshellInterpreter(const std::string & server_name, int serv
 {
 }
 
-CoshellInterpreter::CoshellInterpreter(coshellbci::CoshellClient * coshell)
+CoshellInterpreter::CoshellInterpreter(coshell::CoshellClient * coshell)
     : m_impl(new CoshellInterpreterImpl(coshell))
 {
 }
 
-coshellbci::CoshellClient * CoshellInterpreter::GetCoshell()
+coshell::CoshellClient * CoshellInterpreter::GetCoshell()
 {
     return m_impl->GetCoshell();
 }

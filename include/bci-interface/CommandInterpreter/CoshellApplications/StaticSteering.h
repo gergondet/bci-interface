@@ -11,7 +11,7 @@
 #include <string>
 #include <vector>
 
-namespace coshellbci
+namespace coshell
 {
     class CoshellClient;
 }
@@ -26,7 +26,7 @@ struct StaticSteeringImpl;
 class StaticSteering : public SimpleInterpreter 
 {
 public:
-    StaticSteering(coshellbci::CoshellClient * coshell);
+    StaticSteering(coshell::CoshellClient * coshell);
 
     virtual bool InterpretCommand(int command, const std::vector<DisplayObject *> & objects);
 

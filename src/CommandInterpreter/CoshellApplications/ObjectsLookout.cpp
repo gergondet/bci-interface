@@ -3,7 +3,7 @@
 #include <bci-interface/CommandInterpreter/SimpleInterpreter.h>
 #include <bci-interface/DisplayObject.h>
 
-#include <coshell-bci/CoshellClient.h>
+#include <coshell-client/CoshellClient.h>
 #include <visionsystem/vs_plugins/xmlrpc/xmlrpc-client.h>
 
 using namespace visionsystem;
@@ -14,14 +14,14 @@ namespace bciinterface
 struct ObjectsLookoutImpl : public SimpleInterpreter
 {
 private:
-    coshellbci::CoshellClient * m_coshell;
+    coshell::CoshellClient * m_coshell;
     XMLRPCClient * m_client;
     std::vector<std::string> m_objects;
     float m_head_lr;
     unsigned int m_width;
     unsigned int m_height;
 public:
-    ObjectsLookoutImpl(unsigned int width, unsigned int height, coshellbci::CoshellClient * coshell, XMLRPCClient * client, const std::vector<std::string> & objects)
+    ObjectsLookoutImpl(unsigned int width, unsigned int height, coshell::CoshellClient * coshell, XMLRPCClient * client, const std::vector<std::string> & objects)
         : m_coshell(coshell), m_client(client), m_objects(objects), m_head_lr(0), m_width(width), m_height(height)
     {}
 
@@ -75,7 +75,7 @@ public:
     }
 };
 
-ObjectsLookout::ObjectsLookout(unsigned int width, unsigned int height, coshellbci::CoshellClient * coshell, XMLRPCClient * client_plugin, const std::vector<std::string> & objects)
+ObjectsLookout::ObjectsLookout(unsigned int width, unsigned int height, coshell::CoshellClient * coshell, XMLRPCClient * client_plugin, const std::vector<std::string> & objects)
 : m_impl(new ObjectsLookoutImpl(width, height, coshell, client_plugin, objects))
 {}
 

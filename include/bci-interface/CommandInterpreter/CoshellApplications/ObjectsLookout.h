@@ -10,7 +10,7 @@
 #include <string>
 #include <vector>
 
-namespace coshellbci
+namespace coshell
 {
     class CoshellClient;
 }
@@ -28,7 +28,7 @@ struct ObjectsLookoutImpl;
 class ObjectsLookout : public CommandInterpreter 
 {
 public:
-    ObjectsLookout(unsigned int width, unsigned int height, coshellbci::CoshellClient * coshell, visionsystem::XMLRPCClient * client_plugin, const std::vector<std::string> & objects);
+    ObjectsLookout(unsigned int width, unsigned int height, coshell::CoshellClient * coshell, visionsystem::XMLRPCClient * client_plugin, const std::vector<std::string> & objects);
 
     virtual bool InterpretCommand(int command, const std::vector<DisplayObject *> & objects);
 

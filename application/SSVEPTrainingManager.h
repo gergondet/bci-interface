@@ -37,7 +37,7 @@ private:
 class SSVEPTrainingManager : public CommandReceiver, public StaticSteering
 {
 public:
-    SSVEPTrainingManager(unsigned int width, unsigned int height, short port_command, short port_training, coshellbci::CoshellClient * coshell);
+    SSVEPTrainingManager(unsigned int width, unsigned int height, short port_command, short port_training, coshell::CoshellClient * coshell);
 
     virtual ~SSVEPTrainingManager();
 

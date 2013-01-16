@@ -1,7 +1,7 @@
 #include <bci-interface/BCIInterface.h>
 #include <bci-interface/Background/VisionServerBG.h>
 #include <bci-interface/DisplayObject/SSVEPStimulus.h>
-#include <coshell-bci/CoshellClient.h>
+#include <coshell-client/CoshellClient.h>
 
 #include "SSVEPTrainingManager.h"
 
@@ -62,10 +62,10 @@ int main(int argc, char * argv[])
     BCIInterface * bciinterface = new BCIInterface(width, height);
 
 
-    coshellbci::CoshellClient * m_client = 0;
+    coshell::CoshellClient * m_client = 0;
     if(moving_robot)
     {
-        m_client = new coshellbci::CoshellClient("hrp2010c", 2809);
+        m_client = new coshell::CoshellClient("hrp2010c", 2809);
         m_client->Initialize();
     }
 

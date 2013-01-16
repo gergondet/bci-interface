@@ -12,8 +12,9 @@ private:
     sf::Text m_text;
 public:
     TextObjectImpl(const std::string & txt)
-        : m_text(txt)
+        : m_text()
     {
+        m_text.setString(txt);
         m_text.setPosition(0,0);
     }
 

@@ -128,6 +128,15 @@ public:
         m_joystick_override[button] = command;
     }
 
+    void Clean()
+    {
+        m_command = 0;
+        m_override = false;
+        m_keyboard_override.clear();
+        m_mouse_override.clear();
+        m_joystick_override.clear();
+    }
+
     int GetCommand()
     {
         return m_command;
@@ -168,6 +177,11 @@ void CommandOverrider::AddOverrideCommand(sf::Mouse::Button ebutton, int command
 void CommandOverrider::AddOverrideCommand(unsigned int button, int command)
 {
     m_impl->AddOverrideCommand(button, command);
+}
+
+void CommandOverrider::Clean()
+{
+    m_impl->Clean();
 }
 
 int CommandOverrider::GetCommand()

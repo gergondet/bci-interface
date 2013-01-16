@@ -3,7 +3,7 @@
 #include <bci-interface/CommandInterpreter/SimpleInterpreter.h>
 #include <bci-interface/DisplayObject.h>
 
-#include <coshell-bci/CoshellClient.h>
+#include <coshell-client/CoshellClient.h>
 
 #include <sys/time.h>
 #include <sstream>
@@ -14,20 +14,37 @@ namespace bciinterface
 struct AdaptiveSteeringImpl : public SimpleInterpreter
 {
 private:
-    coshellbci::CoshellClient * m_coshell;
+    coshell::CoshellClient * m_coshell;
     double m_time_in;
     int prev_cmd;
+    int32_t depth_;
+    int32_t depth_threshold_;
 public:
-    AdaptiveSteeringImpl(coshellbci::CoshellClient * coshell)
-        : m_coshell(coshell), m_time_in(0), prev_cmd(-1)
+    AdaptiveSteeringImpl(coshell::CoshellClient * coshell)
+        : m_coshell(coshell), m_time_in(0), prev_cmd(-1), 
+          depth_(0), depth_threshold_(950)
     {
 //        m_coshell->ExecuteACommand("StartWalking");
         m_coshell->ExecuteACommand("import walking/startherdt");
         m_coshell->ExecuteACommand("set pg.velocitydes [3](-0.0001,0.0,0.0)");
     }
 
+    void UpdateDepth(int32_t v)
+    {
+        depth_ = v;
+    }
+
+    void SetDepthTreshold(int32_t v)
+    {
+        depth_threshold_ = v;
+    }
+
     bool InterpretCommand(int command, const std::vector<DisplayObject *> & objects)
     {
+        if(depth_ < depth_threshold_ && depth_ > 0 && command == 1)
+        {
+            command = 0;
+        }
         if(prev_cmd == command && command != 3) 
         { 
             return false; 
@@ -76,7 +93,7 @@ public:
     }
 };
 
-AdaptiveSteering::AdaptiveSteering(coshellbci::CoshellClient * coshell)
+AdaptiveSteering::AdaptiveSteering(coshell::CoshellClient * coshell)
 : m_impl(new AdaptiveSteeringImpl(coshell))
 {}
 

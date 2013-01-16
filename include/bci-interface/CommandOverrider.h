@@ -28,6 +28,9 @@ public:
     /* Handle joypad button events */
     void AddOverrideCommand(unsigned int button, int command);
 
+    /* Remove all handled events */
+    void Clean();
+
     virtual int GetCommand();
 
     virtual bool IsOverriding(); 

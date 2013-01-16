@@ -29,6 +29,7 @@ private:
     unsigned int m_height;
     bool m_in_paradigm;
     bool m_close;
+    bool m_finished;
     sf::RenderWindow * m_app;
     std::ofstream m_fpslog;
 
@@ -52,7 +53,8 @@ private:
 
 public:
     BCIInterfaceImpl(const BCIInterface & ref, unsigned int width, unsigned int height)
-    : m_ref(ref), m_width(width), m_height(height), m_in_paradigm(false), m_close(false), m_app(0), m_fpslog("/tmp/bciinterface_fps.log"), 
+    : m_ref(ref), m_width(width), m_height(height), m_in_paradigm(false), m_close(false), m_finished(true),
+        m_app(0), m_fpslog("/tmp/bciinterface_fps.log"), 
         m_take_screenshot(false), m_screenshot_index(0),
         m_handlers(0),
         m_background(0), m_backgroundth(0),
@@ -64,6 +66,8 @@ public:
 
     ~BCIInterfaceImpl()
     {
+        m_close = true;
+        while(!m_finished) { usleep(1000); }
         m_fpslog.close();
         m_objects_non_owned.resize(0);
         for(size_t i = 0; i < m_objects.size(); ++i)
@@ -156,6 +160,11 @@ public:
         m_interpreter = interpreter;
     }
 
+    CommandInterpreter * GetCommandInterpreter()
+    {
+        return m_interpreter;
+    }
+
     void Clean()
     {
         while(m_handlers.size() > 0)
@@ -232,6 +241,7 @@ public:
         bool in_paradigm = m_in_paradigm;
         sf::Clock clock;
         m_close = false;
+        m_finished = false;
 //        if(cmd) { *cmd = 0; }
 
         /* Launch Background thread */
@@ -342,26 +352,7 @@ public:
 
             m_app->display();
         }
-//        m_fpslog.close();
-
-/*        if(!cmd)
-*        {
-*            // Actual and final exit
-*            if(m_background)
-*            {
-*                m_background->Close();
-*                m_backgroundth->join();
-*                delete m_backgroundth;
-*                m_backgroundth = 0;
-*            }
-*            if(m_receiver)
-*            {
-*                m_receiver->Close();
-*                m_receiverth->join();
-*                delete m_receiverth;
-*                m_receiverth = 0;
-*            }
-*        } */
+        m_finished = true;
     }  
 
     void Close()
@@ -451,6 +442,11 @@ void BCIInterface::SetCommandOverrider(CommandOverrider * overrider)
 void BCIInterface::SetCommandInterpreter(CommandInterpreter * interpreter)
 {
     m_impl->SetCommandInterpreter(interpreter);
+}
+
+CommandInterpreter * BCIInterface::GetCommandInterpreter()
+{
+    return m_impl->GetCommandInterpreter();
 }
 
 void BCIInterface::Clean()
