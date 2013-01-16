@@ -160,6 +160,11 @@ public:
         m_interpreter = interpreter;
     }
 
+    CommandInterpreter * GetCommandInterpreter()
+    {
+        return m_interpreter;
+    }
+
     void Clean()
     {
         while(m_handlers.size() > 0)
@@ -437,6 +442,11 @@ void BCIInterface::SetCommandOverrider(CommandOverrider * overrider)
 void BCIInterface::SetCommandInterpreter(CommandInterpreter * interpreter)
 {
     m_impl->SetCommandInterpreter(interpreter);
+}
+
+CommandInterpreter * BCIInterface::GetCommandInterpreter()
+{
+    return m_impl->GetCommandInterpreter();
 }
 
 void BCIInterface::Clean()
