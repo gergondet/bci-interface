@@ -3,7 +3,7 @@
 #include <bci-interface/CommandInterpreter/SimpleInterpreter.h>
 #include <bci-interface/DisplayObject.h>
 
-#include <coshell-bci/CoshellClient.h>
+#include <coshell-client/CoshellClient.h>
 
 #include <SFML/Graphics.hpp>
 
@@ -16,11 +16,11 @@ namespace bciinterface
 struct StaticSteeringImpl
 {
 private:
-    coshellbci::CoshellClient * m_coshell;
+    coshell::CoshellClient * m_coshell;
     bool m_stop;
     int prev_cmd;
 public:
-    StaticSteeringImpl(coshellbci::CoshellClient * coshell)
+    StaticSteeringImpl(coshell::CoshellClient * coshell)
         : m_coshell(coshell), m_stop(false)
     {
         if(m_coshell)
@@ -84,7 +84,7 @@ void StaticSteering::Process(sf::Event & event)
     m_impl->Process(event);
 }
 
-StaticSteering::StaticSteering(coshellbci::CoshellClient * coshell)
+StaticSteering::StaticSteering(coshell::CoshellClient * coshell)
 : m_impl(new StaticSteeringImpl(coshell))
 {}
 

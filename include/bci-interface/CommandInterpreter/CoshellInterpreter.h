@@ -10,7 +10,7 @@
 #include <string>
 #include <vector>
 
-namespace coshellbci
+namespace coshell
 {
     class CoshellClient;
 }
@@ -25,9 +25,9 @@ class CoshellInterpreter : public CommandInterpreter
 public:
     CoshellInterpreter(const std::string & server_name, int server_port);
 
-    CoshellInterpreter(coshellbci::CoshellClient * coshell);
+    CoshellInterpreter(coshell::CoshellClient * coshell);
 
-    coshellbci::CoshellClient * GetCoshell();
+    coshell::CoshellClient * GetCoshell();
     
     void Initialize();
 

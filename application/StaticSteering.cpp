@@ -2,7 +2,7 @@
 #include <bci-interface/Background/VisionServerBG.h>
 #include <bci-interface/DisplayObject/SSVEPStimulus.h>
 #include <bci-interface/CommandReceiver/UDPReceiver.h>
-#include <coshell-bci/CoshellClient.h>
+#include <coshell-client/CoshellClient.h>
 #include <bci-interface/CommandInterpreter/CoshellApplications/StaticSteering.h>
 
 #include <SFML/Graphics.hpp>
@@ -37,7 +37,7 @@ int main(int argc, char * argv[])
     UDPReceiver * receiver = new UDPReceiver(1111);
     bciinterface->SetCommandReceiver(receiver);
 
-    coshellbci::CoshellClient * m_client = new coshellbci::CoshellClient("hrp2010c", 2809);
+    coshell::CoshellClient * m_client = new coshell::CoshellClient("hrp2010c", 2809);
     m_client->Initialize();
     StaticSteering * interpreter = new StaticSteering(m_client);
     bciinterface->SetCommandInterpreter(interpreter);

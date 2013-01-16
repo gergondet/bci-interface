@@ -55,6 +55,9 @@ public:
     /* Set the current command interpreter: BCIInterface does NOT assume ownership of the interpreter */
     void SetCommandInterpreter(CommandInterpreter * interpreter);
 
+    /* Get the current command interpreter */
+    CommandInterpreter * GetCommandInterpreter();
+
     /* Remove all objects from the interface */
     void Clean();
 

@@ -3,7 +3,7 @@
 #include <bci-interface/DisplayObject/SSVEPStimulus.h>
 #include <bci-interface/CommandReceiver/UDPReceiver.h>
 #include <bci-interface/CommandInterpreter/SimpleInterpreter.h>
-#include <coshell-bci/CoshellClient.h>
+#include <coshell-client/CoshellClient.h>
 #include <bci-middleware/TCPTrigger.h>
 #include <bci-interface/CommandInterpreter/CoshellApplications/StaticSteering.h>
 #include "SSVEPTrainingManager.h"
@@ -32,7 +32,7 @@ class CustomInterpreter : public SSVEPTrainingManager
 public:
     TCPTrigger * tcpTrigger;
 
-	CustomInterpreter(unsigned int w, unsigned int h, short pa, short pb, coshellbci::CoshellClient * coshell) : SSVEPTrainingManager(w, h, pa, pb, coshell), tcpTrigger(new TCPTrigger("150.29.145.137", 4242)) 
+	CustomInterpreter(unsigned int w, unsigned int h, short pa, short pb, coshell::CoshellClient * coshell) : SSVEPTrainingManager(w, h, pa, pb, coshell), tcpTrigger(new TCPTrigger("150.29.145.137", 4242)) 
     {
     }
 
@@ -96,12 +96,12 @@ int main(int argc, char * argv[])
     }
 
     BCIInterface * bciinterface = new BCIInterface(width, height);
-    coshellbci::CoshellClient * m_client = 0;
+    coshell::CoshellClient * m_client = 0;
     
     
     if(moving_robot)
     {
-        m_client = new coshellbci::CoshellClient("hrp2010c", 2809);
+        m_client = new coshell::CoshellClient("hrp2010c", 2809);
         m_client->Initialize();
     }
 	CustomInterpreter * interpreter = new CustomInterpreter(width, height, 1111, 2222, m_client);

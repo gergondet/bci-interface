@@ -4,7 +4,7 @@
 
 using namespace bciinterface;
 
-SSVEPTrainingManager::SSVEPTrainingManager(unsigned int width, unsigned int height, short port_command, short port_training, coshellbci::CoshellClient * coshell)
+SSVEPTrainingManager::SSVEPTrainingManager(unsigned int width, unsigned int height, short port_command, short port_training, coshell::CoshellClient * coshell)
 : StaticSteering(coshell),
   m_train_with_moving_robot(false),
   m_width(width), m_height(height),

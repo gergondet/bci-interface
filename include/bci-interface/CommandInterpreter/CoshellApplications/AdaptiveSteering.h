@@ -10,7 +10,7 @@
 #include <string>
 #include <vector>
 
-namespace coshellbci
+namespace coshell
 {
     class CoshellClient;
 }
@@ -23,7 +23,7 @@ struct AdaptiveSteeringImpl;
 class AdaptiveSteering : public CommandInterpreter 
 {
 public:
-    AdaptiveSteering(coshellbci::CoshellClient * coshell);
+    AdaptiveSteering(coshell::CoshellClient * coshell);
 
     virtual bool InterpretCommand(int command, const std::vector<DisplayObject *> & objects);
 
