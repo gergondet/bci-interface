@@ -70,7 +70,6 @@ public:
                 m_coshell->ExecuteACommand("set pg.velocitydes [3](-0.0001,0.0,0.1)");
                 break;
             case 5:
-                return true;
                 break;
         }
         return false;
