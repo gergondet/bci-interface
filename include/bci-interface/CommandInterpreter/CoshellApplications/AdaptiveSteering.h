@@ -27,6 +27,10 @@ public:
 
     virtual bool InterpretCommand(int command, const std::vector<DisplayObject *> & objects);
 
+    void UpdateDepth(int32_t new_d);
+
+    void SetDepthThreshold(int32_t new_dt);
+
 private:
     boost::shared_ptr<AdaptiveSteeringImpl> m_impl;
 };
