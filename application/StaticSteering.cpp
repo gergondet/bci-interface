@@ -1,4 +1,5 @@
 #include <bci-interface/BCIInterface.h>
+#include <bci-interface/CommandOverrider.h>
 #include <bci-interface/Background/VisionServerBG.h>
 #include <bci-interface/DisplayObject/SSVEPStimulus.h>
 #include <bci-interface/CommandReceiver/UDPReceiver.h>
@@ -42,12 +43,19 @@ int main(int argc, char * argv[])
     StaticSteering * interpreter = new StaticSteering(m_client);
     bciinterface->SetCommandInterpreter(interpreter);
 
+    CommandOverrider overrider;
+    overrider.AddOverrideCommand(sf::Keyboard::Up, 1);
+    overrider.AddOverrideCommand(sf::Keyboard::Right, 2);
+    overrider.AddOverrideCommand(sf::Keyboard::Down, 3);
+    overrider.AddOverrideCommand(sf::Keyboard::Left, 4);
+    bciinterface->SetCommandOverrider(&overrider);
+
     bciinterface->SetBackground(new VisionServerBG("hrp2010v", 4242, 640, 480, compress_data, width, height, 800, 600));
     
     bciinterface->AddObject(new SSVEPStimulus(6, 60, width/2, 100, 200,200, "UP.png", "UP_HL.png"));
     bciinterface->AddObject(new SSVEPStimulus(8, 60, width-100, height/2, 200, 200, "RIGHT.png", "RIGHT_HL.png"));
     bciinterface->AddObject(new SSVEPStimulus(10, 60, width/2, height-100, 200, 200, "DOWN.png", "DOWN_HL.png"));
-    bciinterface->AddObject(new SSVEPStimulus(14, 60, 100, height/2,200, 200, "LEFT.png", "LEFT_HL.png"));
+    bciinterface->AddObject(new SSVEPStimulus(9, 60, 100, height/2,200, 200, "LEFT.png", "LEFT_HL.png"));
 
 
     bciinterface->StartParadigm();
