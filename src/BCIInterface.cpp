@@ -18,6 +18,8 @@
 
 #include <SFML/Graphics.hpp>
 
+#include <bci-interface/Utils/Win32.h>
+
 namespace bciinterface
 {
 

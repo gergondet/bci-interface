@@ -9,8 +9,10 @@
 # else
 #  define DELTA_EPOCH_IN_MICROSECS  11644473600000000ULL
 # endif
-
+namespace bciinterface
+{
 void gettimeofday(struct timeval *tv, void *);
 
 void usleep(int t);
+}
 #endif

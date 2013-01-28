@@ -6,7 +6,6 @@
 #include <bci-interface/CommandOverrider.h>
 
 #include <bci-interface/Background/BufferBG.h>
-#include <inttypes.h>
 
 #include <SFML/Graphics.hpp>
 
@@ -20,6 +19,9 @@ void sleep(DWORD t)
 {
 	Sleep(1000*t);
 }
+#include <stdint.h>
+#else
+#include <inttypes.h>
 #endif
 
 using namespace bciinterface;
