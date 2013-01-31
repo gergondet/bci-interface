@@ -26,7 +26,7 @@ struct StaticSteeringImpl;
 class StaticSteering : public SimpleInterpreter 
 {
 public:
-    StaticSteering(coshell::CoshellClient * coshell);
+    StaticSteering(coshell::CoshellClient * coshell, const std::string & start_script = "import walking/startherdt", const std::string & pg_entity = "pg");
 
     virtual bool InterpretCommand(int command, const std::vector<DisplayObject *> & objects);
 

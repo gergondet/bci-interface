@@ -17,16 +17,17 @@ struct StaticSteeringImpl
 {
 private:
     coshell::CoshellClient * m_coshell;
+    std::string m_pg;
     bool m_stop;
     int prev_cmd;
 public:
-    StaticSteeringImpl(coshell::CoshellClient * coshell)
-        : m_coshell(coshell), m_stop(false)
+    StaticSteeringImpl(coshell::CoshellClient * coshell, const std::string & start_script, const std::string & pg_entity)
+        : m_coshell(coshell), m_pg(pg_entity), m_stop(false)
     {
         if(m_coshell)
         {
-            m_coshell->ExecuteACommand("import walking/startherdt");
-            m_coshell->ExecuteACommand("set pg.velocitydes [3](-0.0001,0.0,0.0)");
+            m_coshell->ExecuteACommand(start_script);
+            m_coshell->ExecuteACommand("set " + m_pg + ".velocitydes [3](-0.0001,0.0,0.0)");
         }
     }
 
@@ -47,22 +48,22 @@ public:
         switch(command)
         {
             case 0:
-                m_coshell->ExecuteACommand("set pg.velocitydes [3](-0.0001,0.0,0.0)");
+                m_coshell->ExecuteACommand("set " + m_pg + ".velocitydes [3](-0.0001,0.0,0.0)");
                 break;
             case 1:
-                m_coshell->ExecuteACommand("set pg.velocitydes [3](0.1,0.0,0.0)");
+                m_coshell->ExecuteACommand("set " + m_pg + ".velocitydes [3](0.1,0.0,0.0)");
                 break;
             case 2:
-                m_coshell->ExecuteACommand("set pg.velocitydes [3](-0.0001,0.0,-0.1)");
+                m_coshell->ExecuteACommand("set " + m_pg + ".velocitydes [3](-0.0001,0.0,-0.1)");
                 break;
             case 3:
-                m_coshell->ExecuteACommand("set pg.velocitydes [3](-0.1,0.0,0.0)");
+                m_coshell->ExecuteACommand("set " + m_pg + ".velocitydes [3](-0.1,0.0,0.0)");
                 break;
             case 4:
-                m_coshell->ExecuteACommand("set pg.velocitydes [3](-0.0001,0.0,0.1)");
+                m_coshell->ExecuteACommand("set " + m_pg + ".velocitydes [3](-0.0001,0.0,0.1)");
                 break;
             case 5:
-                //m_coshell->ExecuteACommand("set pg.velocitydes [3](0,0,0)");
+                //m_coshell->ExecuteACommand("set " + m_pg + ".velocitydes [3](0,0,0)");
                 //return true;
                 break;
         }
@@ -74,7 +75,7 @@ public:
         if(event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space)
         {
             m_stop = true;
-            if(m_coshell) { m_coshell->ExecuteACommand("set pg.velocitydes [3](0,0,0)"); }
+            if(m_coshell) { m_coshell->ExecuteACommand("set " + m_pg + ".velocitydes [3](0,0,0)"); }
         }
     }
 };
@@ -84,8 +85,8 @@ void StaticSteering::Process(sf::Event & event)
     m_impl->Process(event);
 }
 
-StaticSteering::StaticSteering(coshell::CoshellClient * coshell)
-: m_impl(new StaticSteeringImpl(coshell))
+StaticSteering::StaticSteering(coshell::CoshellClient * coshell, const std::string & start_script, const std::string & pg_entity)
+: m_impl(new StaticSteeringImpl(coshell, start_script, pg_entity))
 {}
 
 bool StaticSteering::InterpretCommand(int command, const std::vector<DisplayObject *> & objects)

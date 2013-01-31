@@ -15,18 +15,18 @@ struct AdaptiveSteeringImpl : public SimpleInterpreter
 {
 private:
     coshell::CoshellClient * m_coshell;
+    std::string m_pg;
     double m_time_in;
     int prev_cmd;
     int32_t depth_;
     int32_t depth_threshold_;
 public:
-    AdaptiveSteeringImpl(coshell::CoshellClient * coshell)
+    AdaptiveSteeringImpl(coshell::CoshellClient * coshell, const std::string & start_script, const std::string & pg_entity)
         : m_coshell(coshell), m_time_in(0), prev_cmd(-1), 
           depth_(0), depth_threshold_(950)
     {
-//        m_coshell->ExecuteACommand("StartWalking");
-        m_coshell->ExecuteACommand("import walking/startherdt");
-        m_coshell->ExecuteACommand("set pg.velocitydes [3](-0.0001,0.0,0.0)");
+        m_coshell->ExecuteACommand(start_script);
+        m_coshell->ExecuteACommand("set " + m_pg + ".velocitydes [3](-0.0001,0.0,0.0)");
     }
 
     void UpdateDepth(int32_t v)
@@ -71,20 +71,20 @@ public:
         switch(command)
         {
             case 0:
-                m_coshell->ExecuteACommand("set pg.velocitydes [3](-0.0001,0.0,0.0)");
+                m_coshell->ExecuteACommand("set " + m_pg + ".velocitydes [3](-0.0001,0.0,0.0)");
                 break;
             case 1:
-                m_coshell->ExecuteACommand("set pg.velocitydes [3](0.1,0.0,0.0)");
+                m_coshell->ExecuteACommand("set " + m_pg + ".velocitydes [3](0.1,0.0,0.0)");
                 break;
             case 2:
-                m_coshell->ExecuteACommand("set pg.velocitydes [3](-0.0001,0.0,-0.1)");
+                m_coshell->ExecuteACommand("set " + m_pg + ".velocitydes [3](-0.0001,0.0,-0.1)");
                 break;
             case 3:
-//                m_coshell->ExecuteACommand("set pg.velocitydes [3](-0.15,0.0,0.0)");
+//                m_coshell->ExecuteACommand("set " + m_pg + ".velocitydes [3](-0.15,0.0,0.0)");
 //                return true;
                 break;
             case 4:
-                m_coshell->ExecuteACommand("set pg.velocitydes [3](-0.0001,0.0,0.1)");
+                m_coshell->ExecuteACommand("set " + m_pg + ".velocitydes [3](-0.0001,0.0,0.1)");
                 break;
             case 5:
                 break;
@@ -93,8 +93,8 @@ public:
     }
 };
 
-AdaptiveSteering::AdaptiveSteering(coshell::CoshellClient * coshell)
-: m_impl(new AdaptiveSteeringImpl(coshell))
+AdaptiveSteering::AdaptiveSteering(coshell::CoshellClient * coshell, const std::string & start_script, const std::string & pg_entity)
+: m_impl(new AdaptiveSteeringImpl(coshell, start_script, pg_entity))
 {}
 
 bool AdaptiveSteering::InterpretCommand(int command, const std::vector<DisplayObject *> & objects)
