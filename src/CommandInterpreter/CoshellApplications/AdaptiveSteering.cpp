@@ -102,5 +102,16 @@ bool AdaptiveSteering::InterpretCommand(int command, const std::vector<DisplayOb
     return m_impl->InterpretCommand(command, objects);
 }
 
+void AdaptiveSteering::UpdateDepth(int32_t v)
+{
+    m_impl->UpdateDepth(v);
+}
+
+void AdaptiveSteering::SetDepthThreshold(int32_t v)
+{
+    m_impl->SetDepthTreshold(v);
+}
+
+
 } // namespace bciinterface
 
