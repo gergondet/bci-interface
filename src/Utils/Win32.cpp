@@ -1,6 +1,9 @@
 #include <bci-interface/Utils/Win32.h>
 
 #ifdef WIN32
+namespace bciinterface
+{
+
 void gettimeofday(struct timeval *tv, void *)
 {
   FILETIME ft;
@@ -27,5 +30,7 @@ void usleep(int t)
 {
 	Sleep(t/1000);
 }
+
+} //namespace bciinterface
 #endif
 

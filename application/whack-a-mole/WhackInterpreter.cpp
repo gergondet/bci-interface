@@ -6,6 +6,7 @@
 #include <sys/time.h>
 #else
 #include <bci-interface/Utils/Win32.h>
+using namespace bciinterface;
 #endif
 
 bool WhackInterpreter::InterpretCommand(int command, const std::vector<bciinterface::DisplayObject *> & objects)

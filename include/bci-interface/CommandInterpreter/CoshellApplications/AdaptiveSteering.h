@@ -23,7 +23,7 @@ struct AdaptiveSteeringImpl;
 class AdaptiveSteering : public CommandInterpreter 
 {
 public:
-    AdaptiveSteering(coshell::CoshellClient * coshell);
+    AdaptiveSteering(coshell::CoshellClient * coshell, const std::string & start_script = "import walking/startherdt", const std::string & pg_entity = "pg");
 
     virtual bool InterpretCommand(int command, const std::vector<DisplayObject *> & objects);
 
