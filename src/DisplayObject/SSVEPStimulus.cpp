@@ -15,6 +15,7 @@ public:
     virtual void Unhighlight() = 0;
     virtual void Move(float diffX, float diffY) = 0;
     virtual void SetPosition(float X, float Y) = 0;
+    virtual void Resize(float size_x, float size_y) {}
     virtual void Draw(sf::RenderWindow * app) = 0;
 };
 
@@ -70,6 +71,13 @@ public:
         m_shape->setPosition(X - size_x/2, Y - size_y/2);
     }
 
+    void Resize(float sx, float sy)
+    {
+        m_shape->setScale(sx/size_x, sy/size_y);
+        size_x = sx;
+        size_y = sy;
+    }
+
     void Draw(sf::RenderWindow * app)
     {
         app->draw(*m_shape);
@@ -113,6 +121,13 @@ public:
     void SetPosition(float X, float Y)
     {
         m_sprite.setPosition(X - size_x/2 ,Y - size_y/2);
+    }
+
+    void Resize(float sx, float sy)
+    {
+        size_x = sx;
+        size_y = sy;
+        m_sprite.setScale((float)size_x/(float)m_texture.getSize().x, (float)size_y/(float)m_texture.getSize().y);
     }
 
     void Draw(sf::RenderWindow * app)
@@ -245,6 +260,11 @@ public:
         m_graph->SetPosition(X, Y);
     }
 
+    void Resize(float sx, float sy)
+    {
+        m_graph->Resize(sx, sy);
+    }
+
     void Display(sf::RenderWindow * app, unsigned int frameCount, sf::Clock & clock)
     {
         if(m_frameSeq[frameCount % m_screenFrequency])
@@ -293,6 +313,11 @@ void SSVEPStimulus::Move(float diffX, float diffY)
 void SSVEPStimulus::SetPosition(float X, float Y)
 {
     m_impl->SetPosition(X, Y);
+}
+
+void SSVEPStimulus::Resize(float size_x, float size_y)
+{
+    m_impl->Resize(size_x, size_y);
 }
 
 void SSVEPStimulus::Display(sf::RenderWindow * app, unsigned int frameCount, sf::Clock & clock)

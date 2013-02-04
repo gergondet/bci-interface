@@ -43,6 +43,9 @@ public:
     /* Set absolute position */
     void SetPosition(float X, float Y);
 
+    /* Resize the stimulus */
+    void Resize(float size_x, float size_y);
+
     /* Display function */
     void Display(sf::RenderWindow * app, unsigned int frameCount, sf::Clock & clock);
 

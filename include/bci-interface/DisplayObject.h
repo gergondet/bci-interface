@@ -30,6 +30,8 @@ public:
 
     virtual void SetPosition(float X, float Y) {}
 
+    virtual void Resize(float size_x, float size_y) {}
+
     virtual void Highlight() {}
 
     virtual void Unhighlight() {}
