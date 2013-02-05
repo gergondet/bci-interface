@@ -22,7 +22,7 @@ private:
     int32_t depth_threshold_;
 public:
     AdaptiveSteeringImpl(coshell::CoshellClient * coshell, const std::string & start_script, const std::string & pg_entity)
-        : m_coshell(coshell), m_time_in(0), prev_cmd(-1), 
+        : m_coshell(coshell), m_pg(pg_entity), m_time_in(0), prev_cmd(-1), 
           depth_(0), depth_threshold_(950)
     {
         m_coshell->ExecuteACommand(start_script);
