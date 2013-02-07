@@ -97,6 +97,7 @@ public:
                     m_coshell->ExecuteACommand("set " + m_pg + ".velocitydes [3](0.0001,0.0,0.1)");
                     break;
                 case 5:
+                    m_coshell->ExecuteACommand("set " + m_pg + ".velocitydes [3](-0.1,0.0,0.0)");
                     break;
             }
         }
