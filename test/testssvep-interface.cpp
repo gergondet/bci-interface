@@ -8,6 +8,7 @@
 #include <bci-interface/Background/BufferBG.h>
 
 #include <SFML/Graphics.hpp>
+#include <SFML/OpenGL.hpp>
 
 #include <iostream>
 #include <sstream>
@@ -20,21 +21,144 @@ void sleep(DWORD t)
 	Sleep(1000*t);
 }
 #include <stdint.h>
+
+std::string dirname(char * path)
+{
+    return ".";
+}
+
 #else
 #include <inttypes.h>
+#include <libgen.h>
 #endif
 
 using namespace bciinterface;
 
+class Cube3D : public bciinterface::DisplayObject
+{
+public:
+    virtual void Display(sf::RenderWindow * app, unsigned int frameCount, sf::Clock & clock)
+    {
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
+        glTranslatef(1.0f,1.0f,-4.0f);              // Move Right And Into The Screen
+        glRotatef(rotQuad,1.0f,1.0f,0.0f);            // Rotate The Cube
+        glBegin(GL_QUADS);
+            /* top of cube */
+            glColor3f(0.0f, 1.0f, 0.0f);
+            glVertex3f(0.5f, 0.5f, -0.5f);
+            glVertex3f(-0.5f, 0.5f, -0.5f);
+            glVertex3f(-0.5f, 0.5f, 0.5f);
+            glVertex3f(0.5f, 0.5f, 0.5f);
+            /* bottom of cube */
+            glColor3f(1.0f, 1.0f, 0.0f);
+            glVertex3f(0.5f, -0.5f, 0.5f);
+            glVertex3f(-0.5f, -0.5f, 0.5f);
+            glVertex3f(-0.5f, -0.5f, -0.5f);
+            glVertex3f(0.5f, -0.5f, -0.5f);
+            /* front of cube */
+            glColor3f(1.0f, 0.0f, 0.0f);
+            glVertex3f(0.5f, 0.5f, 0.5f);
+            glVertex3f(-0.5f, 0.5f, 0.5f);
+            glVertex3f(-0.5f, -0.5f, 0.5f);
+            glVertex3f(0.5f, -0.5f, 0.5f);
+            /* back of cube */
+            glColor3f(1.0f, 1.0f, 1.0f);
+            glVertex3f(-0.5f, 0.5f, -0.5f);
+            glVertex3f(0.5f, 0.5f, -0.5f);
+            glVertex3f(0.5f, -0.5f, -0.5f);
+            glVertex3f(-0.5f, -0.5f, -0.5f);
+            /* right side of cube */
+            glColor3f(1.0f, 0.0f, 1.0f);
+            glVertex3f(0.5f, 0.5f, -0.5f);
+            glVertex3f(0.5f, 0.5f, 0.5f);
+            glVertex3f(0.5f, -0.5f, 0.5f);
+            glVertex3f(0.5f, -0.5f, -0.5f);
+            /* left side of cube */
+            glColor3f(0.0f, 1.0f, 1.0f);
+            glVertex3f(-0.5f, 0.5f, 0.5f);
+            glVertex3f(-0.5f, 0.5f, -0.5f);
+            glVertex3f(-0.5f, -0.5f, -0.5f);
+            glVertex3f(-0.5f, -0.5f, 0.5f);
+        glEnd();
+        rotQuad -= 0.15f;
+    }
+
+    Cube3D() : rotQuad(0) {}
+
+    virtual bool DrawWithGL() { return true; }
+
+    float rotQuad;
+};
+
+class GLBG : public bciinterface::Background
+{
+public:
+    GLBG() : rot(0) {}
+
+    virtual bool DrawWithGL() { return true; }
+
+    void UpdateLoop() {}
+
+    void Close() {}
+
+    void Draw(sf::RenderWindow * app)
+    {
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();                   // Reset The View
+        glTranslatef(0.0f,0.0f,-1.5f);             // Move Left And Into The Screen
+        glRotatef(rot,0.0f,1.0f,0.0f);            // Rotate The Cube On X, Y & Z
+        glBegin(GL_TRIANGLES);
+            glColor3f(0.5f,0.0f,0.0f);
+            glVertex3f( 0.0f, 0.5f, 0.0f);
+            glColor3f(0.0f,0.5f,0.0f);
+            glVertex3f(-0.5f,-0.5f, 0.5f);
+            glColor3f(0.0f,0.0f,0.5f);
+            glVertex3f( 0.5f,-0.5f, 0.5f);
+            glColor3f(0.5f,0.0f,0.0f);
+            glVertex3f( 0.0f, 0.5f, 0.0f);
+            glColor3f(0.0f,0.0f,0.5f);
+            glVertex3f( 0.5f,-0.5f, 0.5f);
+            glColor3f(0.0f,0.5f,0.0f);
+            glVertex3f( 0.5f,-0.5f, -0.5f);
+            glColor3f(0.5f,0.0f,0.0f);
+            glVertex3f( 0.0f, 0.5f, 0.0f);
+            glColor3f(0.0f,0.5f,0.0f);
+            glVertex3f( 0.5f,-0.5f, -0.5f);
+            glColor3f(0.0f,0.0f,0.5f);
+            glVertex3f(-0.5f,-0.5f, -0.5f);
+            glColor3f(0.5f,0.0f,0.0f);
+            glVertex3f( 0.0f, 0.5f, 0.0f);
+            glColor3f(0.0f,0.0f,0.5f);
+            glVertex3f(-0.5f,-0.5f,-0.5f);
+            glColor3f(0.0f,0.5f,0.0f);
+            glVertex3f(-0.5f,-0.5f, 0.5f);
+        glEnd();
+        rot += 0.2;
+    }
+
+    float rot;
+};
+
 int main(int argc, char * argv[])
 {
     bool fullscreen = true;
+    if(argc > 1)
+    {
+        std::stringstream ss;
+        ss << argv[1];
+        ss >> fullscreen;
+    }
     unsigned int width = 1280;
-    unsigned int height = 1024; 
+    unsigned int height = 1024;
+    unsigned int iwidth = 800;
+    unsigned int iheight = 600;
     if(!fullscreen)
     {
         width = 1024;
         height = 768;
+        iwidth = 640;
+        iheight = 480;
     }
 
     BCIInterface * bciinterface = new BCIInterface(width, height);
@@ -52,7 +176,7 @@ int main(int argc, char * argv[])
 
     bool data_compressed = true;
     //bciinterface->SetBackground(new VisionServerBG("hrp2010v", 4242, 640, 480, data_compressed, width, height, 800, 600));
-    BufferBG * bufferBG = new BufferBG(640, 480, width, height, 800, 600);
+    BufferBG * bufferBG = new BufferBG(640, 480, width, height, iwidth, iheight);
     uint32_t * buffer = new uint32_t[640*480];
     for(unsigned int x = 0; x < 640; ++x)
     {
@@ -76,13 +200,17 @@ int main(int argc, char * argv[])
     bufferBG->SetSubRect(0, 0, 320, 240);
     bufferBG->SetSubRect(0, 0, 640, 480);
     bufferBG->UpdateFromBuffer_RGB((unsigned char*)buffer);
-    bciinterface->SetBackground(bufferBG);
-    
-    bciinterface->AddObject(new SSVEPStimulus(6, 60, width/2, 100, 200,200, "UP.png", "UP_HL.png"));
-    bciinterface->AddObject(new SSVEPStimulus(8, 60, width-100, height/2, 200, 200, "RIGHT.png", "RIGHT_HL.png"));
-    bciinterface->AddObject(new SSVEPStimulus(10, 60, width/2, height-100, 200, 200, "DOWN.png", "DOWN_HL.png"));
-    bciinterface->AddObject(new SSVEPStimulus(9, 60, 100, height/2,200, 200, "LEFT.png", "LEFT_HL.png"));
-    
+//    bciinterface->SetBackground(bufferBG);
+    bciinterface->SetBackground(new GLBG());
+
+    std::string dir = dirname(argv[0]);
+    dir += "/";
+    bciinterface->AddObject(new SSVEPStimulus(6, 60, width/2, 100, 200,200, dir + "UP.png", dir + "UP_HL.png"));
+    bciinterface->AddObject(new SSVEPStimulus(8, 60, width-100, height/2, 200, 200, dir + "RIGHT.png", dir + "RIGHT_HL.png"));
+    bciinterface->AddObject(new SSVEPStimulus(10, 60, width/2, height-100, 200, 200, dir + "DOWN.png", dir + "DOWN_HL.png"));
+    bciinterface->AddObject(new SSVEPStimulus(9, 60, 100, height/2,200, 200, dir + "LEFT.png", dir + "LEFT_HL.png"));
+    bciinterface->AddObject(new Cube3D());
+
     bciinterface->DisplayLoop(fullscreen);
 
     delete bciinterface;
