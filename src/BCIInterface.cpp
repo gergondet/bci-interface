@@ -17,6 +17,7 @@
 #include <vector>
 
 #include <SFML/Graphics.hpp>
+#include <SFML/OpenGL.hpp>
 
 #include <bci-interface/Utils/Win32.h>
 
@@ -43,8 +44,13 @@ private:
     Background * m_background;
     boost::thread * m_backgroundth;
 
+    std::vector<DisplayObject *> m_active_objects;
+
     std::vector<DisplayObject *> m_objects;
     std::vector<DisplayObject *> m_objects_non_owned;
+
+    std::vector<DisplayObject *> m_gl_objects;
+    std::vector<DisplayObject *> m_gl_objects_non_owned;
 
     CommandReceiver * m_receiver;
     boost::thread * m_receiverth;
@@ -61,6 +67,7 @@ public:
         m_handlers(0),
         m_background(0), m_backgroundth(0),
         m_objects(0), m_objects_non_owned(0),
+        m_gl_objects(0), m_gl_objects_non_owned(0),
         m_receiver(0), m_receiverth(0),
         m_overrider(0),
         m_interpreter(0)
@@ -72,9 +79,10 @@ public:
         while(!m_finished) { usleep(1000); }
         m_fpslog.close();
         m_objects_non_owned.resize(0);
-        for(size_t i = 0; i < m_objects.size(); ++i)
+        m_gl_objects_non_owned.resize(0);
+        for(size_t i = 0; i < m_active_objects.size(); ++i)
         {
-            delete m_objects[i];
+            delete m_active_objects[i];
         }
         if(m_background)
         {
@@ -96,6 +104,33 @@ public:
         delete m_background;
         delete m_receiverth;
         delete m_app;
+    }
+
+    void InitGL()
+    {
+        glShadeModel(GL_SMOOTH);                            // Enable Smooth Shading
+        glClearColor(0.0f, 0.0f, 0.0f, 0.5f);               // Black Background
+        glClearDepth(1.0f);                                 // Depth Buffer Setup
+        glEnable(GL_DEPTH_TEST);                            // Enables Depth Testing
+        glDepthFunc(GL_LEQUAL);                             // The Type Of Depth Testing To Do
+        glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+
+        /* Position the camera */
+        glTranslatef(0, 0, 0);
+    }
+
+    void Resize()
+    {
+        glViewport(0,0, m_width, m_height);
+
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+
+        // Calculate The Aspect Ratio Of The Window
+        gluPerspective(45.0f,m_width/m_height,0.1f,100.0f);
+
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
     }
 
     void AddEventHandler(EventHandler * handler)
@@ -127,12 +162,27 @@ public:
 
     void AddObject(DisplayObject * object)
     {
-        m_objects.push_back(object);
+        m_active_objects.push_back(object);
+        if(object->DrawWithGL())
+        {
+            m_gl_objects.push_back(object);
+        }
+        else
+        {
+            m_objects.push_back(object);
+        }
     }
 
     void AddNonOwnedObject(DisplayObject * object)
     {
-        m_objects_non_owned.push_back(object);
+        if(object->DrawWithGL())
+        {
+            m_gl_objects_non_owned.push_back(object);
+        }
+        else
+        {
+            m_objects_non_owned.push_back(object);
+        }
     }
 
     void SetCommandReceiver(CommandReceiver * receiver)
@@ -175,13 +225,16 @@ public:
             delete tmp;
             m_handlers.pop_back();
         }
-        while(m_objects.size() > 0)
+        while(m_active_objects.size() > 0)
         {
-            DisplayObject * tmp = m_objects.back();
+            DisplayObject * tmp = m_active_objects.back();
             delete tmp;
-            m_objects.pop_back();
+            m_active_objects.pop_back();
         }
+        m_objects.resize(0);
+        m_gl_objects.resize(0);
         m_objects_non_owned.resize(0);
+        m_gl_objects_non_owned.resize(0);
     }
 
     void DisplayLoop(bool fullscreen)
@@ -200,6 +253,9 @@ public:
 //        m_app->EnableVerticalSync(true);
 
         m_app->setKeyRepeatEnabled(false);
+
+        InitGL();
+        Resize();
 
         DisplayLoop();
 
@@ -227,6 +283,9 @@ public:
 
 //        m_app->EnableVerticalSync(true);
         m_app->setKeyRepeatEnabled(false);
+
+        InitGL();
+        Resize();
 
         while(!m_close)
         {
@@ -286,13 +345,17 @@ public:
                 {
                     m_handlers[i]->Process(event);
                 }
-                for(size_t i = 0; i < m_objects.size(); ++i)
+                for(size_t i = 0; i < m_active_objects.size(); ++i)
                 {
-                    m_objects[i]->Process(event, m_ref);
+                    m_active_objects[i]->Process(event, m_ref);
                 }
                 for(size_t i = 0; i < m_objects_non_owned.size(); ++i)
                 {
                     m_objects_non_owned[i]->Process(event, m_ref);
+                }
+                for(size_t i = 0; i < m_gl_objects_non_owned.size(); ++i)
+                {
+                    m_gl_objects_non_owned[i]->Process(event, m_ref);
                 }
                 if(m_overrider)
                 {
@@ -316,7 +379,7 @@ public:
                         in_cmd = m_overrider->GetCommand();
                     }
                 }
-                bool interpreter_status = m_interpreter->InterpretCommand(in_cmd, m_objects);
+                bool interpreter_status = m_interpreter->InterpretCommand(in_cmd, m_active_objects);
                 if(cmd && interpreter_status) 
                 { 
                     *cmd = in_cmd; 
@@ -325,10 +388,24 @@ public:
                 }
             }
 
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             /* Draw background */
             if(m_background)
             {
-                m_background->Draw(m_app);
+                if(m_background->DrawWithGL())
+                {
+                    m_background->Draw(m_app);
+                    m_app->pushGLStates();
+                }
+                else
+                {
+                    m_app->pushGLStates();
+                    m_background->Draw(m_app);
+                }
+            }
+            else
+            {
+                m_app->pushGLStates();
             }
 
             /* Draw objects */
@@ -350,6 +427,18 @@ public:
                 screen.saveToFile(ss.str().c_str());
                 m_take_screenshot = false;
                 m_screenshot_index++;
+            }
+
+            m_app->popGLStates();
+
+            for(size_t i = 0; i < m_gl_objects.size(); ++i)
+            {
+                m_gl_objects[i]->Display(m_app, frameCount, clock);
+            }
+            /* Draw non-owned objects */
+            for(size_t i = 0; i < m_gl_objects_non_owned.size(); ++i)
+            {
+                m_gl_objects_non_owned[i]->Display(m_app, frameCount, clock);
             }
 
             m_app->display();

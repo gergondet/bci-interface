@@ -26,6 +26,9 @@ public:
 
     /* Returns the current sprite of background */
     virtual void Draw(sf::RenderWindow * app) = 0;
+
+    /* Overrider if you wish to implement Draw with OpenGL */
+    virtual bool DrawWithGL() { return false; }
 };
 
 } // namespace bciinterface
