@@ -419,16 +419,6 @@ public:
                 m_objects_non_owned[i]->Display(m_app, frameCount, clock);
             }
 
-            if(m_take_screenshot)
-            {
-                sf::Image screen = m_app->capture();
-                std::stringstream ss;
-                ss << "/tmp/bci-interface-screen-" << std::setfill('0') << std::setw(3) << m_screenshot_index << ".png";
-                screen.saveToFile(ss.str().c_str());
-                m_take_screenshot = false;
-                m_screenshot_index++;
-            }
-
             m_app->popGLStates();
 
             for(size_t i = 0; i < m_gl_objects.size(); ++i)
@@ -439,6 +429,16 @@ public:
             for(size_t i = 0; i < m_gl_objects_non_owned.size(); ++i)
             {
                 m_gl_objects_non_owned[i]->Display(m_app, frameCount, clock);
+            }
+
+            if(m_take_screenshot)
+            {
+                sf::Image screen = m_app->capture();
+                std::stringstream ss;
+                ss << "/tmp/bci-interface-screen-" << std::setfill('0') << std::setw(3) << m_screenshot_index << ".png";
+                screen.saveToFile(ss.str().c_str());
+                m_take_screenshot = false;
+                m_screenshot_index++;
             }
 
             m_app->display();
