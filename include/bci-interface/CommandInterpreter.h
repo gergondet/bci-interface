@@ -26,7 +26,7 @@ public:
     virtual bool InterpretCommand(int command, const std::vector<DisplayObject*> & objects) = 0;
 
     /* Handle events */
-    virtual void Process(sf::Event & event, const BCIInterface & interface) {}
+    virtual void Process(sf::Event & event, const BCIInterface & iface) {}
 };
 
 } // namespace bciinterface

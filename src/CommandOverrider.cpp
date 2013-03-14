@@ -13,7 +13,7 @@ public:
     {
     }
 
-    void Process(sf::Event & event, const BCIInterface & interface)
+    void Process(sf::Event & event, const BCIInterface & iface)
     {
         if(m_keyboard_override.size() != 0)
         {
@@ -159,9 +159,9 @@ CommandOverrider::CommandOverrider() : m_impl(new CommandOverriderImpl())
 {
 }
 
-void CommandOverrider::Process(sf::Event & event, const BCIInterface & interface)
+void CommandOverrider::Process(sf::Event & event, const BCIInterface & iface)
 {
-    m_impl->Process(event, interface);
+    m_impl->Process(event, iface);
 }
 
 void CommandOverrider::AddOverrideCommand(sf::Keyboard::Key ekey, int command)

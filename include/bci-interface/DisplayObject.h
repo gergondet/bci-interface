@@ -29,7 +29,7 @@ public:
     virtual bool DrawWithGL() { return false; }
 
     /* Process an event */
-    virtual void Process(sf::Event & event, const BCIInterface & interface) {}
+    virtual void Process(sf::Event & event, const BCIInterface & iface) {}
 
     virtual void SetPosition(float X, float Y) {}
 

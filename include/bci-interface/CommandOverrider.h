@@ -17,7 +17,7 @@ class CommandOverrider
 public:
     CommandOverrider();
 
-    virtual void Process(sf::Event & event, const BCIInterface & interface);
+    virtual void Process(sf::Event & event, const BCIInterface & iface);
 
     /* Handle keyboards events */
     void AddOverrideCommand(sf::Keyboard::Key ekey, int command);
