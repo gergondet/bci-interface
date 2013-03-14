@@ -60,7 +60,7 @@ SET_TARGET_PROPERTIES(${PROJECT_NAME_LIB}
 IF(UNIX)
 TARGET_LINK_LIBRARIES(${EXEC_NAME} ${PROJECT_NAME})
 ELSE(UNIX)
-TARGET_LINK_LIBRARIES(${EXEC_NAME} "bci-interface.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;bci-middleware.lib")
+TARGET_LINK_LIBRARIES(${EXEC_NAME} "bci-interface.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;bci-middleware.lib;OpenGL32.lib;glu32.lib")
 ENDIF(UNIX)
 TARGET_LINK_LIBRARIES(${EXEC_NAME} ${Boost_LIBRARIES})
 
@@ -92,7 +92,7 @@ SET_TARGET_PROPERTIES(${PROJECT_NAME_LIB}
 IF(UNIX)
 TARGET_LINK_LIBRARIES(${EXEC_NAME} ${PROJECT_NAME})
 ELSE(UNIX)
-TARGET_LINK_LIBRARIES(${EXEC_NAME} "bci-interface.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;bci-middleware.lib")
+TARGET_LINK_LIBRARIES(${EXEC_NAME} "bci-interface.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;bci-middleware.lib;OpenGL32.lib;glu32.lib")
 ENDIF(UNIX)
 TARGET_LINK_LIBRARIES(${EXEC_NAME} ${Boost_LIBRARIES})
 
@@ -124,7 +124,7 @@ SET_TARGET_PROPERTIES(${PROJECT_NAME_LIB}
 IF(UNIX)
 TARGET_LINK_LIBRARIES(${EXEC_NAME} ${PROJECT_NAME})
 ELSE(UNIX)
-TARGET_LINK_LIBRARIES(${EXEC_NAME} "bci-interface.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;bci-middleware.lib")
+TARGET_LINK_LIBRARIES(${EXEC_NAME} "bci-interface.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;bci-middleware.lib;OpenGL32.lib;glu32.lib")
 ENDIF(UNIX)
 TARGET_LINK_LIBRARIES(${EXEC_NAME} ${Boost_LIBRARIES})
 
@@ -156,7 +156,7 @@ SET_TARGET_PROPERTIES(${PROJECT_NAME_LIB}
 IF(UNIX)
 TARGET_LINK_LIBRARIES(${EXEC_NAME} ${PROJECT_NAME} )
 ELSE(UNIX)
-TARGET_LINK_LIBRARIES(${EXEC_NAME} "bci-interface.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;bci-middleware.lib")
+TARGET_LINK_LIBRARIES(${EXEC_NAME} "bci-interface.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;bci-middleware.lib;OpenGL32.lib;glu32.lib")
 ENDIF(UNIX)
 TARGET_LINK_LIBRARIES(${EXEC_NAME} ${Boost_LIBRARIES})
 
@@ -193,6 +193,6 @@ IF(UNIX)
 TARGET_LINK_LIBRARIES(${EXEC_NAME} "-lsfml-audio")
 TARGET_LINK_LIBRARIES(${EXEC_NAME} ${PROJECT_NAME})
 ELSE(UNIX)
-TARGET_LINK_LIBRARIES(${EXEC_NAME} "bci-interface.lib;sfml-audio.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;bci-middleware.lib")
+TARGET_LINK_LIBRARIES(${EXEC_NAME} "bci-interface.lib;sfml-audio.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;bci-middleware.lib;OpenGL32.lib;glu32.lib")
 ENDIF(UNIX)
 TARGET_LINK_LIBRARIES(${EXEC_NAME} ${Boost_LIBRARIES})

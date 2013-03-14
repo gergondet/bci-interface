@@ -60,7 +60,7 @@ ENDIF(NOT WIN32)
 
 # -- Manual link for WIN32
 IF(WIN32)
-TARGET_LINK_LIBRARIES(${LIB_NAME} "sfml-graphics.lib;sfml-window.lib;sfml-system.lib;bci-middleware.lib;vision.lib;avcodec.lib;swscale.lib;avutil.lib")
+TARGET_LINK_LIBRARIES(${LIB_NAME} "sfml-graphics.lib;sfml-window.lib;sfml-system.lib;bci-middleware.lib;vision.lib;avcodec.lib;swscale.lib;avutil.lib;OpenGL32.lib;glu32.lib")
 ENDIF(WIN32)
 
 IF(COSHELLBCI_FOUND)
