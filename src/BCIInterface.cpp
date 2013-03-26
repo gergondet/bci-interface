@@ -435,7 +435,11 @@ public:
             {
                 sf::Image screen = m_app->capture();
                 std::stringstream ss;
+#ifndef WIN32
                 ss << "/tmp/bci-interface-screen-" << std::setfill('0') << std::setw(3) << m_screenshot_index << ".png";
+#else
+                ss << "C:/bci-interface-screen-" << std::setfill('0') << std::setw(3) << m_screenshot_index << ".png";
+#endif
                 screen.saveToFile(ss.str().c_str());
                 m_take_screenshot = false;
                 m_screenshot_index++;
