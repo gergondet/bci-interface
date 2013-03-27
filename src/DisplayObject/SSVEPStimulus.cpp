@@ -212,6 +212,11 @@ public:
         delete m_graph;
     }
 
+    int GetFrequency()
+    {
+        return m_frequency;
+    }
+
     bool ChangeFrequency(int frequency, int screenFrequency)
     {
         std::vector< std::pair<int, int> > tmpSeq;
@@ -288,6 +293,11 @@ SSVEPStimulus::SSVEPStimulus(int frequency, int screenFrequency, float x, float 
 SSVEPStimulus::SSVEPStimulus(int frequency, int screenFrequency, float x, float y, float size_x, float size_y, int r, int g, int b, int a) :
     m_impl(new SSVEPStimulusImpl(frequency, screenFrequency, x, y, size_x, size_y, r, g, b, a))
 {
+}
+
+int SSVEPStimulus::GetFrequency()
+{
+    return m_impl->GetFrequency();
 }
 
 bool SSVEPStimulus::ChangeFrequency(int frequency, int screenFrequency)

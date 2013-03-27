@@ -28,6 +28,9 @@ public:
     /*! \brief Constructor: x and y are stimulus centers */ 
     SSVEPStimulus(int frequency, int screenFrequency, float x, float y, float size_x, float size_y, int r, int g, int b, int a);
 
+    /* \brief Get flickering frequency */
+    int GetFrequency();
+
     /* \brief Change flickering frequency */
     bool ChangeFrequency(int frequency, int screenFrequency);
 
