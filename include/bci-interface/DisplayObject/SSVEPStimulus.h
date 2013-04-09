@@ -49,6 +49,9 @@ public:
     /* Set absolute position */
     void SetPosition(float X, float Y);
 
+    /* Set scale */
+    void SetScale(float sX, float sY);
+
     /* Resize the stimulus */
     void Resize(float size_x, float size_y);
 
