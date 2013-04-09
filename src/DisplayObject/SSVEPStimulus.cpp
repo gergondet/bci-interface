@@ -93,12 +93,13 @@ private:
     float size_x;
     float size_y;
 public:
-    SpriteImpl(float x, float y, float size_x, float size_y, const std::string & texture, const std::string & texture_hl)
-        : size_x(size_x), size_y(size_y)
+    SpriteImpl(float x, float y, const std::string & texture, const std::string & texture_hl, float size_x_i = 0, float size_y_i = 0)
     {
         m_texture.loadFromFile(texture);
         m_texture_hl.loadFromFile(texture_hl);
         m_sprite.setTexture(m_texture);
+        size_x = size_x_i == 0 ? m_texture.getSize().x : size_x_i;
+        size_y = size_y_i == 0 ? m_texture.getSize().y : size_y_i;
         m_sprite.setPosition(x - size_x/2 ,y - size_y/2);
         m_sprite.setScale((float)size_x/(float)m_texture.getSize().x, (float)size_y/(float)m_texture.getSize().y);
     }
@@ -145,8 +146,8 @@ private:
     int m_screenFrequency;
     std::vector<bool> m_frameSeq;
 public:
-    SSVEPStimulusImpl(int frequency, int screenFrequency, float x, float y, float size_x, float size_y, const std::string & texture, const std::string & texture_hl) : 
-        m_graph(new SpriteImpl(x, y, size_x, size_y, texture, texture_hl)),
+    SSVEPStimulusImpl(int frequency, int screenFrequency, float x, float y, const std::string & texture, const std::string & texture_hl, float size_x = 0, float size_y = 0) : 
+        m_graph(new SpriteImpl(x, y, texture, texture_hl, size_x, size_y)),
         m_frequency(frequency) , m_screenFrequency(screenFrequency)
     {
         std::vector< std::pair<int, int> > tmpSeq;
@@ -281,7 +282,12 @@ public:
 }; //class SSVEPStimulusImpl
 
 SSVEPStimulus::SSVEPStimulus(int frequency, int screenFrequency, float x, float y, float size_x, float size_y, const std::string & tx, const std::string & tx_hl) :
-    m_impl(new SSVEPStimulusImpl(frequency, screenFrequency, x, y, size_x, size_y, tx, tx_hl))
+    m_impl(new SSVEPStimulusImpl(frequency, screenFrequency, x, y, tx, tx_hl, size_x, size_y))
+{
+}
+
+SSVEPStimulus::SSVEPStimulus(int frequency, int screenFrequency, float x, float y, const std::string & tx, const std::string & tx_hl) :
+    m_impl(new SSVEPStimulusImpl(frequency, screenFrequency, x, y, tx, tx_hl))
 {
 }
 
