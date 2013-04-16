@@ -31,20 +31,22 @@ public:
         m_shape(new sf::RectangleShape(sf::Vector2f(size_x, size_y)))
         , size_x(size_x), size_y(size_y)
     {
-	    m_shape->setFillColor(sf::Color(r,g,b,a));
-	    m_shape->setOutlineColor(sf::Color(0,255,0,128));
-	    m_shape->setOutlineThickness(0);
-        m_shape->setPosition(x-size_x/2,y-size_y/2);
+        m_shape->setFillColor(sf::Color(r,g,b,a));
+        m_shape->setOutlineColor(sf::Color(0,255,0,128));
+        m_shape->setOutlineThickness(0);
+        m_shape->setOrigin(size_x/2, size_y/2);
+        m_shape->setPosition(x,y);
     }
 
     ShapeImpl(float x, float y, float radius, int r, int g, int b, int a) : 
         m_shape(new sf::CircleShape(radius)) 
         , size_x(2*radius), size_y(2*radius)
     {
-	    m_shape->setFillColor(sf::Color(r,g,b,a));
-	    m_shape->setOutlineColor(sf::Color(0,255,0,128));
-	    m_shape->setOutlineThickness(0);
-        m_shape->setPosition(x-radius,y-radius);
+        m_shape->setFillColor(sf::Color(r,g,b,a));
+        m_shape->setOutlineColor(sf::Color(0,255,0,128));
+        m_shape->setOutlineThickness(0);
+        m_shape->setOrigin(radius, radius);
+        m_shape->setPosition(x,y);
     }
 
     ~ShapeImpl()
@@ -69,7 +71,7 @@ public:
 
     void SetPosition(float X, float Y)
     {
-        m_shape->setPosition(X - size_x/2, Y - size_y/2);
+        m_shape->setPosition(X, Y);
     }
 
     void SetScale(float sX, float sY)
@@ -79,9 +81,7 @@ public:
 
     void Resize(float sx, float sy)
     {
-        m_shape->setScale(sx/size_x, sy/size_y);
-        size_x = sx;
-        size_y = sy;
+        SetScale(sx/size_x, sy/size_y);
     }
 
     void Draw(sf::RenderWindow * app)
@@ -106,7 +106,8 @@ public:
         m_sprite.setTexture(m_texture);
         size_x = size_x_i == 0 ? m_texture.getSize().x : size_x_i;
         size_y = size_y_i == 0 ? m_texture.getSize().y : size_y_i;
-        m_sprite.setPosition(x - size_x/2 ,y - size_y/2);
+        m_sprite.setOrigin(size_x/2, size_y/2);
+        m_sprite.setPosition(x,y);
         m_sprite.setScale((float)size_x/(float)m_texture.getSize().x, (float)size_y/(float)m_texture.getSize().y);
     }
 
@@ -127,7 +128,7 @@ public:
 
     void SetPosition(float X, float Y)
     {
-        m_sprite.setPosition(X - size_x/2 ,Y - size_y/2);
+        m_sprite.setPosition(X, Y);
     }
 
     void SetScale(float sX, float sY)
@@ -137,9 +138,7 @@ public:
 
     void Resize(float sx, float sy)
     {
-        size_x = sx;
-        size_y = sy;
-        m_sprite.setScale((float)size_x/(float)m_texture.getSize().x, (float)size_y/(float)m_texture.getSize().y);
+        SetScale(sx/size_x, sy/size_y);
     }
 
     void Draw(sf::RenderWindow * app)
