@@ -104,11 +104,13 @@ public:
         m_texture.loadFromFile(texture);
         m_texture_hl.loadFromFile(texture_hl);
         m_sprite.setTexture(m_texture);
-        size_x = size_x_i == 0 ? m_texture.getSize().x : size_x_i;
-        size_y = size_y_i == 0 ? m_texture.getSize().y : size_y_i;
-        m_sprite.setOrigin(size_x/2, size_y/2);
+        size_x = m_texture.getSize().x;
+        size_y = m_texture.getSize().y;
+        m_sprite.setOrigin(m_texture.getSize().x/2, m_texture.getSize().y/2);
         m_sprite.setPosition(x,y);
-        m_sprite.setScale((float)size_x/(float)m_texture.getSize().x, (float)size_y/(float)m_texture.getSize().y);
+        if(size_x_i == 0) { size_x_i = size_x; }
+        if(size_y_i == 0) { size_y_i = size_y; }
+        m_sprite.setScale((float)size_x_i/(float)m_texture.getSize().x, (float)size_y_i/(float)m_texture.getSize().y);
     }
 
     void Highlight()
