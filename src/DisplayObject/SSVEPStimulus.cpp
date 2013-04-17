@@ -15,6 +15,7 @@ public:
     virtual void Unhighlight() = 0;
     virtual void Move(float diffX, float diffY) = 0;
     virtual void SetPosition(float X, float Y) = 0;
+    virtual void SetRotation(float deg_angle) = 0;
     virtual void SetScale(float sX, float sY) = 0;
     virtual void Resize(float size_x, float size_y) {}
     virtual void Draw(sf::RenderWindow * app) = 0;
@@ -74,6 +75,11 @@ public:
         m_shape->setPosition(X, Y);
     }
 
+    void SetRotation(float deg_angle)
+    {
+        m_shape->setRotation(deg_angle);
+    }
+
     void SetScale(float sX, float sY)
     {
         m_shape->setScale(sX, sY);
@@ -131,6 +137,11 @@ public:
     void SetPosition(float X, float Y)
     {
         m_sprite.setPosition(X, Y);
+    }
+
+    void SetRotation(float deg_angle)
+    {
+        m_sprite.setRotation(deg_angle);
     }
 
     void SetScale(float sX, float sY)
@@ -278,6 +289,11 @@ public:
         m_graph->SetPosition(X, Y);
     }
 
+    void SetRotation(float deg_angle)
+    {
+        m_graph->SetRotation(deg_angle);
+    }
+
     void SetScale(float sX, float sY)
     {
         m_graph->SetScale(sX, sY);
@@ -346,6 +362,11 @@ void SSVEPStimulus::Move(float diffX, float diffY)
 void SSVEPStimulus::SetPosition(float X, float Y)
 {
     m_impl->SetPosition(X, Y);
+}
+
+void SSVEPStimulus::SetRotation(float deg_angle)
+{
+    m_impl->SetRotation(deg_angle);
 }
 
 void SSVEPStimulus::SetScale(float sX, float sY)

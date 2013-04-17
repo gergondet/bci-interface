@@ -49,6 +49,9 @@ public:
     /* Set absolute position */
     void SetPosition(float X, float Y);
 
+    /* Set absolute rotation */
+    void SetRotation(float deg_angle);
+
     /* Set scale */
     void SetScale(float sX, float sY);
 
