@@ -22,8 +22,15 @@ public:
     /*! \brief Constructor: x and y are stimulus centers, can provide an image as graphic for the stim */
     SSVEPStimulus(int frequency, int screenFrequency, float x, float y, float size_x, float size_y, const std::string & tx, const std::string & tx_hl);
 
+    /*! \brief Constructor: x and y are stimulus centers, can provide an image as graphic for the stim */
+    SSVEPStimulus(int frequency, int screenFrequency, float x, float y, float size_x, float size_y, const std::string & tx, const std::string & tx_hl, const std::string & unactive_tx, const std::string & unactive_tx_hl);
+
     /*! \brief Constructor: x and y are stimulus centers, can provide an image as graphic for the stim, size is set to the image size */
     SSVEPStimulus(int frequency, int screenFrequency, float x, float y, const std::string & tx, const std::string & tx_hl);
+
+    /*! \brief Constructor: x and y are stimulus centers, can provide an image as graphic for the stim, 
+                                size is set to the image size, second image is the unactive sprite */
+    SSVEPStimulus(int frequency, int screenFrequency, float x, float y, const std::string & tx, const std::string & tx_hl, const std::string & unactive_tx, const std::string & unactive_tx_hl);
 
     /*! \brief Constructor: x and y are stimulus centers, circle shape */
     SSVEPStimulus(int frequency, int screenFrequency, float x, float y, float radius, int r, int g, int b, int a);

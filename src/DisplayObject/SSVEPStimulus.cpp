@@ -19,6 +19,7 @@ public:
     virtual void SetScale(float sX, float sY) = 0;
     virtual void Resize(float size_x, float size_y) {}
     virtual void Draw(sf::RenderWindow * app) = 0;
+    virtual void DrawInactive(sf::RenderWindow * app) {}
 };
 
 struct ShapeImpl : public GraphImpl
@@ -161,6 +162,91 @@ public:
 
 };
 
+struct SpriteWithInactiveImpl : public GraphImpl
+{
+private:
+    sf::Texture m_texture;
+    sf::Texture m_texture_hl;
+    sf::Texture m_texture_inactive;
+    sf::Texture m_texture_inactive_hl;
+    sf::Sprite  m_sprite;
+    sf::Sprite  m_sprite_inactive;
+    float size_x;
+    float size_y;
+public:
+    SpriteWithInactiveImpl(float x, float y, const std::string & texture, const std::string & texture_hl, const std::string & texture_inactive, const std::string & texture_inactive_hl, float size_x_i = 0, float size_y_i = 0)
+    {
+        m_texture.loadFromFile(texture);
+        m_texture_hl.loadFromFile(texture_hl);
+        m_texture_inactive.loadFromFile(texture_inactive);
+        m_texture_inactive_hl.loadFromFile(texture_inactive_hl);
+        m_sprite.setTexture(m_texture);
+        m_sprite_inactive.setTexture(m_texture_inactive);
+        size_x = m_texture.getSize().x;
+        size_y = m_texture.getSize().y;
+        m_sprite.setOrigin(m_texture.getSize().x/2, m_texture.getSize().y/2);
+        m_sprite.setPosition(x,y);
+        m_sprite_inactive.setOrigin(m_texture.getSize().x/2, m_texture.getSize().y/2);
+        m_sprite_inactive.setPosition(x,y);
+        if(size_x_i == 0) { size_x_i = size_x; }
+        if(size_y_i == 0) { size_y_i = size_y; }
+        m_sprite.setScale((float)size_x_i/(float)m_texture.getSize().x, (float)size_y_i/(float)m_texture.getSize().y);
+        m_sprite_inactive.setScale((float)size_x_i/(float)m_texture.getSize().x, (float)size_y_i/(float)m_texture.getSize().y);
+    }
+
+    void Highlight()
+    {
+        m_sprite.setTexture(m_texture_hl);
+        m_sprite_inactive.setTexture(m_texture_inactive_hl);
+    }
+
+    void Unhighlight()
+    {
+        m_sprite.setTexture(m_texture);
+        m_sprite_inactive.setTexture(m_texture_inactive);
+    }
+
+    void Move(float diffX, float diffY)
+    {
+        m_sprite.move(diffX, diffY);
+        m_sprite_inactive.move(diffX, diffY);
+    }
+
+    void SetPosition(float X, float Y)
+    {
+        m_sprite.setPosition(X, Y);
+        m_sprite_inactive.setPosition(X, Y);
+    }
+
+    void SetRotation(float deg_angle)
+    {
+        m_sprite.setRotation(deg_angle);
+        m_sprite_inactive.setRotation(deg_angle);
+    }
+
+    void SetScale(float sX, float sY)
+    {
+        m_sprite.setScale(sX, sY);
+        m_sprite_inactive.setScale(sX, sY);
+    }
+
+    void Resize(float sx, float sy)
+    {
+        SetScale(sx/size_x, sy/size_y);
+    }
+
+    void Draw(sf::RenderWindow * app)
+    {
+        app->draw(m_sprite);
+    }
+
+    void DrawInactive(sf::RenderWindow * app)
+    {
+        app->draw(m_sprite_inactive);
+    }
+
+};
+
 struct SSVEPStimulusImpl
 {
 private:
@@ -171,6 +257,27 @@ private:
 public:
     SSVEPStimulusImpl(int frequency, int screenFrequency, float x, float y, const std::string & texture, const std::string & texture_hl, float size_x = 0, float size_y = 0) : 
         m_graph(new SpriteImpl(x, y, texture, texture_hl, size_x, size_y)),
+        m_frequency(frequency) , m_screenFrequency(screenFrequency)
+    {
+        std::vector< std::pair<int, int> > tmpSeq;
+        if(squarefunction(m_frequency, m_screenFrequency, tmpSeq))
+        {
+            for(unsigned int i = 0; i < tmpSeq.size(); ++i)
+            {
+                for(int j = 0; j < tmpSeq[i].first; ++j)
+                {
+                    m_frameSeq.push_back(true);
+                }
+                for(int j = 0; j < tmpSeq[i].second; ++j)
+                {
+                    m_frameSeq.push_back(false);
+                }
+            }
+        }
+    }
+
+    SSVEPStimulusImpl(int frequency, int screenFrequency, float x, float y, const std::string & texture, const std::string & texture_hl, const std::string & texture_inactive, const std::string & texture_inactive_hl, float size_x = 0, float size_y = 0) : 
+        m_graph(new SpriteWithInactiveImpl(x, y, texture, texture_hl, texture_inactive, texture_inactive_hl, size_x, size_y)),
         m_frequency(frequency) , m_screenFrequency(screenFrequency)
     {
         std::vector< std::pair<int, int> > tmpSeq;
@@ -310,6 +417,10 @@ public:
         {
             m_graph->Draw(app);
         }
+        else
+        {
+            m_graph->DrawInactive(app);
+        }
     }
 
 }; //class SSVEPStimulusImpl
@@ -319,8 +430,18 @@ SSVEPStimulus::SSVEPStimulus(int frequency, int screenFrequency, float x, float 
 {
 }
 
+SSVEPStimulus::SSVEPStimulus(int frequency, int screenFrequency, float x, float y, float size_x, float size_y, const std::string & tx, const std::string & tx_hl, const std::string & tx2, const std::string & tx2_hl) :
+    m_impl(new SSVEPStimulusImpl(frequency, screenFrequency, x, y, tx, tx_hl, tx2, tx2_hl, size_x, size_y))
+{
+}
+
 SSVEPStimulus::SSVEPStimulus(int frequency, int screenFrequency, float x, float y, const std::string & tx, const std::string & tx_hl) :
     m_impl(new SSVEPStimulusImpl(frequency, screenFrequency, x, y, tx, tx_hl))
+{
+}
+
+SSVEPStimulus::SSVEPStimulus(int frequency, int screenFrequency, float x, float y, const std::string & tx, const std::string & tx_hl, const std::string & tx2, const std::string & tx2_hl) :
+    m_impl(new SSVEPStimulusImpl(frequency, screenFrequency, x, y, tx, tx_hl, tx2, tx2_hl))
 {
 }
 
