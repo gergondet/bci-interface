@@ -22,7 +22,7 @@ SET_TARGET_PROPERTIES(${PROJECT_NAME_LIB}
 IF(WIN32)
 TARGET_LINK_LIBRARIES(${EXEC_NAME} "bci-interface.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;bci-middleware.lib;vision.lib;avcodec.lib;swscale.lib;avutil.lib;ws2_32.lib;OpenGL32.lib;glu32.lib")
 ELSE(WIN32)
-TARGET_LINK_LIBRARIES(${EXEC_NAME} bci-interface)
+TARGET_LINK_LIBRARIES(${EXEC_NAME} bci-interface ${SFML_LIBRARIES})
 ENDIF(WIN32)
 TARGET_LINK_LIBRARIES(${EXEC_NAME} ${Boost_LIBRARIES})
 
@@ -49,7 +49,7 @@ SET_TARGET_PROPERTIES(${PROJECT_NAME_LIB}
 IF(WIN32)
 TARGET_LINK_LIBRARIES(${EXEC_NAME} "bci-interface.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;bci-middleware.lib;vision.lib;avcodec.lib;swscale.lib;avutil.lib;ws2_32.lib;OpenGL32.lib;glu32.lib")
 ELSE(WIN32)
-TARGET_LINK_LIBRARIES(${EXEC_NAME} bci-interface)
+TARGET_LINK_LIBRARIES(${EXEC_NAME} bci-interface ${SFML_LIBRARIES})
 ENDIF(WIN32)
 TARGET_LINK_LIBRARIES(${EXEC_NAME} ${Boost_LIBRARIES})
 
@@ -76,7 +76,7 @@ SET_TARGET_PROPERTIES(${PROJECT_NAME_LIB}
 IF(WIN32)
 TARGET_LINK_LIBRARIES(${EXEC_NAME} "bci-interface.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;bci-middleware.lib;vision.lib;avcodec.lib;swscale.lib;avutil.lib;ws2_32.lib;OpenGL32.lib;glu32.lib")
 ELSE(WIN32)
-TARGET_LINK_LIBRARIES(${EXEC_NAME} bci-interface)
+TARGET_LINK_LIBRARIES(${EXEC_NAME} bci-interface ${SFML_LIBRARIES})
 ENDIF(WIN32)
 TARGET_LINK_LIBRARIES(${EXEC_NAME} ${Boost_LIBRARIES})
 
@@ -103,7 +103,7 @@ SET_TARGET_PROPERTIES(${PROJECT_NAME_LIB}
 IF(WIN32)
 TARGET_LINK_LIBRARIES(${EXEC_NAME} "bci-interface.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;bci-middleware.lib;vision.lib;avcodec.lib;swscale.lib;avutil.lib;ws2_32.lib;OpenGL32.lib;glu32.lib")
 ELSE(WIN32)
-TARGET_LINK_LIBRARIES(${EXEC_NAME} bci-interface)
+TARGET_LINK_LIBRARIES(${EXEC_NAME} bci-interface ${SFML_LIBRARIES})
 ENDIF(WIN32)
 TARGET_LINK_LIBRARIES(${EXEC_NAME} ${Boost_LIBRARIES})
 
