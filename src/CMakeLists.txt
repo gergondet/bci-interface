@@ -64,12 +64,13 @@ ENDIF(NOT WIN32)
 IF(WIN32)
 TARGET_LINK_LIBRARIES(${LIB_NAME} "sfml-graphics.lib;sfml-window.lib;sfml-system.lib;bci-middleware.lib;vision.lib;avcodec.lib;swscale.lib;avutil.lib;OpenGL32.lib;glu32.lib")
 ENDIF(WIN32)
+  
+PKG_CONFIG_USE_DEPENDENCY(${LIB_NAME} visionsystem)
 
 IF(COSHELL_CLIENT_FOUND)
   PKG_CONFIG_USE_DEPENDENCY(${LIB_NAME} bci-middleware)
   PKG_CONFIG_USE_DEPENDENCY(${LIB_NAME} coshell_client)
-
-  TARGET_LINK_LIBRARIES(${LIB_NAME} XmlRpc xmlrpc-client visionsystem vision configparser)
+  PKG_CONFIG_USE_DEPENDENCY(${LIB_NAME} visionsystem-xmlrpc-client)
 ENDIF(COSHELL_CLIENT_FOUND)
 
 INSTALL(TARGETS ${LIB_NAME}
