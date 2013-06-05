@@ -38,6 +38,9 @@ public:
     /*! \brief Constructor: x and y are stimulus centers */ 
     SSVEPStimulus(int frequency, int screenFrequency, float x, float y, float size_x, float size_y, int r, int g, int b, int a);
 
+    /*! \brief Constructor: for OpenGL SSVEPStimulus */
+    SSVEPStimulus(int frequency, int screenFrequency);
+
     /* \brief Get flickering frequency */
     int GetFrequency();
 
@@ -45,10 +48,10 @@ public:
     bool ChangeFrequency(int frequency, int screenFrequency);
 
     /*! \brief Highlight the stimulus by changing outline color */
-    void Highlight();
+    virtual void Highlight();
 
     /*! \brief Unhighlight the stimulus */
-    void Unhighlight();
+    virtual void Unhighlight();
 
     /*Change position of the square*/
     void Move(float diffX, float diffY);
@@ -66,7 +69,13 @@ public:
     void Resize(float size_x, float size_y);
 
     /* Display function */
-    void Display(sf::RenderWindow * app, unsigned int frameCount, sf::Clock & clock);
+    virtual void Display(sf::RenderWindow * app, unsigned int frameCount, sf::Clock & clock);
+
+    virtual bool DrawWithGL();
+
+    /* Should draw active or inactive? Use if you implement Display */
+    bool DisplayActive(unsigned int frameCount);
+
 
 private:
     boost::shared_ptr<SSVEPStimulusImpl> m_impl;

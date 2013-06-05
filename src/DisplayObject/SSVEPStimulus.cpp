@@ -251,12 +251,14 @@ struct SSVEPStimulusImpl
 {
 private:
     GraphImpl * m_graph;
+    bool m_gl;
     int m_frequency;
     int m_screenFrequency;
     std::vector<bool> m_frameSeq;
 public:
     SSVEPStimulusImpl(int frequency, int screenFrequency, float x, float y, const std::string & texture, const std::string & texture_hl, float size_x = 0, float size_y = 0) : 
         m_graph(new SpriteImpl(x, y, texture, texture_hl, size_x, size_y)),
+        m_gl(false),
         m_frequency(frequency) , m_screenFrequency(screenFrequency)
     {
         std::vector< std::pair<int, int> > tmpSeq;
@@ -278,6 +280,7 @@ public:
 
     SSVEPStimulusImpl(int frequency, int screenFrequency, float x, float y, const std::string & texture, const std::string & texture_hl, const std::string & texture_inactive, const std::string & texture_inactive_hl, float size_x = 0, float size_y = 0) : 
         m_graph(new SpriteWithInactiveImpl(x, y, texture, texture_hl, texture_inactive, texture_inactive_hl, size_x, size_y)),
+        m_gl(false),
         m_frequency(frequency) , m_screenFrequency(screenFrequency)
     {
         std::vector< std::pair<int, int> > tmpSeq;
@@ -299,6 +302,7 @@ public:
 
     SSVEPStimulusImpl(int frequency, int screenFrequency, float x, float y, float radius, int r, int g, int b, int a) : 
         m_graph(new ShapeImpl(x, y, radius, r, g, b, a)),
+        m_gl(false),
         m_frequency(frequency) , m_screenFrequency(screenFrequency)
     {
         std::vector< std::pair<int, int> > tmpSeq;
@@ -320,6 +324,7 @@ public:
 
     SSVEPStimulusImpl(int frequency, int screenFrequency, float x, float y, float size_x, float size_y, int r, int g, int b, int a) : 
         m_graph(new ShapeImpl(x, y, size_x, size_y, r, g, b, a)),
+        m_gl(false),
         m_frequency(frequency) , m_screenFrequency(screenFrequency)
     {
         std::vector< std::pair<int, int> > tmpSeq;
@@ -338,6 +343,29 @@ public:
             }
         }
     }
+
+    SSVEPStimulusImpl(int frequency, int screenFrequency) : 
+        m_graph(0),
+        m_gl(true),
+        m_frequency(frequency) , m_screenFrequency(screenFrequency)
+    {
+        std::vector< std::pair<int, int> > tmpSeq;
+        if(squarefunction(m_frequency, m_screenFrequency, tmpSeq))
+        {
+            for(unsigned int i = 0; i < tmpSeq.size(); ++i)
+            {
+                for(int j = 0; j < tmpSeq[i].first; ++j)
+                {
+                    m_frameSeq.push_back(true);
+                }
+                for(int j = 0; j < tmpSeq[i].second; ++j)
+                {
+                    m_frameSeq.push_back(false);
+                }
+            }
+        }
+    }
+
     ~SSVEPStimulusImpl()
     {
         delete m_graph;
@@ -378,49 +406,80 @@ public:
 
     void Highlight()
     {
-        m_graph->Highlight();
+        if(m_graph)
+        {
+            m_graph->Highlight();
+        }
     }
 
     void Unhighlight()
     {
-        m_graph->Unhighlight();
+        if(m_graph)
+        {
+            m_graph->Unhighlight();
+        }
     }
 
     void Move(float diffX, float diffY)
     {
-        m_graph->Move(diffX, diffY);
+        if(m_graph)
+        {
+            m_graph->Move(diffX, diffY);
+        }
     }
 
     void SetPosition(float X, float Y)
     {
-        m_graph->SetPosition(X, Y);
+        if(m_graph)
+        {
+            m_graph->SetPosition(X, Y);
+        }
     }
 
     void SetRotation(float deg_angle)
     {
-        m_graph->SetRotation(deg_angle);
+        if(m_graph)
+        {
+            m_graph->SetRotation(deg_angle);
+        }
     }
 
     void SetScale(float sX, float sY)
     {
-        m_graph->SetScale(sX, sY);
+        if(m_graph)
+        {
+            m_graph->SetScale(sX, sY);
+        }
     }
 
     void Resize(float sx, float sy)
     {
-        m_graph->Resize(sx, sy);
+        if(m_graph)
+        {
+            m_graph->Resize(sx, sy);
+        }
     }
 
     void Display(sf::RenderWindow * app, unsigned int frameCount, sf::Clock & clock)
     {
-        if(m_frameSeq[frameCount % m_screenFrequency])
+        if(m_graph && m_frameSeq[frameCount % m_screenFrequency])
         {
             m_graph->Draw(app);
         }
-        else
+        else if(m_graph)
         {
             m_graph->DrawInactive(app);
         }
+    }
+
+    bool DrawWithGL()
+    {
+        return m_gl;
+    }
+
+    bool DisplayActive(unsigned int frameCount)
+    {
+        return m_frameSeq[frameCount % m_screenFrequency];
     }
 
 }; //class SSVEPStimulusImpl
@@ -452,6 +511,11 @@ SSVEPStimulus::SSVEPStimulus(int frequency, int screenFrequency, float x, float 
 
 SSVEPStimulus::SSVEPStimulus(int frequency, int screenFrequency, float x, float y, float size_x, float size_y, int r, int g, int b, int a) :
     m_impl(new SSVEPStimulusImpl(frequency, screenFrequency, x, y, size_x, size_y, r, g, b, a))
+{
+}
+
+SSVEPStimulus::SSVEPStimulus(int frequency, int screenFrequency) :
+    m_impl(new SSVEPStimulusImpl(frequency, screenFrequency))
 {
 }
 
@@ -503,6 +567,16 @@ void SSVEPStimulus::Resize(float size_x, float size_y)
 void SSVEPStimulus::Display(sf::RenderWindow * app, unsigned int frameCount, sf::Clock & clock)
 {
     m_impl->Display(app, frameCount, clock);
+}
+
+bool SSVEPStimulus::DrawWithGL()
+{
+    return m_impl->DrawWithGL();
+}
+
+bool SSVEPStimulus::DisplayActive(unsigned int frameCount)
+{
+    return m_impl->DisplayActive(frameCount);
 }
 
 } // namespace bciinterface

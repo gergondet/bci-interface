@@ -34,59 +34,60 @@ std::string dirname(char * path)
 
 using namespace bciinterface;
 
-class Cube3D : public bciinterface::DisplayObject
+class Cube3D : public bciinterface::SSVEPStimulus
 {
 public:
     virtual void Display(sf::RenderWindow * app, unsigned int frameCount, sf::Clock & clock)
     {
-        glMatrixMode(GL_MODELVIEW);
-        glLoadIdentity();
-        glTranslatef(1.0f,1.0f,-4.0f);              // Move Right And Into The Screen
-        glRotatef(rotQuad,1.0f,1.0f,0.0f);            // Rotate The Cube
-        glBegin(GL_QUADS);
-            /* top of cube */
-            glColor3f(0.0f, 1.0f, 0.0f);
-            glVertex3f(0.5f, 0.5f, -0.5f);
-            glVertex3f(-0.5f, 0.5f, -0.5f);
-            glVertex3f(-0.5f, 0.5f, 0.5f);
-            glVertex3f(0.5f, 0.5f, 0.5f);
-            /* bottom of cube */
-            glColor3f(1.0f, 1.0f, 0.0f);
-            glVertex3f(0.5f, -0.5f, 0.5f);
-            glVertex3f(-0.5f, -0.5f, 0.5f);
-            glVertex3f(-0.5f, -0.5f, -0.5f);
-            glVertex3f(0.5f, -0.5f, -0.5f);
-            /* front of cube */
-            glColor3f(1.0f, 0.0f, 0.0f);
-            glVertex3f(0.5f, 0.5f, 0.5f);
-            glVertex3f(-0.5f, 0.5f, 0.5f);
-            glVertex3f(-0.5f, -0.5f, 0.5f);
-            glVertex3f(0.5f, -0.5f, 0.5f);
-            /* back of cube */
-            glColor3f(1.0f, 1.0f, 1.0f);
-            glVertex3f(-0.5f, 0.5f, -0.5f);
-            glVertex3f(0.5f, 0.5f, -0.5f);
-            glVertex3f(0.5f, -0.5f, -0.5f);
-            glVertex3f(-0.5f, -0.5f, -0.5f);
-            /* right side of cube */
-            glColor3f(1.0f, 0.0f, 1.0f);
-            glVertex3f(0.5f, 0.5f, -0.5f);
-            glVertex3f(0.5f, 0.5f, 0.5f);
-            glVertex3f(0.5f, -0.5f, 0.5f);
-            glVertex3f(0.5f, -0.5f, -0.5f);
-            /* left side of cube */
-            glColor3f(0.0f, 1.0f, 1.0f);
-            glVertex3f(-0.5f, 0.5f, 0.5f);
-            glVertex3f(-0.5f, 0.5f, -0.5f);
-            glVertex3f(-0.5f, -0.5f, -0.5f);
-            glVertex3f(-0.5f, -0.5f, 0.5f);
-        glEnd();
-        rotQuad -= 0.15f;
+        if(DisplayActive(frameCount))
+        {
+            glMatrixMode(GL_MODELVIEW);
+            glLoadIdentity();
+            glTranslatef(1.0f,1.0f,-4.0f);              // Move Right And Into The Screen
+            glRotatef(rotQuad,1.0f,1.0f,0.0f);            // Rotate The Cube
+            glBegin(GL_QUADS);
+                /* top of cube */
+                glColor3f(0.0f, 1.0f, 0.0f);
+                glVertex3f(0.5f, 0.5f, -0.5f);
+                glVertex3f(-0.5f, 0.5f, -0.5f);
+                glVertex3f(-0.5f, 0.5f, 0.5f);
+                glVertex3f(0.5f, 0.5f, 0.5f);
+                /* bottom of cube */
+                glColor3f(1.0f, 1.0f, 0.0f);
+                glVertex3f(0.5f, -0.5f, 0.5f);
+                glVertex3f(-0.5f, -0.5f, 0.5f);
+                glVertex3f(-0.5f, -0.5f, -0.5f);
+                glVertex3f(0.5f, -0.5f, -0.5f);
+                /* front of cube */
+                glColor3f(1.0f, 0.0f, 0.0f);
+                glVertex3f(0.5f, 0.5f, 0.5f);
+                glVertex3f(-0.5f, 0.5f, 0.5f);
+                glVertex3f(-0.5f, -0.5f, 0.5f);
+                glVertex3f(0.5f, -0.5f, 0.5f);
+                /* back of cube */
+                glColor3f(1.0f, 1.0f, 1.0f);
+                glVertex3f(-0.5f, 0.5f, -0.5f);
+                glVertex3f(0.5f, 0.5f, -0.5f);
+                glVertex3f(0.5f, -0.5f, -0.5f);
+                glVertex3f(-0.5f, -0.5f, -0.5f);
+                /* right side of cube */
+                glColor3f(1.0f, 0.0f, 1.0f);
+                glVertex3f(0.5f, 0.5f, -0.5f);
+                glVertex3f(0.5f, 0.5f, 0.5f);
+                glVertex3f(0.5f, -0.5f, 0.5f);
+                glVertex3f(0.5f, -0.5f, -0.5f);
+                /* left side of cube */
+                glColor3f(0.0f, 1.0f, 1.0f);
+                glVertex3f(-0.5f, 0.5f, 0.5f);
+                glVertex3f(-0.5f, 0.5f, -0.5f);
+                glVertex3f(-0.5f, -0.5f, -0.5f);
+                glVertex3f(-0.5f, -0.5f, 0.5f);
+            glEnd();
+            rotQuad -= 0.15f;
+        }
     }
 
-    Cube3D() : rotQuad(0) {}
-
-    virtual bool DrawWithGL() { return true; }
+    Cube3D(int freq, int screenFreq ) : SSVEPStimulus(freq, screenFreq), rotQuad(0) {}
 
     float rotQuad;
 };
@@ -142,7 +143,7 @@ public:
 
 int main(int argc, char * argv[])
 {
-    bool fullscreen = true;
+    bool fullscreen = false;
     if(argc > 1)
     {
         std::stringstream ss;
@@ -209,7 +210,8 @@ int main(int argc, char * argv[])
     bciinterface->AddObject(new SSVEPStimulus(10, 60, width/2, height-100, 200, 200, dir + "DOWN.png", dir + "DOWN_HL.png"));
     bciinterface->AddObject(new SSVEPStimulus(9, 60, 100, height/2,200, 200, dir + "LEFT.png", dir + "LEFT_HL.png"));
     bciinterface->AddObject(new SSVEPStimulus(14, 60, 100, height/2,200, 200, "LEFT.png", "LEFT_HL.png"));
-    bciinterface->AddObject(new SSVEPStimulus(9, 60, width/2, height/2, 200, 200, "STOP.png", "STOP_HL.png"));
+//    bciinterface->AddObject(new SSVEPStimulus(9, 60, width/2, height/2, 200, 200, "STOP.png", "STOP_HL.png"));
+    bciinterface->AddObject(new Cube3D(9,60));
 
     bciinterface->DisplayLoop(fullscreen);
 
