@@ -2,6 +2,8 @@
 
 #include <SFML/Graphics.hpp>
 
+#include <boost/thread/mutex.hpp>
+
 #include <iostream>
 #include <cstring>
 
@@ -25,13 +27,11 @@ private:
 
     sf::Uint8 * m_dataImage;
     sf::Texture * m_texture_display;
-    sf::Texture * m_texture_load;
     sf::Sprite * m_sprite_display;
-    sf::Sprite * m_sprite_load;
 
     bool m_color_enabled;
 
-    bool m_close;
+    boost::mutex bg_mutex;
 
 public:
     BufferBGImpl(unsigned int width, unsigned int height,
@@ -41,36 +41,29 @@ public:
             m_wwidth(wwidth), m_wheight(wheight), m_iwidth(iwidth), m_iheight(iheight),
             m_subrect(0, 0, width, height),
             m_dataImage(new sf::Uint8[width*height*4]),
-            m_texture_display(new sf::Texture), m_texture_load(new sf::Texture),
-            m_sprite_display(new sf::Sprite), m_sprite_load(new sf::Sprite),
-            m_color_enabled(true), m_close(false)
+            m_texture_display(new sf::Texture),
+            m_sprite_display(new sf::Sprite),
+            m_color_enabled(true)
     {
         m_scale_x = (float)m_iwidth/(float)m_width;
         m_scale_y = (float)m_iheight/(float)m_height;
         memset(m_dataImage, 0, width*height*4);
         m_texture_display->create(width, height);
-        m_texture_load->create(width, height);
         m_sprite_display->setTexture(*m_texture_display);
-        m_sprite_load->setTexture(*m_texture_load);
         if(iwidth == 0 || iheight == 0)
         {
             m_iwidth = m_wwidth;
             m_iheight = m_wheight;
         }
-        m_sprite_load->setScale(m_scale_x, m_scale_y);
-        m_sprite_load->setPosition(m_wwidth/2 - m_iwidth/2, m_wheight/2 - m_iheight/2);
         m_sprite_display->setScale(m_scale_x, m_scale_y);
         m_sprite_display->setPosition(m_wwidth/2 - m_iwidth/2, m_wheight/2 - m_iheight/2);
         m_sprite_display->setTextureRect(m_subrect);
-        m_sprite_load->setTextureRect(m_subrect);
     }
 
     ~BufferBGImpl()
     {
         delete m_sprite_display;
-        delete m_sprite_load;
         delete m_texture_display;
-        delete m_texture_load;
         delete[] m_dataImage;
     }
 
@@ -80,27 +73,18 @@ public:
 
     void Close()
     {
-        m_close = true;
     }
 
     void Draw(sf::RenderWindow * app)
     {
+        boost::mutex::scoped_lock lock(bg_mutex);
         app->draw(*m_sprite_display);
     }
 
     void LoadImageFromPixels()
     {
-        m_texture_load->update(m_dataImage, m_width, m_height, 0, 0);
-        m_sprite_load->setTextureRect(m_subrect);
-        m_sprite_load->setScale(m_scale_x, m_scale_y);
-        sf::Sprite * sprite_tmp = m_sprite_display;
-        sf::Texture * texture_tmp = m_texture_display;
-        m_sprite_display = m_sprite_load;
-        m_texture_display = m_texture_load;
-        m_sprite_load = sprite_tmp;
-        m_texture_load = texture_tmp;
-        m_sprite_load->setTextureRect(m_subrect);
-        m_sprite_load->setScale(m_scale_x, m_scale_y);
+        boost::mutex::scoped_lock lock(bg_mutex);
+        m_texture_display->update(m_dataImage, m_width, m_height, 0, 0);
     }
 
     void UpdateFromBuffer_MONO(unsigned char * img)
