@@ -29,6 +29,8 @@ public:
 
     void UpdateFromBuffer_RGB(unsigned char * img);
 
+    void UpdateFromBuffer_BGR8(unsigned char * img);
+
     void SwitchColorMode();
 
     void SetSubRect(int left, int top, int width, int height);
