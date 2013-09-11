@@ -27,7 +27,7 @@ SET_TARGET_PROPERTIES(${PROJECT_NAME_LIB}
 )
 
 IF(UNIX)
-TARGET_LINK_LIBRARIES(${EXEC_NAME} "${PROJECT_NAME}")
+TARGET_LINK_LIBRARIES(${EXEC_NAME} "${PROJECT_NAME}" pthread)
 ELSE(UNIX)
 TARGET_LINK_LIBRARIES(${EXEC_NAME} "bci-interface.lib sfml-graphics.lib sfml-window.lib sfml-system.lib")
 ENDIF(UNIX)
@@ -58,7 +58,7 @@ SET_TARGET_PROPERTIES(${PROJECT_NAME_LIB}
 )
 
 IF(UNIX)
-TARGET_LINK_LIBRARIES(${EXEC_NAME} ${PROJECT_NAME})
+TARGET_LINK_LIBRARIES(${EXEC_NAME} ${PROJECT_NAME} pthread)
 ELSE(UNIX)
 TARGET_LINK_LIBRARIES(${EXEC_NAME} "bci-interface.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;bci-middleware.lib;OpenGL32.lib;glu32.lib")
 ENDIF(UNIX)
@@ -90,7 +90,7 @@ SET_TARGET_PROPERTIES(${PROJECT_NAME_LIB}
 )
 
 IF(UNIX)
-TARGET_LINK_LIBRARIES(${EXEC_NAME} ${PROJECT_NAME})
+TARGET_LINK_LIBRARIES(${EXEC_NAME} ${PROJECT_NAME} pthread)
 ELSE(UNIX)
 TARGET_LINK_LIBRARIES(${EXEC_NAME} "bci-interface.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;bci-middleware.lib;OpenGL32.lib;glu32.lib")
 ENDIF(UNIX)
@@ -122,7 +122,7 @@ SET_TARGET_PROPERTIES(${PROJECT_NAME_LIB}
 )
 
 IF(UNIX)
-TARGET_LINK_LIBRARIES(${EXEC_NAME} ${PROJECT_NAME})
+TARGET_LINK_LIBRARIES(${EXEC_NAME} ${PROJECT_NAME} pthread)
 ELSE(UNIX)
 TARGET_LINK_LIBRARIES(${EXEC_NAME} "bci-interface.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;bci-middleware.lib;OpenGL32.lib;glu32.lib")
 ENDIF(UNIX)
@@ -154,7 +154,7 @@ SET_TARGET_PROPERTIES(${PROJECT_NAME_LIB}
 )
 
 IF(UNIX)
-TARGET_LINK_LIBRARIES(${EXEC_NAME} ${PROJECT_NAME} )
+TARGET_LINK_LIBRARIES(${EXEC_NAME} ${PROJECT_NAME} pthread)
 ELSE(UNIX)
 TARGET_LINK_LIBRARIES(${EXEC_NAME} "bci-interface.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;bci-middleware.lib;OpenGL32.lib;glu32.lib")
 ENDIF(UNIX)
@@ -191,7 +191,7 @@ SET_TARGET_PROPERTIES(${PROJECT_NAME_LIB}
 
 IF(UNIX)
 TARGET_LINK_LIBRARIES(${EXEC_NAME} "-lsfml-audio")
-TARGET_LINK_LIBRARIES(${EXEC_NAME} ${PROJECT_NAME})
+TARGET_LINK_LIBRARIES(${EXEC_NAME} ${PROJECT_NAME} pthread)
 ELSE(UNIX)
 TARGET_LINK_LIBRARIES(${EXEC_NAME} "bci-interface.lib;sfml-audio.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;bci-middleware.lib;OpenGL32.lib;glu32.lib")
 ENDIF(UNIX)
