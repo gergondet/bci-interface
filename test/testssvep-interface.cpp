@@ -150,10 +150,10 @@ int main(int argc, char * argv[])
         ss << argv[1];
         ss >> fullscreen;
     }
-    unsigned int width = 1680;
-    unsigned int height = 1050; 
-    unsigned int iwidth = 1024;
-    unsigned int iheight = 768;
+    unsigned int width = 1280;
+    unsigned int height = 1024;
+    unsigned int iwidth = 800;
+    unsigned int iheight = 600;
     if(!fullscreen)
     {
         width = 1024;
@@ -209,9 +209,8 @@ int main(int argc, char * argv[])
     bciinterface->AddObject(new SSVEPStimulus(8, 60, width-100, height/2, 200, 200, dir + "RIGHT.png", dir + "RIGHT_HL.png"));
     bciinterface->AddObject(new SSVEPStimulus(10, 60, width/2, height-100, 200, 200, dir + "DOWN.png", dir + "DOWN_HL.png"));
     bciinterface->AddObject(new SSVEPStimulus(9, 60, 100, height/2,200, 200, dir + "LEFT.png", dir + "LEFT_HL.png"));
-    bciinterface->AddObject(new SSVEPStimulus(14, 60, 100, height/2,200, 200, "LEFT.png", "LEFT_HL.png"));
-//    bciinterface->AddObject(new SSVEPStimulus(9, 60, width/2, height/2, 200, 200, "STOP.png", "STOP_HL.png"));
-    bciinterface->AddObject(new Cube3D(9,60));
+    bciinterface->AddObject(new SSVEPStimulus(14, 60, width/2, height/2, 200, 200, "STOP.png", "STOP_HL.png"));
+//    bciinterface->AddObject(new Cube3D(9,60));
 
     bciinterface->DisplayLoop(fullscreen);
 

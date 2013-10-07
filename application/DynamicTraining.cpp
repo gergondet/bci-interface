@@ -84,6 +84,7 @@ int main(int argc, char * argv[])
     bciinterface->AddObject(new SSVEPStimulus(8, 60, width-100, height/2, 200, 200, "RIGHT.png", "RIGHT_HL.png"));
     bciinterface->AddObject(new SSVEPStimulus(10, 60, width/2, height-100, 200, 200, "DOWN.png", "DOWN_HL.png"));
     bciinterface->AddObject(new SSVEPStimulus(9, 60, 100, height/2,200, 200, "LEFT.png", "LEFT_HL.png"));
+    bciinterface->AddObject(new SSVEPStimulus(14, 60, width/2, height/2, 200, 200, "STOP.png", "STOP_HL.png"));
 
     bciinterface->AddNonOwnedObject(&(manager->GetShape()));
 
