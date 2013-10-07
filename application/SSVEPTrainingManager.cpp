@@ -11,7 +11,7 @@ SSVEPTrainingManager::SSVEPTrainingManager(unsigned int width, unsigned int heig
   m_command_receiver(new UDPReceiver(port_command)),
   m_training_receiver(new UDPReceiver(port_training)),
   m_training_th(0), m_training_command(0),
-  m_shape()
+  m_shape("TRAIN.png")
 {
     m_shape.SetPosition(-100,-100);
 }
@@ -68,9 +68,13 @@ bool SSVEPTrainingManager::InterpretCommand(int command, const std::vector<Displ
         case 4:
             m_shape.SetPosition(260,m_height/2);
             break;
+        case 5:
+            m_shape.SetPosition(m_width/2, m_height/2 - 160);
+            break;
         default:
             break;
     }
-    return StaticSteering::InterpretCommand(command, objects);
+    return false;
+//    return StaticSteering::InterpretCommand(command, objects);
 }
 
