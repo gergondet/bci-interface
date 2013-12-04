@@ -72,7 +72,7 @@ int main(int argc, char * argv[])
     txtobj->SetPosition(width-150, height-50);
     bciinterface->AddObject(txtobj);
 
-    int * out_cmd = new int(-1);
+    int out_cmd = -1;
     float timeout = 2;
     sf::RenderWindow * app = 0;
     boost::thread th(boost::bind(&bciinterface::BCIInterface::DisplayLoop, bciinterface, app, fullscreen, out_cmd, timeout));
@@ -84,7 +84,7 @@ int main(int argc, char * argv[])
     sf::Sound scoreSound;
     scoreSound.setBuffer(buffer);
 
-    while(*out_cmd != 0)
+    while(out_cmd != 0)
     {
         targetid = rand() % 4;
         interpreter->SetCurrentTarget(targetid+1);

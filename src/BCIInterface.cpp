@@ -261,12 +261,14 @@ public:
         InitGL();
         Resize();
 
-        DisplayLoop();
+        int cmd_out = -1;
+
+        DisplayLoop(cmd_out);
 
         m_app->close();
     }
 
-    sf::RenderWindow * DisplayLoop(sf::RenderWindow * app, bool fullscreen, int * cmd, float timeout = 0)
+    sf::RenderWindow * DisplayLoop(sf::RenderWindow * app, bool fullscreen, int & cmd, float timeout = 0)
     {
         if(!app)
         {
@@ -300,7 +302,7 @@ public:
     }
 
     /* Actual loop launched by BCIInterface public functions */
-    void DisplayLoop(int * cmd = 0, float timeout = 0)
+    void DisplayLoop(int & cmd, float timeout = 0)
     {
         unsigned int frameCount = 0;
         bool in_paradigm = m_in_paradigm;
@@ -335,10 +337,7 @@ public:
                 if(event.type == sf::Event::Closed || 
                     ( event.type == sf::Event::KeyPressed && ( event.key.code == sf::Keyboard::Escape || event.key.code == sf::Keyboard::Q ) ))
                 {   
-                    if(cmd)
-                    {
-                        *cmd = -1;
-                    }
+                    cmd = -1;
                     Close(); 
                 }
                 if( event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::F1 ) 
@@ -384,9 +383,9 @@ public:
                     }
                 }
                 bool interpreter_status = m_interpreter->InterpretCommand(in_cmd, m_active_objects);
-                if(cmd && interpreter_status) 
+                if(interpreter_status)
                 { 
-                    *cmd = in_cmd; 
+                    cmd = in_cmd;
                     m_in_paradigm = false; 
                     SetCommandInterpreter(0);
                 }
@@ -558,12 +557,12 @@ void BCIInterface::DisplayLoop(bool fullscreen)
     m_impl->DisplayLoop(fullscreen);
 }
 
-sf::RenderWindow * BCIInterface::DisplayLoop(sf::RenderWindow * app, bool fullscreen, int * cmd, float timeout)
+sf::RenderWindow * BCIInterface::DisplayLoop(sf::RenderWindow * app, bool fullscreen, int & cmd, float timeout)
 {
     return m_impl->DisplayLoop(app, fullscreen, cmd, timeout);
 }
 
-sf::RenderWindow * BCIInterface::DisplayLoop(sf::RenderWindow * app, int * cmd, float timeout)
+sf::RenderWindow * BCIInterface::DisplayLoop(sf::RenderWindow * app, int & cmd, float timeout)
 {
     return m_impl->DisplayLoop(app, true, cmd, timeout);
 }

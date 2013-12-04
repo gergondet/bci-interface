@@ -126,7 +126,7 @@ int main(int argc, char * argv[])
 
     bciinterface->SetBackground(new VisionServerBG("localhost", 4242, 640, 480, compressed_data, width, height));
     
-    int * out_cmd = new int(-1);
+    int out_cmd = -1;
     float timeout = 2;
     int cross_x = 0;
     int cross_y = 0;
@@ -135,7 +135,7 @@ int main(int argc, char * argv[])
     SpriteObject * m_hud_sprite = new SpriteObject(data_path+"HUDSprite.png");
     m_hud_sprite->SetPosition(50, height-150);
 
-    while(*out_cmd != 0)
+    while(out_cmd != 0)
     {
         std::vector<std::string> commands = GenerateCommands(cross_x,cross_y);
         interpreter->SetCommands(commands);
@@ -146,7 +146,7 @@ int main(int argc, char * argv[])
 
         app = bciinterface->DisplayLoop(app, fullscreen, out_cmd, timeout);
 
-        switch(*out_cmd)
+        switch(out_cmd)
         {
             case 1:
                 cross_x = cross_y==2?0:cross_x;
@@ -179,7 +179,6 @@ int main(int argc, char * argv[])
     delete interpreter;
     delete sinterpreter;
     delete receiver;
-    delete out_cmd;
 
     return 0;
 }

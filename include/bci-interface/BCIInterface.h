@@ -65,10 +65,10 @@ public:
     void DisplayLoop(bool fullscreen = true);
 
     /* DisplayLoop function for interface chaining */
-    sf::RenderWindow * DisplayLoop(sf::RenderWindow * app, bool fullscreen, int * cmd, float timeout = 0);
+    sf::RenderWindow * DisplayLoop(sf::RenderWindow * app, bool fullscreen, int & cmd, float timeout = 0);
 
     /* DisplayLoop function for interface chaining alternate proto */
-    sf::RenderWindow * DisplayLoop(sf::RenderWindow * app, int * cmd, float timeout = 0);
+    sf::RenderWindow * DisplayLoop(sf::RenderWindow * app, int & cmd, float timeout = 0);
 
     sf::RenderWindow * GetRenderWindow();
 
