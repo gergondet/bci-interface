@@ -27,6 +27,9 @@ public:
     /* Returns the current sprite of background */
     virtual void Draw(sf::RenderWindow * app) = 0;
 
+    /* "Zoom" on a sub-rectangle, optionnaly implemented */
+    virtual void SetSubRect(int left, int top, int width, int height) {}
+
     /* Overrider if you wish to implement Draw with OpenGL */
     virtual bool DrawWithGL() { return false; }
 };

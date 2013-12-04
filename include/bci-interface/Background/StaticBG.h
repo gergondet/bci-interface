@@ -27,7 +27,7 @@ public:
 
     void ChangeImage(const std::string & new_src);
 
-    void SetSubRect(int left, int top, int width, int height);
+    virtual void SetSubRect(int left, int top, int width, int height);
 
 private:
     boost::shared_ptr<StaticBGImpl> m_impl;
