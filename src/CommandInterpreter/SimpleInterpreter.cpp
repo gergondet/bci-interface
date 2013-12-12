@@ -14,7 +14,6 @@ bool SimpleInterpreter::InterpretCommand(int command, const std::vector<DisplayO
     if(command - 1 < (int)objects.size() && command - 1 >= 0)
     {
         objects[command-1]->Highlight();
-        return true;
     }
     return false;
 }
