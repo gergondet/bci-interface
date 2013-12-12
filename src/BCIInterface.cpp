@@ -51,6 +51,7 @@ private:
 
     std::vector<DisplayObject *> m_gl_objects;
     std::vector<DisplayObject *> m_gl_objects_non_owned;
+    std::vector<DisplayObject *> m_gl_objects_to_delete;
 
     CommandReceiver * m_receiver;
     boost::thread * m_receiverth;
@@ -68,6 +69,7 @@ public:
         m_background(0), m_backgroundth(0),
         m_objects(0), m_objects_non_owned(0),
         m_gl_objects(0), m_gl_objects_non_owned(0),
+        m_gl_objects_to_delete(0),
         m_receiver(0), m_receiverth(0),
         m_overrider(0),
         m_interpreter(0)
@@ -232,8 +234,15 @@ public:
         while(m_active_objects.size() > 0)
         {
             DisplayObject * tmp = m_active_objects.back();
-            delete tmp;
             m_active_objects.pop_back();
+            if(!tmp->DrawWithGL())
+            {
+                delete tmp;
+            }
+            else
+            {
+                m_gl_objects_to_delete.push_back(tmp);
+            }
         }
         m_objects.resize(0);
         m_gl_objects.resize(0);
@@ -309,6 +318,12 @@ public:
         sf::Clock clock;
         m_close = false;
         m_finished = false;
+        while(m_gl_objects_to_delete.size())
+        {
+            DisplayObject * tmp = m_gl_objects_to_delete.back();
+            m_gl_objects_to_delete.pop_back();
+            delete tmp;
+        }
 //        if(cmd) { *cmd = 0; }
 
         /* Launch Background thread */
