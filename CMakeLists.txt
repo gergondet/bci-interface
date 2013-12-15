@@ -26,11 +26,6 @@ SETUP_PROJECT(FALSE)
 #  Look for dependencies
 #
 
-#
-# Dependency on bci-middle ware
-#
-ADD_REQUIRED_DEPENDENCY("bci-middleware")
-
 find_package( Boost 1.40.0 COMPONENTS thread system)
 
 IF(Boost_FOUND)
