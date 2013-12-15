@@ -1,5 +1,4 @@
 #include <bci-interface/BCIInterface.h>
-#include <bci-interface/Background/VisionServerBG.h>
 #include <bci-interface/DisplayObject/SSVEPStimulus.h>
 #include <bci-interface/DisplayObject/SpriteObject.h>
 #include <bci-interface/DisplayObject/TextObject.h>
@@ -70,9 +69,6 @@ int main(int argc, char * argv[])
     unsigned int height = 1024;
 
     BCIInterface * bciinterface = new BCIInterface(width, height);
-
-    bool data_compressed = true;
-    bciinterface->SetBackground(new VisionServerBG("localhost", 4242, 640, 480, data_compressed, width, height, 800, 600));
 
     /* Sprite stimulus */
     //bciinterface->AddObject(new TestStimulus(6,60, 50, 50, 100, 100, "TEST.png", "TEST_HL.png"));

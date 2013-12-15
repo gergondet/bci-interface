@@ -1,5 +1,4 @@
 #include <bci-interface/BCIInterface.h>
-#include <bci-interface/Background/VisionServerBG.h>
 #include <bci-interface/DisplayObject/SSVEPStimulus.h>
 #include <bci-interface/CommandReceiver/UDPReceiver.h>
 #include <bci-interface/CommandInterpreter/SimpleInterpreter.h>
@@ -176,7 +175,6 @@ int main(int argc, char * argv[])
     bciinterface->SetCommandOverrider(&overrider);
 
     bool data_compressed = true;
-    //bciinterface->SetBackground(new VisionServerBG("hrp2010v", 4242, 640, 480, data_compressed, width, height, 800, 600));
     BufferBG * bufferBG = new BufferBG(640, 480, width, height, iwidth, iheight);
     uint32_t * buffer = new uint32_t[640*480];
     for(unsigned int x = 0; x < 640; ++x)

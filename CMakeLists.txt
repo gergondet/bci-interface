@@ -31,11 +31,6 @@ SETUP_PROJECT()
 #
 ADD_REQUIRED_DEPENDENCY("bci-middleware")
 
-#
-# Dependency on coshell-client 
-#
-ADD_REQUIRED_DEPENDENCY("coshell-client")
-
 find_package( Boost 1.40.0 COMPONENTS thread system)
 
 IF(Boost_FOUND)
@@ -46,9 +41,6 @@ IF(Boost_FOUND)
 ENDIF(Boost_FOUND)
 
 SET(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMakeModules)
-
-ADD_REQUIRED_DEPENDENCY(visionsystem)
-ADD_REQUIRED_DEPENDENCY(visionsystem_xmlrpc_client)
 
 find_package(SFML COMPONENTS graphics window system)
 
