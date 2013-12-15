@@ -1,6 +1,8 @@
 bci-interface
 =============
 
+[![Build Status](https://travis-ci.org/gergondet/bci-interface.png?branch=master)](https://travis-ci.org/gergondet/bci-interface)
+
 A generic library to design BCI interfaces
 
 =============
