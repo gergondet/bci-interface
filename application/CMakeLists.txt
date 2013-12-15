@@ -1,5 +1,10 @@
 ADD_DEFINITIONS(${${PROJECT_NAME}_CXXFLAGS})
 
+ADD_REQUIRED_DEPENDENCY(visionsystem_xmlrpc_server)
+find_package(SFML COMPONENTS audio graphics window system)
+
+LINK_DIRECTORIES(${VISIONSYSTEM_LIBRARY_DIRS} ${VISIONSYSTEM_LIBRARY_DIRS}/vs_plugins ${VISIONSYSTEM_LIBRARY_DIRS}/vs_controllers ${VISIONSYSTEM_EXTRA_LIBRARY_DIRS})
+
 # -- The three following app cannot be compiled without coshell-bci support
 IF(COSHELLBCI_FOUND)
 
@@ -190,9 +195,12 @@ SET_TARGET_PROPERTIES(${PROJECT_NAME_LIB}
 )
 
 IF(UNIX)
-TARGET_LINK_LIBRARIES(${EXEC_NAME} "-lsfml-audio")
-TARGET_LINK_LIBRARIES(${EXEC_NAME} ${PROJECT_NAME} pthread)
+TARGET_LINK_LIBRARIES(${EXEC_NAME} ${PROJECT_NAME} ${SFML_LIBRARIES} pthread)
 ELSE(UNIX)
 TARGET_LINK_LIBRARIES(${EXEC_NAME} "bci-interface.lib;sfml-audio.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;bci-middleware.lib;OpenGL32.lib;glu32.lib")
 ENDIF(UNIX)
 TARGET_LINK_LIBRARIES(${EXEC_NAME} ${Boost_LIBRARIES})
+
+PKG_CONFIG_USE_DEPENDENCY(${EXEC_NAME} configparser)
+
+# -- EchoServer

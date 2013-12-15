@@ -9,5 +9,5 @@ Name: ${PROJECT_NAME}
 Description: 
 Version: ${PROJECT_VERSION}
 Requires: ${PACKAGE_REQUIREMENTS}
-Libs: ${LIBDIR_KW}${install_pkg_libdir} ${${PROJECT_NAME}_LDFLAGS}
-Cflags: -I${install_pkg_include_dir} ${${PROJECT_NAME}_CXXFLAGS}
+Libs: ${LIBDIR_KW}${install_pkg_libdir} ${${PROJECT_NAME}_LDFLAGS} ${SFML_LIBRARIES_LIST}
+Cflags: -I${install_pkg_include_dir} ${${PROJECT_NAME}_CXXFLAGS} -I${SFML_INCLUDE_DIR}
