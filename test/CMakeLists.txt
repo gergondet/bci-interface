@@ -20,7 +20,7 @@ SET_TARGET_PROPERTIES(${PROJECT_NAME_LIB}
 )
 
 IF(WIN32)
-TARGET_LINK_LIBRARIES(${EXEC_NAME} "bci-interface.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;bci-middleware.lib;ws2_32.lib;OpenGL32.lib;glu32.lib")
+TARGET_LINK_LIBRARIES(${EXEC_NAME} "bci-interface.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;ws2_32.lib;OpenGL32.lib;glu32.lib")
 ELSE(WIN32)
 TARGET_LINK_LIBRARIES(${EXEC_NAME} bci-interface ${SFML_LIBRARIES} pthread)
 ENDIF(WIN32)
@@ -48,7 +48,7 @@ SET_TARGET_PROPERTIES(${PROJECT_NAME_LIB}
 )
 
 IF(WIN32)
-TARGET_LINK_LIBRARIES(${EXEC_NAME} "bci-interface.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;bci-middleware.lib;ws2_32.lib;OpenGL32.lib;glu32.lib")
+TARGET_LINK_LIBRARIES(${EXEC_NAME} "bci-interface.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;ws2_32.lib;OpenGL32.lib;glu32.lib")
 ELSE(WIN32)
 TARGET_LINK_LIBRARIES(${EXEC_NAME} bci-interface ${SFML_LIBRARIES} pthread)
 ENDIF(WIN32)
@@ -76,7 +76,7 @@ SET_TARGET_PROPERTIES(${PROJECT_NAME_LIB}
 )
 
 IF(WIN32)
-TARGET_LINK_LIBRARIES(${EXEC_NAME} "bci-interface.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;bci-middleware.lib;ws2_32.lib;OpenGL32.lib;glu32.lib")
+TARGET_LINK_LIBRARIES(${EXEC_NAME} "bci-interface.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;ws2_32.lib;OpenGL32.lib;glu32.lib")
 ELSE(WIN32)
 TARGET_LINK_LIBRARIES(${EXEC_NAME} bci-interface ${SFML_LIBRARIES})
 ENDIF(WIN32)
@@ -105,7 +105,7 @@ SET_TARGET_PROPERTIES(${PROJECT_NAME_LIB}
 )
 
 IF(WIN32)
-TARGET_LINK_LIBRARIES(${EXEC_NAME} "bci-interface.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;bci-middleware.lib;ws2_32.lib;OpenGL32.lib;glu32.lib")
+TARGET_LINK_LIBRARIES(${EXEC_NAME} "bci-interface.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;ws2_32.lib;OpenGL32.lib;glu32.lib")
 ELSE(WIN32)
 TARGET_LINK_LIBRARIES(${EXEC_NAME} bci-interface ${SFML_LIBRARIES} pthread)
 ENDIF(WIN32)
@@ -135,6 +135,6 @@ TARGET_LINK_LIBRARIES(${EXEC_NAME} ${Boost_LIBRARIES})
 #IF(UNIX)
 #TARGET_LINK_LIBRARIES(${EXEC_NAME} "${PROJECT_NAME} -lsfml-graphics -lsfml-window -lsfml-system")
 #ELSE(UNIX)
-#TARGET_LINK_LIBRARIES(${EXEC_NAME} "bci-interface.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;bci-middleware.lib;ws2_32.lib")
+#TARGET_LINK_LIBRARIES(${EXEC_NAME} "bci-interface.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;ws2_32.lib")
 #ENDIF(UNIX)
 #TARGET_LINK_LIBRARIES(${EXEC_NAME} ${Boost_LIBRARIES})

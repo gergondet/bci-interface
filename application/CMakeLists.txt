@@ -31,7 +31,7 @@ SET_TARGET_PROPERTIES(${PROJECT_NAME_LIB}
 IF(UNIX)
 TARGET_LINK_LIBRARIES(${EXEC_NAME} ${PROJECT_NAME} ${SFML_LIBRARIES} pthread)
 ELSE(UNIX)
-TARGET_LINK_LIBRARIES(${EXEC_NAME} "bci-interface.lib;sfml-audio.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;bci-middleware.lib;OpenGL32.lib;glu32.lib")
+TARGET_LINK_LIBRARIES(${EXEC_NAME} "bci-interface.lib;sfml-audio.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;OpenGL32.lib;glu32.lib")
 ENDIF(UNIX)
 TARGET_LINK_LIBRARIES(${EXEC_NAME} ${Boost_LIBRARIES})
 

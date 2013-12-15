@@ -2,8 +2,10 @@ SET(LIB_NAME bci-interface)
 
 SET(${LIB_NAME}_src
 CommandReceiver/UDPReceiver.cpp
-CommandReceiver/TCPClient.cpp
+CommandReceiver/TCPClientReceiver.cpp
 CommandReceiver/TCPReceiver.cpp
+Utils/TCPClient.cpp
+Utils/UDPSocket.cpp
 Utils/UDPServer.cpp
 Utils/square-function.cpp
 Utils/Win32.cpp
@@ -40,7 +42,7 @@ SET_TARGET_PROPERTIES(${LIB_NAME}
   INSTALL_RPATH lib)
 
 ADD_DEFINITIONS(${${PROJECT_NAME}_CXXFLAGS})
-TARGET_LINK_LIBRARIES(${LIB_NAME} ${BCIMIDDLEWARE_LIBS} glut GLU GL)
+TARGET_LINK_LIBRARIES(${LIB_NAME} glut GLU GL)
 # -- Not needed in WIN32 because boost comes with autolink
 
 IF(NOT WIN32)
@@ -48,12 +50,9 @@ TARGET_LINK_LIBRARIES(${LIB_NAME} ${Boost_LIBRARIES})
 TARGET_LINK_LIBRARIES(${LIB_NAME} ${SFML_LIBRARIES})
 ENDIF(NOT WIN32)
 
-PKG_CONFIG_USE_DEPENDENCY(${LIB_NAME} bci-middleware)
-
-
 # -- Manual link for WIN32
 IF(WIN32)
-TARGET_LINK_LIBRARIES(${LIB_NAME} "sfml-graphics.lib;sfml-window.lib;sfml-system.lib;bci-middleware.lib;OpenGL32.lib;glu32.lib")
+TARGET_LINK_LIBRARIES(${LIB_NAME} "sfml-graphics.lib;sfml-window.lib;sfml-system.lib;OpenGL32.lib;glu32.lib")
 ENDIF(WIN32)
   
 INSTALL(TARGETS ${LIB_NAME}
