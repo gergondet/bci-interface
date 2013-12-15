@@ -56,7 +56,7 @@ public:
             m_iheight = m_wheight;
         }
         m_sprite_display->setScale(m_scale_x, m_scale_y);
-        m_sprite_display->setPosition(m_wwidth/2 - m_iwidth/2, m_wheight/2 - m_iheight/2);
+        m_sprite_display->setPosition((float)(m_wwidth/2 - m_iwidth/2), (float)(m_wheight/2 - m_iheight/2));
         m_sprite_display->setTextureRect(m_subrect);
     }
 
@@ -117,9 +117,9 @@ public:
             for(size_t i = 0; i < m_width*m_height; ++i)
             {
                 gray = (img[4*i] + img[4*i+1] + img[4*i+2])/3;
-                m_dataImage[4*i]   = gray;
-                m_dataImage[4*i+1] = gray;
-                m_dataImage[4*i+2] = gray;
+                m_dataImage[4*i]   = (sf::Uint8)gray;
+                m_dataImage[4*i+1] = (sf::Uint8)gray;
+                m_dataImage[4*i+2] = (sf::Uint8)gray;
                 m_dataImage[4*i+3] = 255;
             }
         }    
@@ -146,9 +146,9 @@ public:
     void SetSubRect(int left, int top, int width, int height)
     {
         m_subrect = sf::IntRect(left, top, width, height);
-        m_scale_x = m_scale_x*m_curr_width/width;
+        m_scale_x = m_scale_x*(float)(m_curr_width)/(float)width;
         m_curr_width = width;
-        m_scale_y = m_scale_y*m_curr_height/height;
+        m_scale_y = m_scale_y*(float)m_curr_height/(float)height;
         m_curr_height = height;
     }
 

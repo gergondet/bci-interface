@@ -29,15 +29,15 @@ public:
         : SSVEPStimulus(frequency, screenFrequency, x, y, size_x, size_y, tx, tx_hl), hl(false)
     {}
 
-    TestStimulus(int frequency, int screenFrequency, float x, float y, float radius, int r, int g, int b, int a)
+    TestStimulus(int frequency, int screenFrequency, float x, float y, float radius, uint8_t r, uint8_t g, uint8_t b, uint8_t a)
         : SSVEPStimulus(frequency, screenFrequency, x, y, radius, r, g, b, a), hl(false)
     {} 
 
-    TestStimulus(int frequency, int screenFrequency, float x, float y, float size_x, float size_y, int r, int g, int b, int a)
+    TestStimulus(int frequency, int screenFrequency, float x, float y, float size_x, float size_y, uint8_t r, uint8_t g, uint8_t b, uint8_t a)
         : SSVEPStimulus(frequency, screenFrequency, x, y, size_x, size_y, r, g, b, a), hl(false)
     {} 
 
-    void Process(sf::Event & event, const BCIInterface & intface)
+    void Process(sf::Event & event, const BCIInterface &)
     {
         if(event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Left)
         {
@@ -62,7 +62,7 @@ public:
     }
 };
 
-int main(int argc, char * argv[])
+int main(int, char * [])
 {
     bool fullscreen = true;
     unsigned int width = 1280;

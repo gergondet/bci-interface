@@ -29,7 +29,7 @@ public:
     {        
     }
 
-    bool InterpretCommand(int command, const std::vector<DisplayObject*> & objects)
+    bool InterpretCommand(int command, const std::vector<DisplayObject*> &)
     {
         if(command == 0)
         {
@@ -46,7 +46,7 @@ public:
         }
         struct timeval tv_now;
         gettimeofday(&tv_now, 0);
-        uint64_t time_now = tv_now.tv_sec*1e6 + tv_now.tv_usec;
+        uint64_t time_now = tv_now.tv_sec*1000000 + tv_now.tv_usec;
         if(command == m_command)
         {
             if(time_now - m_time_reset > m_time_hold)
@@ -68,7 +68,7 @@ public:
         m_command = 0;
         struct timeval tv_now;
         gettimeofday(&tv_now, 0);
-        uint64_t time_now = tv_now.tv_sec*1e6 + tv_now.tv_usec;
+        uint64_t time_now = tv_now.tv_sec*1000000 + tv_now.tv_usec;
         m_time_reset = time_now;
     }
 };

@@ -17,9 +17,10 @@ public:
     virtual void SetPosition(float X, float Y) = 0;
     virtual void SetRotation(float deg_angle) = 0;
     virtual void SetScale(float sX, float sY) = 0;
-    virtual void Resize(float size_x, float size_y) {}
+    /* Resize(size_x, size_y) */
+    virtual void Resize(float, float) {}
     virtual void Draw(sf::RenderWindow * app) = 0;
-    virtual void DrawInactive(sf::RenderWindow * app) {}
+    virtual void DrawInactive(sf::RenderWindow *) {}
 };
 
 struct ShapeImpl : public GraphImpl
@@ -29,7 +30,7 @@ private:
     float size_x;
     float size_y;
 public:
-    ShapeImpl(float x, float y, float size_x, float size_y, int r, int g, int b, int a) : 
+    ShapeImpl(float x, float y, float size_x, float size_y, uint8_t r, uint8_t g, uint8_t b, uint8_t a) : 
         m_shape(new sf::RectangleShape(sf::Vector2f(size_x, size_y)))
         , size_x(size_x), size_y(size_y)
     {
@@ -40,7 +41,7 @@ public:
         m_shape->setPosition(x,y);
     }
 
-    ShapeImpl(float x, float y, float radius, int r, int g, int b, int a) : 
+    ShapeImpl(float x, float y, float radius, uint8_t r, uint8_t g, uint8_t b, uint8_t a) : 
         m_shape(new sf::CircleShape(radius)) 
         , size_x(2*radius), size_y(2*radius)
     {
@@ -111,9 +112,9 @@ public:
         m_texture.loadFromFile(texture);
         m_texture_hl.loadFromFile(texture_hl);
         m_sprite.setTexture(m_texture);
-        size_x = m_texture.getSize().x;
-        size_y = m_texture.getSize().y;
-        m_sprite.setOrigin(m_texture.getSize().x/2, m_texture.getSize().y/2);
+        size_x = (float)m_texture.getSize().x;
+        size_y = (float)m_texture.getSize().y;
+        m_sprite.setOrigin((float)m_texture.getSize().x/2, (float)m_texture.getSize().y/2);
         m_sprite.setPosition(x,y);
         if(size_x_i == 0) { size_x_i = size_x; }
         if(size_y_i == 0) { size_y_i = size_y; }
@@ -182,11 +183,11 @@ public:
         m_texture_inactive_hl.loadFromFile(texture_inactive_hl);
         m_sprite.setTexture(m_texture);
         m_sprite_inactive.setTexture(m_texture_inactive);
-        size_x = m_texture.getSize().x;
-        size_y = m_texture.getSize().y;
-        m_sprite.setOrigin(m_texture.getSize().x/2, m_texture.getSize().y/2);
+        size_x = (float)m_texture.getSize().x;
+        size_y = (float)m_texture.getSize().y;
+        m_sprite.setOrigin((float)m_texture.getSize().x/2, (float)m_texture.getSize().y/2);
         m_sprite.setPosition(x,y);
-        m_sprite_inactive.setOrigin(m_texture.getSize().x/2, m_texture.getSize().y/2);
+        m_sprite_inactive.setOrigin((float)m_texture.getSize().x/2, (float)m_texture.getSize().y/2);
         m_sprite_inactive.setPosition(x,y);
         if(size_x_i == 0) { size_x_i = size_x; }
         if(size_y_i == 0) { size_y_i = size_y; }
@@ -300,7 +301,7 @@ public:
         }
     }
 
-    SSVEPStimulusImpl(int frequency, int screenFrequency, float x, float y, float radius, int r, int g, int b, int a) : 
+    SSVEPStimulusImpl(int frequency, int screenFrequency, float x, float y, float radius, uint8_t r, uint8_t g, uint8_t b, uint8_t a) : 
         m_graph(new ShapeImpl(x, y, radius, r, g, b, a)),
         m_gl(false),
         m_frequency(frequency) , m_screenFrequency(screenFrequency)
@@ -322,7 +323,7 @@ public:
         }
     }
 
-    SSVEPStimulusImpl(int frequency, int screenFrequency, float x, float y, float size_x, float size_y, int r, int g, int b, int a) : 
+    SSVEPStimulusImpl(int frequency, int screenFrequency, float x, float y, float size_x, float size_y, uint8_t r, uint8_t g, uint8_t b, uint8_t a) : 
         m_graph(new ShapeImpl(x, y, size_x, size_y, r, g, b, a)),
         m_gl(false),
         m_frequency(frequency) , m_screenFrequency(screenFrequency)
@@ -460,7 +461,7 @@ public:
         }
     }
 
-    void Display(sf::RenderWindow * app, unsigned int frameCount, sf::Clock & clock)
+    void Display(sf::RenderWindow * app, unsigned int frameCount, sf::Clock &)
     {
         if(m_graph && m_frameSeq[frameCount % m_screenFrequency])
         {
@@ -504,12 +505,12 @@ SSVEPStimulus::SSVEPStimulus(int frequency, int screenFrequency, float x, float 
 {
 }
 
-SSVEPStimulus::SSVEPStimulus(int frequency, int screenFrequency, float x, float y, float radius, int r, int g, int b, int a) :
+SSVEPStimulus::SSVEPStimulus(int frequency, int screenFrequency, float x, float y, float radius, uint8_t r, uint8_t g, uint8_t b, uint8_t a) :
     m_impl(new SSVEPStimulusImpl(frequency, screenFrequency, x, y, radius, r, g, b, a))
 {
 }
 
-SSVEPStimulus::SSVEPStimulus(int frequency, int screenFrequency, float x, float y, float size_x, float size_y, int r, int g, int b, int a) :
+SSVEPStimulus::SSVEPStimulus(int frequency, int screenFrequency, float x, float y, float size_x, float size_y, uint8_t r, uint8_t g, uint8_t b, uint8_t a) :
     m_impl(new SSVEPStimulusImpl(frequency, screenFrequency, x, y, size_x, size_y, r, g, b, a))
 {
 }

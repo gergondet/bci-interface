@@ -13,7 +13,7 @@ public:
     {
     }
 
-    void Process(sf::Event & event, const BCIInterface & iface)
+    void Process(sf::Event & event, const BCIInterface &)
     {
         if(m_keyboard_override.size() != 0)
         {

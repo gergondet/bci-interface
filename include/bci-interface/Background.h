@@ -28,7 +28,8 @@ public:
     virtual void Draw(sf::RenderWindow * app) = 0;
 
     /* "Zoom" on a sub-rectangle, optionnaly implemented */
-    virtual void SetSubRect(int left, int top, int width, int height) {}
+    /* Arguments are (left, top, width, height) */
+    virtual void SetSubRect(int, int, int, int) {}
 
     /* Overrider if you wish to implement Draw with OpenGL */
     virtual bool DrawWithGL() { return false; }

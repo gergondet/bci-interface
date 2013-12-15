@@ -339,7 +339,7 @@ public:
 
         while(!m_close && in_paradigm == m_in_paradigm && m_app->isOpen())
         {
-            unsigned int newFrameCount = 6*clock.getElapsedTime().asMilliseconds()*0.01;
+            unsigned int newFrameCount = static_cast<unsigned int>(trunc(6*clock.getElapsedTime().asMilliseconds()*0.01));
             /* cheat when missing a frame */
             frameCount = newFrameCount > frameCount+1?frameCount+1:newFrameCount;
 

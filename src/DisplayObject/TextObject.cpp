@@ -22,7 +22,7 @@ public:
     {
     }
 
-    void Display(sf::RenderWindow * app, unsigned int frameCount, sf::Clock & clock)
+    void Display(sf::RenderWindow * app, unsigned int, sf::Clock &)
     {
         app->draw(m_text);
     } 

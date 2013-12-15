@@ -33,7 +33,7 @@ public:
         m_flash_before_cmd = m_trials*m_nb_objects;
     }
 
-    bool InterpretCommand(int command, const std::vector<DisplayObject *> & objects)
+    bool InterpretCommand(int, const std::vector<DisplayObject *> &)
     {
 		return false;
     }

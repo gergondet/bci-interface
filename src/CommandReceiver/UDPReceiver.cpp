@@ -29,7 +29,7 @@ public:
 
     void CommandLoop()
     {
-        float timeout = 1;
+        int timeout = 1;
         while(!m_close)
         {
             std::string buffer;

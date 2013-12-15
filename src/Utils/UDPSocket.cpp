@@ -146,6 +146,7 @@ struct UDPSocketImpl
 #ifndef WIN32
                 std::cerr << std::strerror(sockfd) << std::endl;
 #endif
+                return false;
             }
         }
 
@@ -182,6 +183,7 @@ struct UDPSocketImpl
 				return closesocket(sockfd) == 0;
 #endif
             }
+            return false;
         };
 
     };

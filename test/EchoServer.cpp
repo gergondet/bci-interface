@@ -11,7 +11,7 @@ public:
     }
 };
 
-int main(int argc, char * argv[])
+int main(int, char * [])
 {
     short port = 4242;
     boost::asio::io_service io_service;
