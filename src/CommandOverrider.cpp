@@ -1,4 +1,4 @@
-#include <bci-interface/CommandOverrider.h>
+#include "bci-interface/CommandOverrider.h"
 
 #include <iostream>
 #include <map>

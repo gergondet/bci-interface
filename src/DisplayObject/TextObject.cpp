@@ -1,4 +1,4 @@
-#include <bci-interface/DisplayObject/TextObject.h>
+#include "bci-interface/DisplayObject/TextObject.h"
 
 #include <iostream>
 #include <SFML/Graphics.hpp>

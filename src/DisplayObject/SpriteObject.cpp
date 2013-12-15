@@ -1,4 +1,4 @@
-#include <bci-interface/DisplayObject/SpriteObject.h>
+#include "bci-interface/DisplayObject/SpriteObject.h"
 
 #include <iostream>
 #include <SFML/Graphics.hpp>

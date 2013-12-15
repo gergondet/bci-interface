@@ -5,7 +5,7 @@
 #ifndef WIN32
 #include <sys/time.h>
 #else
-#include <bci-interface/Utils/Win32.h>
+#include "bci-interface/Utils/Win32.h"
 #endif
 
 namespace bciinterface

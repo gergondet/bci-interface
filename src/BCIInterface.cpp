@@ -1,13 +1,13 @@
-#include <bci-interface/BCIInterface.h>
+#include "bci-interface/BCIInterface.h"
 
-#include <bci-interface/EventHandler.h>
+#include "bci-interface/EventHandler.h"
 
-#include <bci-interface/Background.h>
-#include <bci-interface/DisplayObject.h>
+#include "bci-interface/Background.h"
+#include "bci-interface/DisplayObject.h"
 
-#include <bci-interface/CommandReceiver.h>
-#include <bci-interface/CommandOverrider.h>
-#include <bci-interface/CommandInterpreter.h>
+#include "bci-interface/CommandReceiver.h"
+#include "bci-interface/CommandOverrider.h"
+#include "bci-interface/CommandInterpreter.h"
 
 #include <boost/bind.hpp>
 #include <boost/thread.hpp>
@@ -19,7 +19,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/OpenGL.hpp>
 
-#include <bci-interface/Utils/Win32.h>
+#include "bci-interface/Utils/Win32.h"
 
 namespace bciinterface
 {

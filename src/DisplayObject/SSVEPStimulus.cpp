@@ -1,6 +1,6 @@
-#include <bci-interface/DisplayObject/SSVEPStimulus.h>
+#include "bci-interface/DisplayObject/SSVEPStimulus.h"
 
-#include <bci-interface/Utils/square-function.h>
+#include "bci-interface/Utils/square-function.h"
 #include <iostream>
 #include <SFML/Graphics.hpp>
 

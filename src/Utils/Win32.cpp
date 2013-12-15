@@ -1,4 +1,4 @@
-#include <bci-interface/Utils/Win32.h>
+#include "bci-interface/Utils/Win32.h"
 
 #ifdef WIN32
 namespace bciinterface

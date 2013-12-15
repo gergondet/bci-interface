@@ -1,6 +1,6 @@
-#include <bci-interface/CommandInterpreter/P300Interpreter.h>
+#include "bci-interface/CommandInterpreter/P300Interpreter.h"
 
-#include <bci-interface/DisplayObject.h>
+#include "bci-interface/DisplayObject.h"
 
 namespace bciinterface
 {

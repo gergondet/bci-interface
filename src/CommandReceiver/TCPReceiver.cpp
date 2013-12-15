@@ -1,4 +1,4 @@
-#include <bci-interface/CommandReceiver/TCPReceiver.h>
+#include "bci-interface/CommandReceiver/TCPReceiver.h"
 
 #include <boost/thread.hpp>
 
