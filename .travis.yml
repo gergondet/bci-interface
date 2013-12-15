@@ -1,0 +1,22 @@
+language: cpp
+compiler: gcc
+env:
+  global:
+  - APT_DEPENDENCIES="libpthread-stubs0-dev libgl1-mesa-dev libx11-dev libxrandr-dev libfreetype6-dev libglew1.5-dev libjpeg8-dev libgpgme11-dev libsndfile1-dev libopenal-dev"
+  - GIT_DEPENDENCIES="LaurentGomila/SFML"
+  matrix: # this section is for the Debian branch only
+  - DIST=unstable
+  - DIST=saucy
+  - DIST=raring
+  - DIST=quantal
+  - DIST=precise
+notifications:
+  email:
+  - pierre.gergondet+github@gmail.com 
+branches:
+  only:
+  - travis
+script: ./.travis/build | sed -e 's|${GNUPG_PASSPHRASE}|\#EDITED\#|g' -e 's|${GH_PUSH_URI}|\#EDITED\#|g'
+after_success: ./.travis/after_success | sed -e 's|${GNUPG_PASSPHRASE}|\#EDITED\#|g' -e 's|${GH_PUSH_URI}|\#EDITED\#|g'
+after_failure: ./.travis/after_failure | sed -e 's|${GNUPG_PASSPHRASE}|\#EDITED\#|g' -e 's|${GH_PUSH_URI}|\#EDITED\#|g'
+before_install: ./.travis/before_install | sed -e 's|${GNUPG_PASSPHRASE}|\#EDITED\#|g' -e 's|${GH_PUSH_URI}|\#EDITED\#|g'
