@@ -1,6 +1,6 @@
-#include <bci-interface/CommandReceiver/UDPReceiver.h>
+#include "bci-interface/CommandReceiver/UDPReceiver.h"
 
-#include <bci-middleware/UDPSocket.h>
+#include "bci-interface/Utils/UDPSocket.h"
 #include <iostream>
 #include <sstream>
 
@@ -10,7 +10,7 @@ namespace bciinterface
 struct UDPReceiverImpl
 {
 private:
-    bcimw::UDPSocket m_socket;
+    UDPSocket m_socket;
     int m_command;
     bool m_close;
 public:
@@ -29,7 +29,7 @@ public:
 
     void CommandLoop()
     {
-        float timeout = 1;
+        int timeout = 1;
         while(!m_close)
         {
             std::string buffer;

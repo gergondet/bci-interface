@@ -1,4 +1,4 @@
-#include <bci-interface/Utils/UDPServer.h>
+#include "bci-interface/Utils/UDPServer.h"
 
 #include <boost/bind.hpp>
 
@@ -47,7 +47,7 @@ void UDPServer::handle_receive_from(const boost::system::error_code& error, size
     }
 }
 
-void UDPServer::handle_send_to(const boost::system::error_code& error, size_t bytes_sent)
+void UDPServer::handle_send_to(const boost::system::error_code&, size_t)
 {
     socket_.async_receive_from(
         boost::asio::buffer(data_, max_length), sender_endpoint_,

@@ -1,13 +1,13 @@
-#include <bci-interface/BCIInterface.h>
+#include "bci-interface/BCIInterface.h"
 
-#include <bci-interface/EventHandler.h>
+#include "bci-interface/EventHandler.h"
 
-#include <bci-interface/Background.h>
-#include <bci-interface/DisplayObject.h>
+#include "bci-interface/Background.h"
+#include "bci-interface/DisplayObject.h"
 
-#include <bci-interface/CommandReceiver.h>
-#include <bci-interface/CommandOverrider.h>
-#include <bci-interface/CommandInterpreter.h>
+#include "bci-interface/CommandReceiver.h"
+#include "bci-interface/CommandOverrider.h"
+#include "bci-interface/CommandInterpreter.h"
 
 #include <boost/bind.hpp>
 #include <boost/thread.hpp>
@@ -19,7 +19,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/OpenGL.hpp>
 
-#include <bci-interface/Utils/Win32.h>
+#include "bci-interface/Utils/Win32.h"
 
 namespace bciinterface
 {
@@ -51,6 +51,7 @@ private:
 
     std::vector<DisplayObject *> m_gl_objects;
     std::vector<DisplayObject *> m_gl_objects_non_owned;
+    std::vector<DisplayObject *> m_gl_objects_to_delete;
 
     CommandReceiver * m_receiver;
     boost::thread * m_receiverth;
@@ -68,6 +69,7 @@ public:
         m_background(0), m_backgroundth(0),
         m_objects(0), m_objects_non_owned(0),
         m_gl_objects(0), m_gl_objects_non_owned(0),
+        m_gl_objects_to_delete(0),
         m_receiver(0), m_receiverth(0),
         m_overrider(0),
         m_interpreter(0)
@@ -232,8 +234,15 @@ public:
         while(m_active_objects.size() > 0)
         {
             DisplayObject * tmp = m_active_objects.back();
-            delete tmp;
             m_active_objects.pop_back();
+            if(!tmp->DrawWithGL())
+            {
+                delete tmp;
+            }
+            else
+            {
+                m_gl_objects_to_delete.push_back(tmp);
+            }
         }
         m_objects.resize(0);
         m_gl_objects.resize(0);
@@ -261,12 +270,14 @@ public:
         InitGL();
         Resize();
 
-        DisplayLoop();
+        int cmd_out = -1;
+
+        DisplayLoop(cmd_out);
 
         m_app->close();
     }
 
-    sf::RenderWindow * DisplayLoop(sf::RenderWindow * app, bool fullscreen, int * cmd, float timeout = 0)
+    sf::RenderWindow * DisplayLoop(sf::RenderWindow * app, bool fullscreen, int & cmd, float timeout = 0)
     {
         if(!app)
         {
@@ -300,13 +311,19 @@ public:
     }
 
     /* Actual loop launched by BCIInterface public functions */
-    void DisplayLoop(int * cmd = 0, float timeout = 0)
+    void DisplayLoop(int & cmd, float timeout = 0)
     {
         unsigned int frameCount = 0;
         bool in_paradigm = m_in_paradigm;
         sf::Clock clock;
         m_close = false;
         m_finished = false;
+        while(m_gl_objects_to_delete.size())
+        {
+            DisplayObject * tmp = m_gl_objects_to_delete.back();
+            m_gl_objects_to_delete.pop_back();
+            delete tmp;
+        }
 //        if(cmd) { *cmd = 0; }
 
         /* Launch Background thread */
@@ -322,7 +339,7 @@ public:
 
         while(!m_close && in_paradigm == m_in_paradigm && m_app->isOpen())
         {
-            unsigned int newFrameCount = 6*clock.getElapsedTime().asMilliseconds()*0.01;
+            unsigned int newFrameCount = static_cast<unsigned int>(trunc(6*clock.getElapsedTime().asMilliseconds()*0.01));
             /* cheat when missing a frame */
             frameCount = newFrameCount > frameCount+1?frameCount+1:newFrameCount;
 
@@ -335,10 +352,7 @@ public:
                 if(event.type == sf::Event::Closed || 
                     ( event.type == sf::Event::KeyPressed && ( event.key.code == sf::Keyboard::Escape || event.key.code == sf::Keyboard::Q ) ))
                 {   
-                    if(cmd)
-                    {
-                        *cmd = -1;
-                    }
+                    cmd = -1;
                     Close(); 
                 }
                 if( event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::F1 ) 
@@ -384,9 +398,9 @@ public:
                     }
                 }
                 bool interpreter_status = m_interpreter->InterpretCommand(in_cmd, m_active_objects);
-                if(cmd && interpreter_status) 
+                if(interpreter_status)
                 { 
-                    *cmd = in_cmd; 
+                    cmd = in_cmd;
                     m_in_paradigm = false; 
                     SetCommandInterpreter(0);
                 }
@@ -558,12 +572,12 @@ void BCIInterface::DisplayLoop(bool fullscreen)
     m_impl->DisplayLoop(fullscreen);
 }
 
-sf::RenderWindow * BCIInterface::DisplayLoop(sf::RenderWindow * app, bool fullscreen, int * cmd, float timeout)
+sf::RenderWindow * BCIInterface::DisplayLoop(sf::RenderWindow * app, bool fullscreen, int & cmd, float timeout)
 {
     return m_impl->DisplayLoop(app, fullscreen, cmd, timeout);
 }
 
-sf::RenderWindow * BCIInterface::DisplayLoop(sf::RenderWindow * app, int * cmd, float timeout)
+sf::RenderWindow * BCIInterface::DisplayLoop(sf::RenderWindow * app, int & cmd, float timeout)
 {
     return m_impl->DisplayLoop(app, true, cmd, timeout);
 }

@@ -1,4 +1,4 @@
-#include <bci-interface/DisplayObject/SpriteObject.h>
+#include "bci-interface/DisplayObject/SpriteObject.h"
 
 #include <iostream>
 #include <SFML/Graphics.hpp>
@@ -28,8 +28,8 @@ public:
         m_sprite->setPosition(0,0);
         m_x = 0;
         m_y = 0;
-        m_size_x = m_texture->getSize().x;
-        m_size_y = m_texture->getSize().y;
+        m_size_x = (float)m_texture->getSize().x;
+        m_size_y = (float)m_texture->getSize().y;
     }
 
     ~SpriteObjectImpl()
@@ -38,7 +38,7 @@ public:
         delete m_texture;
     }
 
-    void Display(sf::RenderWindow * app, unsigned int frameCount, sf::Clock & clock)
+    void Display(sf::RenderWindow * app, unsigned int, sf::Clock &)
     {
         app->draw(*m_sprite);
     } 

@@ -29,13 +29,16 @@ public:
     virtual bool DrawWithGL() { return false; }
 
     /* Process an event */
-    virtual void Process(sf::Event & event, const BCIInterface & iface) {}
+    virtual void Process(sf::Event &, const BCIInterface &) {}
 
-    virtual void SetPosition(float X, float Y) {}
+    /* Set the position of the object, arguments: X and Y */
+    virtual void SetPosition(float, float) {}
 
-    virtual void SetRotation(float deg_angle) {}
+    /* Set absolute rotation, in degree */
+    virtual void SetRotation(float) {}
 
-    virtual void Resize(float size_x, float size_y) {}
+    /* Resize object, arguments: size_x and size_y */
+    virtual void Resize(float, float) {}
 
     virtual void Highlight() {}
 

@@ -1,15 +1,15 @@
 #include <bci-interface/BCIInterface.h>
 #include <bci-interface/Background/VisionServerBG.h>
 #include <bci-interface/DisplayObject/SSVEPStimulus.h>
-#include <bci-interface/DisplayObject/SpriteObject.h>
 #include <bci-interface/CommandReceiver/UDPReceiver.h>
 #include <bci-interface/CommandInterpreter/CoshellInterpreter.h>
-#include <bci-interface/CommandInterpreter/SimpleInterpreter.h>
 
 #include <SFML/Graphics.hpp>
 
 #include <iostream>
 #include <sstream>
+
+#include <boost/thread.hpp>
 
 #ifdef WIN32
 #include <Windows.h>
@@ -53,55 +53,52 @@ inline std::vector<std::string> GenerateCommands(int x, int y)
     return result;
 }
 
+template<typename T>
+inline int sgn(T a)
+{
+    return a > 0 ? 1 : ( a == 0 ? 0 : -1 );
+}
+
 inline void CreateObjects(BCIInterface * bciinterface, int cross_x, int cross_y, float width, float height)
 {
+    float orig_x = width/2 + cross_x*width/6 + sgn(cross_x)*50;
+    float orig_y = height/2 - cross_y*height/6 - sgn(cross_y) * 50;
     bool out_of_screen = false;
     if(cross_y > 1)
     {
-        bciinterface->AddObject(new SSVEPStimulus(7, 60, width-100, height-100, 150, 150, 255, 0, 0, 255));
+        bciinterface->AddObject(new SSVEPStimulus(6, 60, width/2, height/2, 150, 150, "STOP.png", "STOP_HL.png"));
         out_of_screen = true;
     }
-    else { bciinterface->AddObject(new SSVEPStimulus(7,60, width/2, 100, 150, 150, 255, 0, 0, 255)); }
+    else { bciinterface->AddObject(new SSVEPStimulus(6,60, orig_x, orig_y - height/6, 200, 200, "UP.png", "UP_HL.png")); }
     if(cross_x > 1)
     {
-        if(!out_of_screen) { bciinterface->AddObject(new SSVEPStimulus(12, 60, width-100, height-100, 150, 150, 255, 0, 0, 255)); }
-        else { bciinterface->AddObject(new SSVEPStimulus(12, 60, width+200, height+200, 1, 1, 255, 0, 0, 255)); }
+        if(!out_of_screen) { bciinterface->AddObject(new SSVEPStimulus(8, 60, width/2, height/2, 150, 150, "STOP.png", "STOP_HL.png")); }
+        else { bciinterface->AddObject(new SSVEPStimulus(8, 60, width+200, height+200, 200, 200, "RIGHT.png", "RIGHT_HL.png")); }
         out_of_screen = true;
     }
-    else { bciinterface->AddObject(new SSVEPStimulus(12,60, width-100, height/2, 150, 150, 255, 0, 0, 255)); }
+    else { bciinterface->AddObject(new SSVEPStimulus(8,60, orig_x + width/6, orig_y, 200, 200, "RIGHT.png", "RIGHT_HL.png")); }
     if(cross_y < -1)
     {
-        if(!out_of_screen) { bciinterface->AddObject(new SSVEPStimulus(5, 60, width-100, height-100, 150, 150, 255, 0, 0, 255)); }
-        else { bciinterface->AddObject(new SSVEPStimulus(5, 60, width+200, height+200, 1, 1, 255, 0, 0, 255)); }
+        if(!out_of_screen) { bciinterface->AddObject(new SSVEPStimulus(11, 60, width/2, height/2, 150, 150, "STOP.png", "STOP_HL.png")); }
+        else { bciinterface->AddObject(new SSVEPStimulus(11, 60, width+200, height+200, 200, 200, "DOWN.png", "DOWN_HL.png")); }
         out_of_screen = true;
     }
-    else { bciinterface->AddObject(new SSVEPStimulus(5,60, width/2, height-100, 150, 150, 255, 0, 0, 255)); }
+    else { bciinterface->AddObject(new SSVEPStimulus(11,60, orig_x, orig_y + height/6, 200, 200, "DOWN.png", "DOWN_HL.png")); }
     if(cross_x < -1)
     {
-        if(!out_of_screen) { bciinterface->AddObject(new SSVEPStimulus(9, 60, width-100, height-100, 150, 150, 255, 0, 0, 255)); }
-        else { bciinterface->AddObject(new SSVEPStimulus(9, 60, width+200, height+200, 1, 1, 255, 0, 0, 255)); }
+        if(!out_of_screen) { bciinterface->AddObject(new SSVEPStimulus(13, 60, width/2, height/2, 150, 150, "STOP.png", "STOP_HL.png")); }
+        else { bciinterface->AddObject(new SSVEPStimulus(13, 60, width+200, height+200, 200, 200, "LEFT.png", "LEFT_HL.png")); }
         out_of_screen = true;
     }
-    else { bciinterface->AddObject(new SSVEPStimulus(9,60, 100, height/2, 150, 150, 255, 0, 0, 255)); }
-}
-
-inline void GenerateHUD(BCIInterface * bciinterface, SpriteObject * m_hud_sprite, int cross_x, int cross_y)
-{
-    m_hud_sprite->SetSubRect((cross_x+2)*100+1, (-cross_y+2)*100+1, 100, 100);
-    bciinterface->AddNonOwnedObject(m_hud_sprite);
+    else { bciinterface->AddObject(new SSVEPStimulus(13,60, orig_x - width/6, orig_y, 200, 200, "LEFT.png", "LEFT_HL.png")); }
 }
 
 int main(int argc, char * argv[])
 {
-    bool fullscreen = false;
+    bool fullscreen = true;
     unsigned int width = 1280;
     unsigned int height = 800;
     bool compressed_data = true;
-
-    /* Get data path with a "good enough" version of basename */
-    std::string app_path(argv[0]);
-    size_t fslash = app_path.find_last_of('/');
-    std::string data_path = app_path.substr(0, fslash)+"/data/";
 
     BCIInterface * bciinterface = new BCIInterface(width, height);
 
@@ -120,33 +117,32 @@ int main(int argc, char * argv[])
     interpreter->SetFinalCommands(finalcommands);
     bciinterface->SetCommandInterpreter(interpreter);
 
-    /* TODO DEBUG ONLY */
-    SimpleInterpreter * sinterpreter = new SimpleInterpreter();
-    bciinterface->SetCommandInterpreter(sinterpreter);
-
-    bciinterface->SetBackground(new VisionServerBG("localhost", 4242, 640, 480, compressed_data, width, height));
+    bciinterface->SetBackground(new VisionServerBG("hrp2010v", 4242, 640, 480, compressed_data, width, height));
     
-    int * out_cmd = new int(-1);
+    int out_cmd = -1;
     float timeout = 2;
     int cross_x = 0;
     int cross_y = 0;
     sf::RenderWindow * app = 0;
+    boost::thread th(boost::bind(&bciinterface::BCIInterface::DisplayLoop, bciinterface, app, fullscreen, out_cmd, timeout));
 
-    SpriteObject * m_hud_sprite = new SpriteObject(data_path+"HUDSprite.png");
-    m_hud_sprite->SetPosition(50, height-150);
-
-    while(*out_cmd != 0)
+    while(out_cmd != 0)
     {
         std::vector<std::string> commands = GenerateCommands(cross_x,cross_y);
         interpreter->SetCommands(commands);
 
         bciinterface->Clean();
         CreateObjects(bciinterface, cross_x, cross_y, (float)width, (float)height);
-        GenerateHUD(bciinterface, m_hud_sprite, cross_x, cross_y);
+        bciinterface->StartParadigm();
+        bciinterface->SetCommandInterpreter(interpreter);
 
-        app = bciinterface->DisplayLoop(app, fullscreen, out_cmd, timeout);
+        while(bciinterface->ParadigmStatus())
+        {
+            usleep(100000);
+        }
+        sleep(2);
 
-        switch(*out_cmd)
+        switch(out_cmd)
         {
             case 1:
                 cross_x = cross_y==2?0:cross_x;
@@ -175,11 +171,8 @@ int main(int argc, char * argv[])
     }
 
     delete bciinterface;
-    delete m_hud_sprite;
     delete interpreter;
-    delete sinterpreter;
     delete receiver;
-    delete out_cmd;
 
     return 0;
 }

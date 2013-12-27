@@ -1,5 +1,4 @@
 #include <bci-interface/BCIInterface.h>
-#include <bci-interface/Background/VisionServerBG.h>
 #include <bci-interface/DisplayObject/SSVEPStimulus.h>
 #include <bci-interface/DisplayObject/SpriteObject.h>
 #include <bci-interface/DisplayObject/TextObject.h>
@@ -30,15 +29,15 @@ public:
         : SSVEPStimulus(frequency, screenFrequency, x, y, size_x, size_y, tx, tx_hl), hl(false)
     {}
 
-    TestStimulus(int frequency, int screenFrequency, float x, float y, float radius, int r, int g, int b, int a)
+    TestStimulus(int frequency, int screenFrequency, float x, float y, float radius, uint8_t r, uint8_t g, uint8_t b, uint8_t a)
         : SSVEPStimulus(frequency, screenFrequency, x, y, radius, r, g, b, a), hl(false)
     {} 
 
-    TestStimulus(int frequency, int screenFrequency, float x, float y, float size_x, float size_y, int r, int g, int b, int a)
+    TestStimulus(int frequency, int screenFrequency, float x, float y, float size_x, float size_y, uint8_t r, uint8_t g, uint8_t b, uint8_t a)
         : SSVEPStimulus(frequency, screenFrequency, x, y, size_x, size_y, r, g, b, a), hl(false)
     {} 
 
-    void Process(sf::Event & event, const BCIInterface & intface)
+    void Process(sf::Event & event, const BCIInterface &)
     {
         if(event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Left)
         {
@@ -63,16 +62,13 @@ public:
     }
 };
 
-int main(int argc, char * argv[])
+int main(int, char * [])
 {
     bool fullscreen = true;
     unsigned int width = 1280;
     unsigned int height = 1024;
 
     BCIInterface * bciinterface = new BCIInterface(width, height);
-
-    bool data_compressed = true;
-    bciinterface->SetBackground(new VisionServerBG("localhost", 4242, 640, 480, data_compressed, width, height, 800, 600));
 
     /* Sprite stimulus */
     //bciinterface->AddObject(new TestStimulus(6,60, 50, 50, 100, 100, "TEST.png", "TEST_HL.png"));

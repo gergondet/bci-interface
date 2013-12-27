@@ -32,7 +32,7 @@ public:
             m_iheight = m_wheight;
         }
         m_sprite->setScale((float)m_iwidth/(float)m_wwidth, (float)m_iheight/(float)m_wheight);
-        m_sprite->setPosition(m_wwidth/2 - m_iwidth/2, m_wheight/2 - m_iheight/2);
+        m_sprite->setPosition((float)(m_wwidth/2 - m_iwidth/2), (float)(m_wheight/2 - m_iheight/2));
     }
 
     ~StaticBGImpl()
@@ -65,7 +65,7 @@ public:
         }
         sf::Sprite * new_sprite  = new sf::Sprite(*new_texture);
         new_sprite->setScale((float)m_iwidth/(float)m_wwidth, (float)m_iheight/(float)m_wheight);
-        new_sprite->setPosition(m_wwidth/2 - m_iwidth/2, m_wheight/2 - m_iheight/2);
+        new_sprite->setPosition((float)(m_wwidth/2 - m_iwidth/2), (float)(m_wheight/2 - m_iheight/2));
 
         sf::Texture * old_texture = m_texture;
         sf::Sprite * old_sprite = m_sprite;
@@ -73,12 +73,6 @@ public:
         m_texture = new_texture;
         delete old_sprite;
         delete old_texture;
-    }
-
-    void SetSubRect(int left, int top, int width, int height)
-    {
-        m_sprite->setScale((float)m_iwidth/(float)m_wwidth, (float)m_iheight/(float)m_wheight);
-        m_sprite->setPosition(m_wwidth/2 - m_iwidth/2, m_wheight/2 - m_iheight/2);
     }
 };
 
@@ -105,11 +99,6 @@ void StaticBG::Draw(sf::RenderWindow * app)
 void StaticBG::ChangeImage(const std::string & new_src)
 {
     m_impl->ChangeImage(new_src);
-}
-
-void StaticBG::SetSubRect(int left, int top, int width, int height)
-{
-    m_impl->SetSubRect(left, top, width, height);
 }
 
 } //namespace bciinterface

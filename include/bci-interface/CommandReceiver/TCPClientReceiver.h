@@ -1,7 +1,7 @@
 /* Receive commands through UDP connection*/
 
-#ifndef _H_TCPCLIENT_H_
-#define _H_TCPCLIENT_H_
+#ifndef _H_TCPCLIENTRECEIVER_H_
+#define _H_TCPCLIENTRECEIVER_H_
 
 #include <bci-interface/CommandReceiver.h>
 
@@ -10,14 +10,14 @@
 namespace bciinterface
 {
 
-struct TCPClientImpl;
+struct TCPClientReceiverImpl;
 
-class TCPClient : public CommandReceiver
+class TCPClientReceiver : public CommandReceiver
 {
 public:
-    TCPClient(const std::string & srv_name, unsigned short port);
+    TCPClientReceiver(const std::string & srv_name, unsigned short port);
 
-    virtual ~TCPClient() {}
+    virtual ~TCPClientReceiver() {}
 
     /* Loop to receive command */
     virtual void CommandLoop();
@@ -32,7 +32,7 @@ public:
     void Send(const std::string & message);
 
 private:
-    boost::shared_ptr<TCPClientImpl> m_impl;
+    boost::shared_ptr<TCPClientReceiverImpl> m_impl;
 };
 
 } // namespace bciinterface

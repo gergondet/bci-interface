@@ -33,7 +33,7 @@ public:
 
     void SwitchColorMode();
 
-    void SetSubRect(int left, int top, int width, int height);
+    virtual void SetSubRect(int left, int top, int width, int height);
 
 private:
     boost::shared_ptr<BufferBGImpl> m_impl;

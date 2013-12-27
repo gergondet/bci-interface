@@ -10,6 +10,7 @@
 #include <bci-interface/DisplayObject.h>
 
 #include <boost/shared_ptr.hpp>
+#include <stdint.h>
 
 namespace bciinterface
 {
@@ -33,10 +34,10 @@ public:
     SSVEPStimulus(int frequency, int screenFrequency, float x, float y, const std::string & tx, const std::string & tx_hl, const std::string & unactive_tx, const std::string & unactive_tx_hl);
 
     /*! \brief Constructor: x and y are stimulus centers, circle shape */
-    SSVEPStimulus(int frequency, int screenFrequency, float x, float y, float radius, int r, int g, int b, int a);
+    SSVEPStimulus(int frequency, int screenFrequency, float x, float y, float radius, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
 
     /*! \brief Constructor: x and y are stimulus centers */ 
-    SSVEPStimulus(int frequency, int screenFrequency, float x, float y, float size_x, float size_y, int r, int g, int b, int a);
+    SSVEPStimulus(int frequency, int screenFrequency, float x, float y, float size_x, float size_y, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
 
     /*! \brief Constructor: for OpenGL SSVEPStimulus */
     SSVEPStimulus(int frequency, int screenFrequency);

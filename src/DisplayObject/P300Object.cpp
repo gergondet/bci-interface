@@ -1,11 +1,11 @@
-#include <bci-interface/DisplayObject/P300Object.h>
+#include "bci-interface/DisplayObject/P300Object.h"
 
 #include <SFML/Graphics.hpp>
 
 #ifndef WIN32
 #include <sys/time.h>
 #else
-#include <bci-interface/Utils/Win32.h>
+#include "bci-interface/Utils/Win32.h"
 #endif
 
 namespace bciinterface
@@ -27,10 +27,10 @@ public:
           m_shape(new sf::ConvexShape())
     {
         m_shape->setPointCount(4);
-        m_shape->setPoint(0, sf::Vector2f(x-size_x/2, y-size_y/2));
-        m_shape->setPoint(1, sf::Vector2f(x+size_x/2, y-size_y/2));
-        m_shape->setPoint(2, sf::Vector2f(x+size_x/2, y+size_y/2));
-        m_shape->setPoint(3, sf::Vector2f(x-size_x/2, y+size_y/2));
+        m_shape->setPoint(0, sf::Vector2f((float)(x-size_x)/2, (float)(y-size_y)/2));
+        m_shape->setPoint(1, sf::Vector2f((float)(x+size_x)/2, (float)(y-size_y)/2));
+        m_shape->setPoint(2, sf::Vector2f((float)(x+size_x)/2, (float)(y+size_y)/2));
+        m_shape->setPoint(3, sf::Vector2f((float)(x-size_x)/2, (float)(y+size_y)/2));
         m_shape->setFillColor(m_inactive_color);
     }
 
@@ -39,14 +39,14 @@ public:
         delete m_shape;
     }
 
-    void Display(sf::RenderWindow * app, unsigned int frameCount, sf::Clock & clock)
+    void Display(sf::RenderWindow * app, unsigned int, sf::Clock &)
     {
         app->draw(*m_shape);
         if(m_active) 
         { 
             timeval tv_now;
             gettimeofday(&tv_now, 0);
-            unsigned int now = tv_now.tv_sec*1e6 + tv_now.tv_usec;
+            unsigned int now = tv_now.tv_sec*1000000 + tv_now.tv_usec;
             if(now - m_active_since > m_active_time)
             {
                 Unhighlight(); 
@@ -60,7 +60,7 @@ public:
         m_active = true;
         timeval tv_now;
         gettimeofday(&tv_now, 0);
-        m_active_since = tv_now.tv_sec*1e6 + tv_now.tv_usec;
+        m_active_since = tv_now.tv_sec*1000000 + tv_now.tv_usec;
     }
 
     void Unhighlight()

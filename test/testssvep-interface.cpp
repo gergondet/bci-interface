@@ -1,5 +1,4 @@
 #include <bci-interface/BCIInterface.h>
-#include <bci-interface/Background/VisionServerBG.h>
 #include <bci-interface/DisplayObject/SSVEPStimulus.h>
 #include <bci-interface/CommandReceiver/UDPReceiver.h>
 #include <bci-interface/CommandInterpreter/SimpleInterpreter.h>
@@ -37,7 +36,7 @@ using namespace bciinterface;
 class Cube3D : public bciinterface::SSVEPStimulus
 {
 public:
-    virtual void Display(sf::RenderWindow * app, unsigned int frameCount, sf::Clock & clock)
+    virtual void Display(sf::RenderWindow *, unsigned int frameCount, sf::Clock &)
     {
         if(DisplayActive(frameCount))
         {
@@ -103,7 +102,7 @@ public:
 
     void Close() {}
 
-    void Draw(sf::RenderWindow * app)
+    void Draw(sf::RenderWindow *)
     {
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();                   // Reset The View
@@ -135,7 +134,7 @@ public:
             glColor3f(0.0f,0.5f,0.0f);
             glVertex3f(-0.5f,-0.5f, 0.5f);
         glEnd();
-        rot += 0.2;
+        rot += 0.2f;
     }
 
     float rot;
@@ -175,8 +174,6 @@ int main(int argc, char * argv[])
     overrider.AddOverrideCommand(sf::Keyboard::Left, 4);
     bciinterface->SetCommandOverrider(&overrider);
 
-    bool data_compressed = true;
-    //bciinterface->SetBackground(new VisionServerBG("hrp2010v", 4242, 640, 480, data_compressed, width, height, 800, 600));
     BufferBG * bufferBG = new BufferBG(640, 480, width, height, iwidth, iheight);
     uint32_t * buffer = new uint32_t[640*480];
     for(unsigned int x = 0; x < 640; ++x)
@@ -205,11 +202,11 @@ int main(int argc, char * argv[])
 
     std::string dir = dirname(argv[0]);
     dir += "/";
-    bciinterface->AddObject(new SSVEPStimulus(6, 60, width/2, 100, 200,200, dir + "UP.png", dir + "UP_HL.png"));
-    bciinterface->AddObject(new SSVEPStimulus(8, 60, width-100, height/2, 200, 200, dir + "RIGHT.png", dir + "RIGHT_HL.png"));
-    bciinterface->AddObject(new SSVEPStimulus(10, 60, width/2, height-100, 200, 200, dir + "DOWN.png", dir + "DOWN_HL.png"));
-    bciinterface->AddObject(new SSVEPStimulus(9, 60, 100, height/2,200, 200, dir + "LEFT.png", dir + "LEFT_HL.png"));
-    bciinterface->AddObject(new SSVEPStimulus(14, 60, width/2, height/2, 200, 200, "STOP.png", "STOP_HL.png"));
+    bciinterface->AddObject(new SSVEPStimulus(6, 60, (float)width/2, 100, 200,200, dir + "UP.png", dir + "UP_HL.png"));
+    bciinterface->AddObject(new SSVEPStimulus(8, 60, (float)width-100, (float)height/2, 200, 200, dir + "RIGHT.png", dir + "RIGHT_HL.png"));
+    bciinterface->AddObject(new SSVEPStimulus(10, 60, (float)width/2, (float)height-100, 200, 200, dir + "DOWN.png", dir + "DOWN_HL.png"));
+    bciinterface->AddObject(new SSVEPStimulus(9, 60, 100, (float)height/2,200, 200, dir + "LEFT.png", dir + "LEFT_HL.png"));
+    bciinterface->AddObject(new SSVEPStimulus(14, 60, (float)width/2, (float)height/2, 200, 200, "STOP.png", "STOP_HL.png"));
 //    bciinterface->AddObject(new Cube3D(9,60));
 
     bciinterface->DisplayLoop(fullscreen);
