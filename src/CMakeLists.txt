@@ -10,6 +10,7 @@ Utils/UDPServer.cpp
 Utils/square-function.cpp
 Utils/Win32.cpp
 BCIInterface.cpp
+private/BCIInterfaceImpl.cpp
 Background/BufferBG.cpp
 Background/StaticBG.cpp
 DisplayObject/SSVEPStimulus.cpp
@@ -25,7 +26,7 @@ CommandOverrider.cpp
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include)
 INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
 
-ADD_LIBRARY(${LIB_NAME} 
+ADD_LIBRARY(${LIB_NAME}
   SHARED
   ${${LIB_NAME}_src}
   ${${LIB_NAME}_headers}
@@ -36,8 +37,8 @@ add_library( "bci-interface-static" STATIC ${${LIB_NAME}_src} ${${LIB_NAME}_head
 set_target_properties( "bci-interface-static" PROPERTIES OUTPUT_NAME "bci-interface")
 ENDIF(WIN32)
 
-SET_TARGET_PROPERTIES(${LIB_NAME} 
-  PROPERTIES 
+SET_TARGET_PROPERTIES(${LIB_NAME}
+  PROPERTIES
   SOVERSION ${PROJECT_VERSION}
   INSTALL_RPATH lib)
 
@@ -54,6 +55,6 @@ ENDIF(NOT WIN32)
 IF(WIN32)
 TARGET_LINK_LIBRARIES(${LIB_NAME} "sfml-graphics.lib;sfml-window.lib;sfml-system.lib;OpenGL32.lib;glu32.lib")
 ENDIF(WIN32)
-  
+
 INSTALL(TARGETS ${LIB_NAME}
     DESTINATION lib)
