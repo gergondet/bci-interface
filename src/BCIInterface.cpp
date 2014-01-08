@@ -88,9 +88,14 @@ sf::RenderWindow * BCIInterface::DisplayLoop(sf::RenderWindow * app, int & cmd, 
     return m_impl->DisplayLoop(app, true, cmd, timeout);
 }
 
-void BCIInterface::OculusDisplayLoop(int & cmd)
+void BCIInterface::InitOculus(const std::string & shader_path)
 {
-    m_impl->OculusDisplayLoop(cmd);
+    m_impl->InitOculus(shader_path);
+}
+
+void BCIInterface::OculusDisplayLoop(int & cmd, const std::string & shader_path)
+{
+    m_impl->OculusDisplayLoop(cmd, shader_path);
 }
 
 void BCIInterface::Close()

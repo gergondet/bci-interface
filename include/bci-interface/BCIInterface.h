@@ -3,6 +3,8 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include <string>
+
 namespace sf
 {
     class RenderWindow;
@@ -72,8 +74,12 @@ public:
     /* DisplayLoop function for interface chaining alternate proto */
     sf::RenderWindow * DisplayLoop(sf::RenderWindow * app, int & cmd, float timeout = 0);
 
+    /* Init things for the oculus display, this should be called if you wish to
+     * access the renderscale before starting the display */
+    void InitOculus(const std::string & shader_path);
+
     /* DisplayLoop for Oculus */
-    void OculusDisplayLoop(int & cmd);
+    void OculusDisplayLoop(int & cmd, const std::string & shader_path = ".");
 
     sf::RenderWindow * GetRenderWindow();
 

@@ -257,13 +257,21 @@ sf::RenderWindow * BCIInterfaceImpl::DisplayLoop(sf::RenderWindow * app, bool fu
     return m_app;
 }
 
-void BCIInterfaceImpl::OculusDisplayLoop(int & cmd)
+void BCIInterfaceImpl::InitOculus(const std::string & shader_path)
 {
     sf::ContextSettings contextSettings;
     contextSettings.depthBits = 32;
-    m_oculus_window = new OculusWindow(sf::VideoMode(m_width, m_height), "bci-interface (Oculus)", sf::Style::Close, contextSettings);
+    m_oculus_window = new OculusWindow(sf::VideoMode(m_width, m_height), "bci-interface (Oculus)", sf::Style::Close, contextSettings, shader_path);
 
     m_display_fun = boost::bind(&OculusWindow::display, m_oculus_window);
+}
+
+void BCIInterfaceImpl::OculusDisplayLoop(int & cmd, const std::string & shader_path)
+{
+    if(!m_oculus_window)
+    {
+        InitOculus(shader_path);
+    }
 
     while(!m_close)
     {
