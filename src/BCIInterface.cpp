@@ -88,6 +88,11 @@ sf::RenderWindow * BCIInterface::DisplayLoop(sf::RenderWindow * app, int & cmd, 
     return m_impl->DisplayLoop(app, true, cmd, timeout);
 }
 
+void BCIInterface::OculusDisplayLoop(int & cmd)
+{
+    m_impl->OculusDisplayLoop(cmd);
+}
+
 void BCIInterface::Close()
 {
     m_impl->Close();
@@ -96,6 +101,16 @@ void BCIInterface::Close()
 sf::RenderWindow * BCIInterface::GetRenderWindow()
 {
     return m_impl->GetRenderWindow();
+}
+
+OculusWindow * BCIInterface::GetOculusWindow()
+{
+    return m_impl->GetOculusWindow();
+}
+
+float BCIInterface::GetRenderScale()
+{
+    return m_impl->GetRenderScale();
 }
 
 } // namespace bciinterface

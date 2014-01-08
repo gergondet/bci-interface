@@ -22,6 +22,8 @@
 
 #include "bci-interface/Utils/Win32.h"
 
+#include "OculusWindow.h"
+
 namespace bciinterface
 {
 
@@ -35,6 +37,7 @@ private:
     bool m_close;
     bool m_finished;
     sf::RenderWindow * m_app;
+    OculusWindow * m_oculus_window;
     std::ofstream m_fpslog;
 
     bool m_take_screenshot;
@@ -60,6 +63,9 @@ private:
     CommandOverrider * m_overrider;
 
     CommandInterpreter * m_interpreter;
+
+    typedef boost::function< void(void) > display_fun_t;
+    display_fun_t m_display_fun;
 
 public:
     BCIInterfaceImpl(const BCIInterface & ref, unsigned int width, unsigned int height);
@@ -95,7 +101,9 @@ public:
     sf::RenderWindow * DisplayLoop(sf::RenderWindow * app, bool fullscreen, int & cmd, float timeout = 0);
 
     /* Internal loop launched by BCIInterface public functions */
-    void DisplayLoop(sf::Window & eventWindow, sf::RenderTarget & drawTarget, int & cmd, float timeout = 0);
+    void DisplayLoop(sf::Window & eventWindow, sf::RenderTarget & drawTarget,int & cmd, float timeout = 0);
+
+    void OculusDisplayLoop(int & cmd);
 
     void Close();
 
@@ -106,6 +114,10 @@ public:
     void StartParadigm();
 
     sf::RenderWindow * GetRenderWindow();
+
+    OculusWindow * GetOculusWindow();
+
+    float GetRenderScale();
 };
 
 } // namespace bciinterface

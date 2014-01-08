@@ -8,6 +8,8 @@ namespace sf
     class RenderWindow;
 }
 
+class OculusWindow;
+
 namespace bciinterface
 {
 class EventHandler;
@@ -70,7 +72,14 @@ public:
     /* DisplayLoop function for interface chaining alternate proto */
     sf::RenderWindow * DisplayLoop(sf::RenderWindow * app, int & cmd, float timeout = 0);
 
+    /* DisplayLoop for Oculus */
+    void OculusDisplayLoop(int & cmd);
+
     sf::RenderWindow * GetRenderWindow();
+
+    OculusWindow * GetOculusWindow();
+
+    float GetRenderScale();
 
     /* Close the interface */
     void Close();

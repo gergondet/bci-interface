@@ -5,7 +5,7 @@ namespace bciinterface
 
 BCIInterfaceImpl::BCIInterfaceImpl(const BCIInterface & ref, unsigned int width, unsigned int height)
 : m_ref(ref), m_width(width), m_height(height), m_in_paradigm(false), m_close(false), m_finished(true),
-    m_app(0), m_fpslog("/tmp/bciinterface_fps.log"),
+    m_app(0), m_oculus_window(0), m_fpslog("/tmp/bciinterface_fps.log"),
     m_take_screenshot(false), m_screenshot_index(0),
     m_handlers(0),
     m_background(0), m_backgroundth(0),
@@ -48,6 +48,7 @@ BCIInterfaceImpl::~BCIInterfaceImpl()
     delete m_background;
     delete m_receiverth;
     delete m_app;
+    delete m_oculus_window;
 }
 
 void BCIInterfaceImpl::InitGL()
@@ -204,6 +205,8 @@ void BCIInterfaceImpl::DisplayLoop(bool fullscreen)
         m_app = new sf::RenderWindow(sf::VideoMode(m_width, m_height), "bci-interface");
     }
 
+    m_display_fun = boost::bind(&sf::RenderWindow::display, m_app);
+
 
     //m_app->EnableVerticalSync(true);
 
@@ -238,6 +241,8 @@ sf::RenderWindow * BCIInterfaceImpl::DisplayLoop(sf::RenderWindow * app, bool fu
         m_app = app;
     }
 
+    m_display_fun = boost::bind(&sf::RenderWindow::display, m_app);
+
     //m_app->EnableVerticalSync(true);
     m_app->setKeyRepeatEnabled(false);
 
@@ -250,6 +255,20 @@ sf::RenderWindow * BCIInterfaceImpl::DisplayLoop(sf::RenderWindow * app, bool fu
     }
 
     return m_app;
+}
+
+void BCIInterfaceImpl::OculusDisplayLoop(int & cmd)
+{
+    sf::ContextSettings contextSettings;
+    contextSettings.depthBits = 32;
+    m_oculus_window = new OculusWindow(sf::VideoMode(m_width, m_height), "bci-interface (Oculus)", sf::Style::Close, contextSettings);
+
+    m_display_fun = boost::bind(&OculusWindow::display, m_oculus_window);
+
+    while(!m_close)
+    {
+        DisplayLoop(m_oculus_window->getApplication(), m_oculus_window->getRenderTarget(), cmd);
+    }
 }
 
 /* Actual loop launched by BCIInterface public functions */
@@ -392,7 +411,7 @@ void BCIInterfaceImpl::DisplayLoop(sf::Window & eventWindow, sf::RenderTarget & 
         }
 
 
-        m_app->display();
+        m_display_fun();
 
         if(m_take_screenshot && m_app)
         {
@@ -442,6 +461,17 @@ void BCIInterfaceImpl::StartParadigm()
 sf::RenderWindow * BCIInterfaceImpl::GetRenderWindow()
 {
     return m_app;
+}
+
+OculusWindow * BCIInterfaceImpl::GetOculusWindow()
+{
+    return m_oculus_window;
+}
+
+float BCIInterfaceImpl::GetRenderScale()
+{
+    if(m_oculus_window) return m_oculus_window->getRenderScale();
+    return 1.0f;
 }
 
 } // namespace bciinterface
