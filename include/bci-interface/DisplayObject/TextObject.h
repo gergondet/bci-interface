@@ -15,7 +15,7 @@ class TextObject : public DisplayObject
 public:
     TextObject(const std::string & txt);
 
-    void Display(sf::RenderWindow * app, unsigned int frameCount, sf::Clock & clock);
+    void Display(sf::RenderTarget * app, unsigned int frameCount, sf::Clock & clock);
 
     void SetPosition(float x, float y);
 

@@ -19,7 +19,7 @@ public:
        r,g,b : color */
     P300Object(unsigned int active_time, unsigned int x, unsigned int y, unsigned int size_x, unsigned int size_y, unsigned char r, unsigned char g, unsigned char b);
 
-    void Display(sf::RenderWindow * app, unsigned int frameCount, sf::Clock & clock);
+    void Display(sf::RenderTarget * app, unsigned int frameCount, sf::Clock & clock);
 
     void Highlight();
 

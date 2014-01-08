@@ -95,7 +95,7 @@ public:
     sf::RenderWindow * DisplayLoop(sf::RenderWindow * app, bool fullscreen, int & cmd, float timeout = 0);
 
     /* Internal loop launched by BCIInterface public functions */
-    void DisplayLoop(int & cmd, float timeout = 0);
+    void DisplayLoop(sf::Window & eventWindow, sf::RenderTarget & drawTarget, int & cmd, float timeout = 0);
 
     void Close();
 

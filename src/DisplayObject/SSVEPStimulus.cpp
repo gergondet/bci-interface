@@ -19,8 +19,8 @@ public:
     virtual void SetScale(float sX, float sY) = 0;
     /* Resize(size_x, size_y) */
     virtual void Resize(float, float) {}
-    virtual void Draw(sf::RenderWindow * app) = 0;
-    virtual void DrawInactive(sf::RenderWindow *) {}
+    virtual void Draw(sf::RenderTarget * app) = 0;
+    virtual void DrawInactive(sf::RenderTarget *) {}
 };
 
 struct ShapeImpl : public GraphImpl
@@ -92,7 +92,7 @@ public:
         SetScale(sx/size_x, sy/size_y);
     }
 
-    void Draw(sf::RenderWindow * app)
+    void Draw(sf::RenderTarget * app)
     {
         app->draw(*m_shape);
     }
@@ -156,7 +156,7 @@ public:
         SetScale(sx/size_x, sy/size_y);
     }
 
-    void Draw(sf::RenderWindow * app)
+    void Draw(sf::RenderTarget * app)
     {
         app->draw(m_sprite);
     }
@@ -236,12 +236,12 @@ public:
         SetScale(sx/size_x, sy/size_y);
     }
 
-    void Draw(sf::RenderWindow * app)
+    void Draw(sf::RenderTarget * app)
     {
         app->draw(m_sprite);
     }
 
-    void DrawInactive(sf::RenderWindow * app)
+    void DrawInactive(sf::RenderTarget * app)
     {
         app->draw(m_sprite_inactive);
     }
@@ -461,7 +461,7 @@ public:
         }
     }
 
-    void Display(sf::RenderWindow * app, unsigned int frameCount, sf::Clock &)
+    void Display(sf::RenderTarget * app, unsigned int frameCount, sf::Clock &)
     {
         if(m_graph && m_frameSeq[frameCount % m_screenFrequency])
         {
@@ -565,7 +565,7 @@ void SSVEPStimulus::Resize(float size_x, float size_y)
     m_impl->Resize(size_x, size_y);
 }
 
-void SSVEPStimulus::Display(sf::RenderWindow * app, unsigned int frameCount, sf::Clock & clock)
+void SSVEPStimulus::Display(sf::RenderTarget * app, unsigned int frameCount, sf::Clock & clock)
 {
     m_impl->Display(app, frameCount, clock);
 }

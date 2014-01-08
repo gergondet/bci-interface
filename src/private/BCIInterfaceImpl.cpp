@@ -214,7 +214,7 @@ void BCIInterfaceImpl::DisplayLoop(bool fullscreen)
 
     int cmd_out = -1;
 
-    DisplayLoop(cmd_out);
+    DisplayLoop(*m_app, *m_app, cmd_out);
 
     m_app->close();
 }
@@ -246,14 +246,14 @@ sf::RenderWindow * BCIInterfaceImpl::DisplayLoop(sf::RenderWindow * app, bool fu
 
     while(!m_close)
     {
-        DisplayLoop(cmd, timeout);
+        DisplayLoop(*m_app, *m_app, cmd, timeout);
     }
 
     return m_app;
 }
 
 /* Actual loop launched by BCIInterface public functions */
-void BCIInterfaceImpl::DisplayLoop(int & cmd, float timeout)
+void BCIInterfaceImpl::DisplayLoop(sf::Window & eventWindow, sf::RenderTarget & drawTarget, int & cmd, float timeout)
 {
     unsigned int frameCount = 0;
     bool in_paradigm = m_in_paradigm;
@@ -279,17 +279,17 @@ void BCIInterfaceImpl::DisplayLoop(int & cmd, float timeout)
         m_receiverth = new boost::thread(boost::bind(&CommandReceiver::CommandLoop, m_receiver));
     }
 
-    while(!m_close && in_paradigm == m_in_paradigm && m_app->isOpen())
+    while(!m_close && in_paradigm == m_in_paradigm && eventWindow.isOpen())
     {
         unsigned int newFrameCount = static_cast<unsigned int>(trunc(6*clock.getElapsedTime().asMilliseconds()*0.01));
         /* cheat when missing a frame */
         frameCount = newFrameCount > frameCount+1?frameCount+1:newFrameCount;
 
-        m_app->clear(sf::Color(0x77, 0x77, 0x77, 255));
+        drawTarget.clear(sf::Color(0x77, 0x77, 0x77, 255));
 
         /* Process events */
         sf::Event event;
-        while(m_app->pollEvent(event))
+        while(eventWindow.pollEvent(event))
         {
             if(event.type == sf::Event::Closed ||
                 ( event.type == sf::Event::KeyPressed && ( event.key.code == sf::Keyboard::Escape || event.key.code == sf::Keyboard::Q ) ))
@@ -354,44 +354,47 @@ void BCIInterfaceImpl::DisplayLoop(int & cmd, float timeout)
         {
             if(m_background->DrawWithGL())
             {
-                m_background->Draw(m_app);
-                m_app->pushGLStates();
+                m_background->Draw(&drawTarget);
+                drawTarget.pushGLStates();
             }
             else
             {
-                m_app->pushGLStates();
-                m_background->Draw(m_app);
+                drawTarget.pushGLStates();
+                m_background->Draw(&drawTarget);
             }
         }
         else
         {
-            m_app->pushGLStates();
+            drawTarget.pushGLStates();
         }
 
         /* Draw objects */
         for(size_t i = 0; i < m_objects.size(); ++i)
         {
-            m_objects[i]->Display(m_app, frameCount, clock);
+            m_objects[i]->Display(&drawTarget, frameCount, clock);
         }
         /* Draw non-owned objects */
         for(size_t i = 0; i < m_objects_non_owned.size(); ++i)
         {
-            m_objects_non_owned[i]->Display(m_app, frameCount, clock);
+            m_objects_non_owned[i]->Display(&drawTarget, frameCount, clock);
         }
 
-        m_app->popGLStates();
+        drawTarget.popGLStates();
 
         for(size_t i = 0; i < m_gl_objects.size(); ++i)
         {
-            m_gl_objects[i]->Display(m_app, frameCount, clock);
+            m_gl_objects[i]->Display(&drawTarget, frameCount, clock);
         }
         /* Draw non-owned objects */
         for(size_t i = 0; i < m_gl_objects_non_owned.size(); ++i)
         {
-            m_gl_objects_non_owned[i]->Display(m_app, frameCount, clock);
+            m_gl_objects_non_owned[i]->Display(&drawTarget, frameCount, clock);
         }
 
-        if(m_take_screenshot)
+
+        m_app->display();
+
+        if(m_take_screenshot && m_app)
         {
             sf::Image screen = m_app->capture();
             std::stringstream ss;
@@ -404,8 +407,6 @@ void BCIInterfaceImpl::DisplayLoop(int & cmd, float timeout)
             m_take_screenshot = false;
             m_screenshot_index++;
         }
-
-        m_app->display();
     }
     m_finished = true;
 }
@@ -414,7 +415,10 @@ void BCIInterfaceImpl::Close()
 {
     m_close = true;
     m_in_paradigm = false;
-    m_app->close();
+    if(m_app)
+    {
+        m_app->close();
+    }
 }
 
 bool BCIInterfaceImpl::ParadigmStatus()

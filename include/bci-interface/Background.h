@@ -5,7 +5,7 @@
 
 namespace sf
 {
-    class RenderWindow;
+    class RenderTarget;
 }
 
 namespace bciinterface
@@ -25,7 +25,7 @@ public:
     virtual void Close() = 0;
 
     /* Returns the current sprite of background */
-    virtual void Draw(sf::RenderWindow * app) = 0;
+    virtual void Draw(sf::RenderTarget * app) = 0;
 
     /* "Zoom" on a sub-rectangle, optionnaly implemented */
     /* Arguments are (left, top, width, height) */

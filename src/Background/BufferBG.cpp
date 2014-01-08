@@ -75,7 +75,7 @@ public:
     {
     }
 
-    void Draw(sf::RenderWindow * app)
+    void Draw(sf::RenderTarget * app)
     {
         boost::mutex::scoped_lock lock(bg_mutex);
         app->draw(*m_sprite_display);
@@ -170,7 +170,7 @@ void BufferBG::Close()
     m_impl->Close();
 }
 
-void BufferBG::Draw(sf::RenderWindow * app)
+void BufferBG::Draw(sf::RenderTarget * app)
 {
     return m_impl->Draw(app);
 }

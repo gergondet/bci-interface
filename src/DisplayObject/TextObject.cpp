@@ -22,7 +22,7 @@ public:
     {
     }
 
-    void Display(sf::RenderWindow * app, unsigned int, sf::Clock &)
+    void Display(sf::RenderTarget * app, unsigned int, sf::Clock &)
     {
         app->draw(m_text);
     } 
@@ -46,7 +46,7 @@ public:
 TextObject::TextObject(const std::string & txt) : m_impl(new TextObjectImpl(txt))
 {}
 
-void TextObject::Display(sf::RenderWindow * app, unsigned int frameCount, sf::Clock & clock)
+void TextObject::Display(sf::RenderTarget * app, unsigned int frameCount, sf::Clock & clock)
 {
     m_impl->Display(app, frameCount, clock);
 }

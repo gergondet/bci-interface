@@ -70,7 +70,7 @@ public:
     void Resize(float size_x, float size_y);
 
     /* Display function */
-    virtual void Display(sf::RenderWindow * app, unsigned int frameCount, sf::Clock & clock);
+    virtual void Display(sf::RenderTarget * app, unsigned int frameCount, sf::Clock & clock);
 
     virtual bool DrawWithGL();
 
