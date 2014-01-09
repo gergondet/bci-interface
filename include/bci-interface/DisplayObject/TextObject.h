@@ -29,7 +29,7 @@ public:
 
     void SetCharacterSize(unsigned int size);
 
-    void SetColor(sf::Color & color);
+    void SetColor(const sf::Color & color);
 private:
     boost::shared_ptr<TextObjectImpl> m_impl;
 };

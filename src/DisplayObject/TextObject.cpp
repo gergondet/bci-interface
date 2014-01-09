@@ -43,7 +43,7 @@ public:
         m_text.setCharacterSize(size);
     }
 
-    void SetColor(sf::Color & color)
+    void SetColor(const sf::Color & color)
     {
         m_text.setColor(color);
     }
@@ -72,7 +72,7 @@ void TextObject::SetCharacterSize(unsigned int size)
     m_impl->SetCharacterSize(size);
 }
 
-void TextObject::SetColor(sf::Color & color)
+void TextObject::SetColor(const sf::Color & color)
 {
     m_impl->SetColor(color);
 }
