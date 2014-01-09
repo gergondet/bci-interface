@@ -27,7 +27,7 @@ TARGET_LINK_LIBRARIES(${EXEC_NAME} bci-interface ${SFML_LIBRARIES} pthread)
 ENDIF(WIN32)
 TARGET_LINK_LIBRARIES(${EXEC_NAME} ${Boost_LIBRARIES})
 
-# -- EchoServer
+# -- testssvep-interface 
 SET(EXEC_NAME testssvep-interface)
 
 SET(${EXEC_NAME}_src
@@ -83,7 +83,7 @@ TARGET_LINK_LIBRARIES(${EXEC_NAME} bci-interface ${SFML_LIBRARIES} pthread)
 ENDIF(WIN32)
 TARGET_LINK_LIBRARIES(${EXEC_NAME} ${Boost_LIBRARIES})
 
-# -- EchoServer
+# -- testsquare-function 
 SET(EXEC_NAME testsquare-function)
 
 SET(${EXEC_NAME}_src
@@ -111,8 +111,36 @@ TARGET_LINK_LIBRARIES(${EXEC_NAME} bci-interface ${SFML_LIBRARIES})
 ENDIF(WIN32)
 TARGET_LINK_LIBRARIES(${EXEC_NAME} ${Boost_LIBRARIES} pthread)
 
-# -- EchoServer
+# -- testfontmanager 
+SET(EXEC_NAME testfontmanager)
 
+SET(${EXEC_NAME}_src
+    testfontmanager.cpp
+)
+
+INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include)
+LINK_DIRECTORIES(${${PROJECT_NAME}_BINARY_DIR}/src)
+
+
+ADD_EXECUTABLE(${EXEC_NAME}
+  ${${EXEC_NAME}_src}
+  )
+
+SET_TARGET_PROPERTIES(${PROJECT_NAME_LIB}
+  PROPERTIES
+  COMPILE_FLAGS ${${PROJECT_NAME}_src_CXXFLAGS}
+  LINK_FLAGS "${${PROJECT_NAME}_src_LDFLAGS}"}
+)
+
+IF(WIN32)
+TARGET_LINK_LIBRARIES(${EXEC_NAME} "bci-interface.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;ws2_32.lib;OpenGL32.lib;glu32.lib")
+ELSE(WIN32)
+TARGET_LINK_LIBRARIES(${EXEC_NAME} bci-interface ${SFML_LIBRARIES})
+ENDIF(WIN32)
+TARGET_LINK_LIBRARIES(${EXEC_NAME} ${Boost_LIBRARIES} pthread)
+
+
+# -- EchoServer
 SET(EXEC_NAME EchoServer)
 
 SET(${EXEC_NAME}_src

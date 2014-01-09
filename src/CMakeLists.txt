@@ -4,6 +4,7 @@ SET(${LIB_NAME}_src
 CommandReceiver/UDPReceiver.cpp
 CommandReceiver/TCPClientReceiver.cpp
 CommandReceiver/TCPReceiver.cpp
+Utils/FontManager.cpp
 Utils/TCPClient.cpp
 Utils/UDPSocket.cpp
 Utils/UDPServer.cpp

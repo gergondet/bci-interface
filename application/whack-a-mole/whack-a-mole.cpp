@@ -4,6 +4,7 @@
 #include <bci-interface/DisplayObject/SpriteObject.h>
 #include <bci-interface/DisplayObject/TextObject.h>
 #include <bci-interface/CommandReceiver/UDPReceiver.h>
+#include <bci-interface/Utils/FontManager.h>
 
 #include "WhackInterpreter.h"
 
@@ -41,6 +42,7 @@ int main(int, char * [])
     srand(time(0));
 
     BCIInterface * bciinterface = new BCIInterface(width, height);
+    FontManager fontManager;
 
     UDPReceiver * receiver = new UDPReceiver(1111);
     bciinterface->SetCommandReceiver(receiver);
@@ -68,7 +70,7 @@ int main(int, char * [])
     target->SetSubRect(clmn*300,line*400,300,400);
     bciinterface->AddObject(target);
 
-    TextObject * txtobj = new TextObject("Score: 0");
+    TextObject * txtobj = new TextObject(fontManager.GetDefaultFont(), "Score: 0");
     txtobj->SetPosition((float)width-150, (float)height-50);
     bciinterface->AddObject(txtobj);
 
