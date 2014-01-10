@@ -187,6 +187,10 @@ void BCIInterfaceImpl::Clean()
             m_gl_objects_to_delete.push_back(tmp);
         }
     }
+    if(m_oculus_window)
+    {
+        m_oculus_window->clearGLcallbacks();
+    }
     m_objects.resize(0);
     m_gl_objects.resize(0);
     m_objects_non_owned.resize(0);
