@@ -39,7 +39,7 @@ ENDIF(Boost_FOUND)
 
 SET(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMakeModules)
 
-find_package(SFML COMPONENTS graphics window system)
+find_package(SFML COMPONENTS oculus graphics window system)
 
 INCLUDE_DIRECTORIES(${SFML_INCLUDE_DIR})
 
