@@ -23,7 +23,7 @@ struct FPSCounterImpl
         std::stringstream ss;
         ss << "FPS: ";
         ss << 1e6*(iF - initFrameCount)/(double)(tM - timeAsMicroSeconds);
-        reset(iF, tM);
+        reset(std::move(iF), std::move(tM));
         return ss.str();
     }
 
@@ -42,11 +42,11 @@ void FPSCounter::Display(sf::RenderTarget * app, unsigned int frameCount, sf::Cl
 {
     if(impl->initFrameCount == 0)
     {
-        impl->reset(frameCount, clock.getElapsedTime().asMicroseconds());
+        impl->reset(std::move(frameCount), clock.getElapsedTime().asMicroseconds());
     }
     if(frameCount - impl->initFrameCount > 99)
     {
-        SetText( impl->getNewText(frameCount, clock.getElapsedTime().asMicroseconds()) );
+        SetText( impl->getNewText(std::move(frameCount), clock.getElapsedTime().asMicroseconds()) );
     }
     TextObject::Display(app, frameCount, clock);
 }

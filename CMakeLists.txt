@@ -28,7 +28,7 @@ SETUP_PROJECT(FALSE)
 #  Look for dependencies
 #
 
-find_package( Boost 1.40.0 COMPONENTS thread system)
+find_package( Boost 1.40.0 COMPONENTS thread system filesystem)
 
 IF(Boost_FOUND)
     MESSAGE(STATUS "Found Boost")
