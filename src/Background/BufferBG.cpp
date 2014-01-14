@@ -30,9 +30,6 @@ private:
     sf::Sprite * m_sprite_display;
 
     bool m_color_enabled;
-
-    boost::mutex bg_mutex;
-
 public:
     BufferBGImpl(unsigned int width, unsigned int height,
                     unsigned int wwidth, unsigned wheight, unsigned iwidth, unsigned iheight)
@@ -77,14 +74,8 @@ public:
 
     void Draw(sf::RenderTarget * app)
     {
-        boost::mutex::scoped_lock lock(bg_mutex);
-        app->draw(*m_sprite_display);
-    }
-
-    void LoadImageFromPixels()
-    {
-        boost::mutex::scoped_lock lock(bg_mutex);
         m_texture_display->update(m_dataImage, m_width, m_height, 0, 0);
+        app->draw(*m_sprite_display);
     }
 
     void UpdateFromBuffer_MONO(unsigned char * img)
@@ -96,7 +87,6 @@ public:
             m_dataImage[4*i+2] = img[i];
             m_dataImage[4*i+3] = 255;
         }
-        LoadImageFromPixels();
     }
 
     void UpdateFromBuffer_RGB(unsigned char * img)
@@ -123,7 +113,6 @@ public:
                 m_dataImage[4*i+3] = 255;
             }
         }    
-        LoadImageFromPixels();
     }
 
     void UpdateFromBuffer_BGR8(unsigned char * img)
@@ -135,7 +124,6 @@ public:
             m_dataImage[4*i+2] = img[3*i];
             m_dataImage[4*i+3] = 255;
         }
-        LoadImageFromPixels();
     }
 
     void SwitchColorMode()
