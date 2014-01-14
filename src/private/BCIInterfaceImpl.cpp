@@ -53,6 +53,7 @@ BCIInterfaceImpl::~BCIInterfaceImpl()
 
 void BCIInterfaceImpl::InitGL()
 {
+    glEnable(GL_TEXTURE_2D);
     glShadeModel(GL_SMOOTH);                            // Enable Smooth Shading
     glClearColor(0.0f, 0.0f, 0.0f, 0.5f);               // Black Background
     glClearDepth(1.0f);                                 // Depth Buffer Setup
@@ -62,10 +63,6 @@ void BCIInterfaceImpl::InitGL()
 
     /* Position the camera */
     glTranslatef(0, 0, 0);
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LEQUAL);
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
 }
 
 void BCIInterfaceImpl::Resize()
@@ -199,14 +196,16 @@ void BCIInterfaceImpl::Clean()
 
 void BCIInterfaceImpl::DisplayLoop(bool fullscreen)
 {
+    sf::ContextSettings contextSettings;
+    contextSettings.depthBits = 32;
     if(fullscreen)
     {
-        m_app = new sf::RenderWindow(sf::VideoMode(m_width, m_height), "bci-interface", sf::Style::Fullscreen);
+        m_app = new sf::RenderWindow(sf::VideoMode(m_width, m_height), "bci-interface", sf::Style::Fullscreen, contextSettings);
         m_app->setMouseCursorVisible(false);
     }
     else
     {
-        m_app = new sf::RenderWindow(sf::VideoMode(m_width, m_height), "bci-interface");
+        m_app = new sf::RenderWindow(sf::VideoMode(m_width, m_height), "bci-interface", sf::Style::Close, contextSettings);
     }
 
     m_display_fun = boost::bind(&sf::RenderWindow::display, m_app);
@@ -228,16 +227,18 @@ void BCIInterfaceImpl::DisplayLoop(bool fullscreen)
 
 sf::RenderWindow * BCIInterfaceImpl::DisplayLoop(sf::RenderWindow * app, bool fullscreen, int & cmd, float timeout)
 {
+    sf::ContextSettings contextSettings;
+    contextSettings.depthBits = 32;
     if(!app)
     {
         if(fullscreen)
         {
-            m_app = new sf::RenderWindow(sf::VideoMode(m_width, m_height), "bci-interface", sf::Style::Fullscreen);
+            m_app = new sf::RenderWindow(sf::VideoMode(m_width, m_height), "bci-interface", sf::Style::Fullscreen, contextSettings);
         	m_app->setMouseCursorVisible(false);
         }
         else
         {
-            m_app = new sf::RenderWindow(sf::VideoMode(m_width, m_height), "bci-interface");
+            m_app = new sf::RenderWindow(sf::VideoMode(m_width, m_height), "bci-interface", sf::Style::Close, contextSettings);
         }
     }
     else
