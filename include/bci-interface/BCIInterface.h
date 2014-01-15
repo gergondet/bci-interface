@@ -76,10 +76,10 @@ public:
 
     /* Init things for the oculus display, this should be called if you wish to
      * access the renderscale before starting the display */
-    void InitOculus(const std::string & shader_path);
+    void InitOculus();
 
     /* DisplayLoop for Oculus */
-    void OculusDisplayLoop(int & cmd, const std::string & shader_path = ".");
+    void OculusDisplayLoop(int & cmd);
 
     sf::RenderWindow * GetRenderWindow();
 

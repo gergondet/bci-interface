@@ -45,7 +45,7 @@ int main(int argc, char * argv[])
     unsigned int rheight = 480;
 
     BCIInterface * bciinterface = new BCIInterface(width, height);
-    bciinterface->InitOculus("/home/gergondet/devel/share/OculusWindow");
+    bciinterface->InitOculus();
 
     FontManager fm;
     FPSCounter fps_c(fm.GetDefaultFont());
@@ -95,7 +95,7 @@ int main(int argc, char * argv[])
     bciinterface->AddObject(new SSVEPStimulus(8, 60, (float)rwidth-100, (float)rheight/2, 200, 200, dir + "RIGHT.png", dir + "RIGHT_HL.png"));
     bciinterface->AddObject(new SSVEPStimulus(10, 60, (float)rwidth/2, (float)rheight-100, 200, 200, dir + "DOWN.png", dir + "DOWN_HL.png"));
     bciinterface->AddObject(new SSVEPStimulus(9, 60, 100, (float)rheight/2,200, 200, dir + "LEFT.png", dir + "LEFT_HL.png"));
-    bciinterface->AddObject(new SSVEPStimulus(14, 60, (float)rwidth/2, (float)rheight/2, 200, 200, "STOP.png", "STOP_HL.png"));
+    bciinterface->AddObject(new SSVEPStimulus(14, 60, (float)rwidth/2, (float)rheight/2, 200, 200, dir + "STOP.png", dir + "STOP_HL.png"));
     bciinterface->AddNonOwnedObject(&fps_c);
 
     int cmd = -1;

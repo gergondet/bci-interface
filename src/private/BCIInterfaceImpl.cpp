@@ -262,20 +262,20 @@ sf::RenderWindow * BCIInterfaceImpl::DisplayLoop(sf::RenderWindow * app, bool fu
     return m_app;
 }
 
-void BCIInterfaceImpl::InitOculus(const std::string & shader_path)
+void BCIInterfaceImpl::InitOculus()
 {
     sf::ContextSettings contextSettings;
     contextSettings.depthBits = 32;
-    m_oculus_window = new OculusWindow(sf::VideoMode(m_width, m_height), "bci-interface (Oculus)", sf::Style::Close, contextSettings, shader_path);
+    m_oculus_window = new OculusWindow(sf::VideoMode(m_width, m_height), "bci-interface (Oculus)", sf::Style::Close, contextSettings);
 
     m_display_fun = boost::bind(&OculusWindow::display, m_oculus_window);
 }
 
-void BCIInterfaceImpl::OculusDisplayLoop(int & cmd, const std::string & shader_path)
+void BCIInterfaceImpl::OculusDisplayLoop(int & cmd)
 {
     if(!m_oculus_window)
     {
-        InitOculus(shader_path);
+        InitOculus();
     }
 
     while(!m_close)
@@ -317,7 +317,8 @@ void BCIInterfaceImpl::DisplayLoop(sf::Window & eventWindow, sf::RenderTarget & 
         /* cheat when missing a frame */
         frameCount = newFrameCount > frameCount+1?frameCount+1:newFrameCount;
 
-        drawTarget.clear(sf::Color(0x77, 0x77, 0x77, 255));
+//        drawTarget.clear(sf::Color(0x77, 0x77, 0x77, 255));
+        drawTarget.clear(sf::Color(0, 0, 0, 255));
 
         /* Process events */
         sf::Event event;

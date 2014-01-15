@@ -103,9 +103,9 @@ public:
     /* Internal loop launched by BCIInterface public functions */
     void DisplayLoop(sf::Window & eventWindow, sf::RenderTarget & drawTarget,int & cmd, float timeout = 0);
 
-    void InitOculus(const std::string & shader_path);
+    void InitOculus();
 
-    void OculusDisplayLoop(int & cmd, const std::string & shader_path);
+    void OculusDisplayLoop(int & cmd);
 
     void Close();
 
