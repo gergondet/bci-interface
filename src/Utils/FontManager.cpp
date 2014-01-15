@@ -80,7 +80,7 @@ struct FontManagerImpl
                 std::copy(bfs::directory_iterator(path), bfs::directory_iterator(), std::back_inserter(ls_path));
                 for(auto it = ls_path.begin(); it != ls_path.end(); ++it)
                 {
-                    if( LoadFont(*it, font) ) return true;
+                    if( LoadFont(std::move(*it), font) ) return true;
                 }
             }
         }
