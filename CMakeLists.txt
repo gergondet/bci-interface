@@ -11,9 +11,12 @@ SET(PROJECT_NAME bci-interface)
 SET(PROJECT_CONTACT )
 SET(PROJECT_DESCRIPTION "")
 SET(PROJECT_URL "")
+SET(PROJECT_VERSION 1.0)
 
 SET(CXX_DISABLE_WERROR True)
 SET(CUSTOM_HEADER_DIR bci-interface)
+
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
 
 #SET(PROJECT_VERSION 0.1)
 
@@ -26,7 +29,7 @@ SETUP_PROJECT(FALSE)
 #  Look for dependencies
 #
 
-find_package( Boost 1.40.0 COMPONENTS thread system)
+find_package( Boost 1.40.0 COMPONENTS thread system filesystem)
 
 IF(Boost_FOUND)
     MESSAGE(STATUS "Found Boost")
@@ -37,7 +40,7 @@ ENDIF(Boost_FOUND)
 
 SET(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMakeModules)
 
-find_package(SFML COMPONENTS graphics window system)
+find_package(SFML COMPONENTS oculus graphics window system)
 
 INCLUDE_DIRECTORIES(${SFML_INCLUDE_DIR})
 

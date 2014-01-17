@@ -38,7 +38,7 @@ public:
         delete m_texture;
     }
 
-    void Display(sf::RenderWindow * app, unsigned int, sf::Clock &)
+    void Display(sf::RenderTarget * app, unsigned int, sf::Clock &)
     {
         app->draw(*m_sprite);
     } 
@@ -67,7 +67,7 @@ public:
 SpriteObject::SpriteObject(const std::string & texture_src) : m_impl(new SpriteObjectImpl(texture_src))
 {}
 
-void SpriteObject::Display(sf::RenderWindow * app, unsigned int frameCount, sf::Clock & clock)
+void SpriteObject::Display(sf::RenderTarget * app, unsigned int frameCount, sf::Clock & clock)
 {
     m_impl->Display(app, frameCount, clock);
 }

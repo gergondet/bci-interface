@@ -15,7 +15,7 @@ class SpriteObject : public DisplayObject
 public:
     SpriteObject(const std::string & image_src);
 
-    void Display(sf::RenderWindow * app, unsigned int frameCount, sf::Clock & clock);
+    void Display(sf::RenderTarget * app, unsigned int frameCount, sf::Clock & clock);
 
     void SetSubRect(int left, int top, int width, int height);
 

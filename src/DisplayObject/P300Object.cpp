@@ -39,7 +39,7 @@ public:
         delete m_shape;
     }
 
-    void Display(sf::RenderWindow * app, unsigned int, sf::Clock &)
+    void Display(sf::RenderTarget * app, unsigned int, sf::Clock &)
     {
         app->draw(*m_shape);
         if(m_active) 
@@ -74,7 +74,7 @@ P300Object::P300Object(unsigned int active_time, unsigned int x, unsigned int y,
     : m_impl(new P300ObjectImpl(active_time, x, y, size_x, size_y, r, g, b))
 {}
 
-void P300Object::Display(sf::RenderWindow * app, unsigned int frameCount, sf::Clock & clock)
+void P300Object::Display(sf::RenderTarget * app, unsigned int frameCount, sf::Clock & clock)
 {
     m_impl->Display(app, frameCount, clock);
 }

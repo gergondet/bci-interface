@@ -3,10 +3,14 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include <string>
+
 namespace sf
 {
     class RenderWindow;
 }
+
+class OculusWindow;
 
 namespace bciinterface
 {
@@ -70,7 +74,18 @@ public:
     /* DisplayLoop function for interface chaining alternate proto */
     sf::RenderWindow * DisplayLoop(sf::RenderWindow * app, int & cmd, float timeout = 0);
 
+    /* Init things for the oculus display, this should be called if you wish to
+     * access the renderscale before starting the display */
+    void InitOculus();
+
+    /* DisplayLoop for Oculus */
+    void OculusDisplayLoop(int & cmd);
+
     sf::RenderWindow * GetRenderWindow();
+
+    OculusWindow * GetOculusWindow();
+
+    float GetRenderScale();
 
     /* Close the interface */
     void Close();

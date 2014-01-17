@@ -11,9 +11,10 @@ struct TextObjectImpl
 private:
     sf::Text m_text;
 public:
-    TextObjectImpl(const std::string & txt)
+    TextObjectImpl(sf::Font & font, const std::string & txt)
         : m_text()
     {
+        m_text.setFont(font);
         m_text.setString(txt);
         m_text.setPosition(0,0);
     }
@@ -22,7 +23,7 @@ public:
     {
     }
 
-    void Display(sf::RenderWindow * app, unsigned int, sf::Clock &)
+    void Display(sf::RenderTarget * app, unsigned int, sf::Clock &)
     {
         app->draw(m_text);
     } 
@@ -41,12 +42,17 @@ public:
     {
         m_text.setCharacterSize(size);
     }
+
+    void SetColor(const sf::Color & color)
+    {
+        m_text.setColor(color);
+    }
 };
 
-TextObject::TextObject(const std::string & txt) : m_impl(new TextObjectImpl(txt))
+TextObject::TextObject(sf::Font & font, const std::string & txt) : m_impl(new TextObjectImpl(font, txt))
 {}
 
-void TextObject::Display(sf::RenderWindow * app, unsigned int frameCount, sf::Clock & clock)
+void TextObject::Display(sf::RenderTarget * app, unsigned int frameCount, sf::Clock & clock)
 {
     m_impl->Display(app, frameCount, clock);
 }
@@ -64,6 +70,11 @@ void TextObject::SetText(const std::string & txt)
 void TextObject::SetCharacterSize(unsigned int size)
 {
     m_impl->SetCharacterSize(size);
+}
+
+void TextObject::SetColor(const sf::Color & color)
+{
+    m_impl->SetColor(color);
 }
 
 } // namespace bciinterface

@@ -49,7 +49,7 @@ public:
     {
     }
 
-    void Draw(sf::RenderWindow * app)
+    void Draw(sf::RenderTarget * app)
     {
         app->draw(*m_sprite);
     }
@@ -91,7 +91,7 @@ void StaticBG::Close()
     m_impl->Close();
 }
 
-void StaticBG::Draw(sf::RenderWindow * app)
+void StaticBG::Draw(sf::RenderTarget * app)
 {
     m_impl->Draw(app);
 }

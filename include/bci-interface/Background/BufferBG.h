@@ -23,7 +23,7 @@ public:
 
     void Close();
 
-    void Draw(sf::RenderWindow * app);
+    void Draw(sf::RenderTarget * app);
 
     void UpdateFromBuffer_MONO(unsigned char * img);
 
