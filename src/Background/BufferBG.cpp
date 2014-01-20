@@ -115,6 +115,17 @@ public:
         }    
     }
 
+    void UpdateFromBuffer_RGB8(unsigned char * img)
+    {
+        for(size_t i = 0; i < m_width*m_height; ++i)
+        {
+            m_dataImage[4*i] = img[3*i];
+            m_dataImage[4*i+1] = img[3*i+1];
+            m_dataImage[4*i+2] = img[3*i+2];
+            m_dataImage[4*i+3] = 255;
+        }
+    }
+
     void UpdateFromBuffer_BGR8(unsigned char * img)
     {
         for(size_t i = 0; i < m_width*m_height; ++i)
@@ -176,6 +187,11 @@ void BufferBG::UpdateFromBuffer_RGB(unsigned char * img)
 void BufferBG::UpdateFromBuffer_BGR8(unsigned char * img)
 {
     m_impl->UpdateFromBuffer_BGR8(img);
+}
+
+void BufferBG::UpdateFromBuffer_RGB8(unsigned char * img)
+{
+    m_impl->UpdateFromBuffer_RGB8(img);
 }
 
 void BufferBG::SwitchColorMode()
