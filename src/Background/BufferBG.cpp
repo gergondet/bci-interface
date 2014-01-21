@@ -75,6 +75,9 @@ public:
     void Draw(sf::RenderTarget * app)
     {
         m_texture_display->update(m_dataImage, m_width, m_height, 0, 0);
+        m_sprite_display->setTextureRect(m_subrect);
+        m_sprite_display->setScale(m_scale_x, m_scale_y);
+        m_sprite_display->setPosition((float)(m_wwidth/2 - m_iwidth/2), (float)(m_wheight/2 - m_iheight/2));
         app->draw(*m_sprite_display);
     }
 
