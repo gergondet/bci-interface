@@ -55,7 +55,9 @@ private:
 
     std::vector<DisplayObject *> m_gl_objects;
     std::vector<DisplayObject *> m_gl_objects_non_owned;
-    std::vector<DisplayObject *> m_gl_objects_to_delete;
+
+    /* Objects to be deleted */
+    std::vector<DisplayObject *> m_objects_to_delete;
 
     CommandReceiver * m_receiver;
     boost::thread * m_receiverth;

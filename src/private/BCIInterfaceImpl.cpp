@@ -11,7 +11,7 @@ BCIInterfaceImpl::BCIInterfaceImpl(const BCIInterface & ref, unsigned int width,
     m_background(0), m_backgroundth(0),
     m_objects(0), m_objects_non_owned(0),
     m_gl_objects(0), m_gl_objects_non_owned(0),
-    m_gl_objects_to_delete(0),
+    m_objects_to_delete(0),
     m_receiver(0), m_receiverth(0),
     m_overrider(0),
     m_interpreter(0)
@@ -175,14 +175,7 @@ void BCIInterfaceImpl::Clean()
     {
         DisplayObject * tmp = m_active_objects.back();
         m_active_objects.pop_back();
-        if(!tmp->DrawWithGL())
-        {
-            delete tmp;
-        }
-        else
-        {
-            m_gl_objects_to_delete.push_back(tmp);
-        }
+        m_objects_to_delete.push_back(tmp);
     }
     if(m_oculus_window)
     {
@@ -292,10 +285,10 @@ void BCIInterfaceImpl::DisplayLoop(sf::Window & eventWindow, sf::RenderTarget & 
     sf::Clock clock;
     m_close = false;
     m_finished = false;
-    while(m_gl_objects_to_delete.size())
+    while(m_objects_to_delete.size())
     {
-        DisplayObject * tmp = m_gl_objects_to_delete.back();
-        m_gl_objects_to_delete.pop_back();
+        DisplayObject * tmp = m_objects_to_delete.back();
+        m_objects_to_delete.pop_back();
         delete tmp;
     }
     //if(cmd) { *cmd = 0; }
