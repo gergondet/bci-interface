@@ -29,6 +29,8 @@ SETUP_PROJECT(FALSE)
 #  Look for dependencies
 #
 
+INCLUDE_DIRECTORIES(${CMAKE_INSTALL_PREFIX}/include)
+
 find_package( Boost 1.40.0 COMPONENTS thread system filesystem)
 
 IF(Boost_FOUND)
