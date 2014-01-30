@@ -37,7 +37,7 @@ ENDIF(UNIX)
 TARGET_LINK_LIBRARIES(${EXEC_NAME} ${Boost_LIBRARIES})
 
 # -------------------------
-#  ssvep-training App
+#  ssvep-training-oculus App
 # -------------------------
 
 SET(EXEC_NAME ssvep-training-oculus)
@@ -47,6 +47,38 @@ SET(${EXEC_NAME}_src
 )
 
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include ${CMAKE_SOURCE_DIR}/application/ssvep-training-oculus)
+LINK_DIRECTORIES(${${PROJECT_NAME}_BINARY_DIR}/src)
+LINK_DIRECTORIES(${CMAKE_INSTALL_PREFIX}/lib)
+
+
+ADD_EXECUTABLE(${EXEC_NAME}
+  ${${EXEC_NAME}_src}
+  )
+
+SET_TARGET_PROPERTIES(${PROJECT_NAME_LIB}
+  PROPERTIES
+  COMPILE_FLAGS ${${PROJECT_NAME}_src_CXXFLAGS}
+  LINK_FLAGS "${${PROJECT_NAME}_src_LDFLAGS}"}
+)
+
+IF(UNIX)
+TARGET_LINK_LIBRARIES(${EXEC_NAME} ${PROJECT_NAME} ${SFML_LIBRARIES} pthread)
+ELSE(UNIX)
+TARGET_LINK_LIBRARIES(${EXEC_NAME} "bci-interface.lib;sfml-audio.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;OpenGL32.lib;glu32.lib")
+ENDIF(UNIX)
+TARGET_LINK_LIBRARIES(${EXEC_NAME} ${Boost_LIBRARIES})
+
+# -------------------------
+#  ssvep-training App
+# -------------------------
+
+SET(EXEC_NAME ssvep-training)
+
+SET(${EXEC_NAME}_src
+    ssvep-training/ssvep-training.cpp
+)
+
+INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include ${CMAKE_SOURCE_DIR}/application/ssvep-training)
 LINK_DIRECTORIES(${${PROJECT_NAME}_BINARY_DIR}/src)
 LINK_DIRECTORIES(${CMAKE_INSTALL_PREFIX}/lib)
 
