@@ -209,7 +209,6 @@ void BCIInterfaceImpl::DisplayLoop(bool fullscreen)
     m_app->setKeyRepeatEnabled(false);
 
     InitGL();
-    Resize();
 
     int cmd_out = -1;
 
@@ -245,7 +244,6 @@ sf::RenderWindow * BCIInterfaceImpl::DisplayLoop(sf::RenderWindow * app, bool fu
     m_app->setKeyRepeatEnabled(false);
 
     InitGL();
-    Resize();
 
     while(!m_close)
     {
