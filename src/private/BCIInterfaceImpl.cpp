@@ -479,5 +479,10 @@ float BCIInterfaceImpl::GetRenderScale()
     return 1.0f;
 }
 
+void BCIInterfaceImpl::EnableFPSCounter(sf::Font & font)
+{
+    if(m_oculus_window) { m_oculus_window->enableFPSCounter(font); }
+}
+
 } // namespace bciinterface
 
