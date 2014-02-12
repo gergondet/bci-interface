@@ -209,7 +209,6 @@ void BCIInterfaceImpl::DisplayLoop(bool fullscreen)
     m_app->setKeyRepeatEnabled(false);
 
     InitGL();
-    Resize();
 
     int cmd_out = -1;
 
@@ -245,7 +244,6 @@ sf::RenderWindow * BCIInterfaceImpl::DisplayLoop(sf::RenderWindow * app, bool fu
     m_app->setKeyRepeatEnabled(false);
 
     InitGL();
-    Resize();
 
     while(!m_close)
     {
@@ -479,6 +477,11 @@ float BCIInterfaceImpl::GetRenderScale()
 {
     if(m_oculus_window) return m_oculus_window->getRenderScale();
     return 1.0f;
+}
+
+void BCIInterfaceImpl::EnableFPSCounter(sf::Font & font)
+{
+    if(m_oculus_window) { m_oculus_window->enableFPSCounter(font); }
 }
 
 } // namespace bciinterface

@@ -3,6 +3,7 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include <SFML/Graphics/Font.hpp>
 #include <string>
 
 namespace sf
@@ -84,6 +85,9 @@ public:
     sf::RenderWindow * GetRenderWindow();
 
     OculusWindow * GetOculusWindow();
+
+    /* Enable FPS counter in Oculus window */
+    void EnableFPSCounter(sf::Font & font);
 
     float GetRenderScale();
 

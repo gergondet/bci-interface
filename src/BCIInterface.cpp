@@ -118,5 +118,10 @@ float BCIInterface::GetRenderScale()
     return m_impl->GetRenderScale();
 }
 
+void BCIInterface::EnableFPSCounter(sf::Font & font)
+{
+    return m_impl->EnableFPSCounter(font);
+}
+
 } // namespace bciinterface
 

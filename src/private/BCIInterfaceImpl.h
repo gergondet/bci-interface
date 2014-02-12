@@ -122,6 +122,8 @@ public:
     OculusWindow * GetOculusWindow();
 
     float GetRenderScale();
+
+    void EnableFPSCounter(sf::Font & font);
 };
 
 } // namespace bciinterface
