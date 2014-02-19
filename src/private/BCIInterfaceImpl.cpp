@@ -1,5 +1,7 @@
 #include "BCIInterfaceImpl.h"
 
+#include <X11/Xlib.h>
+
 namespace bciinterface
 {
 
@@ -204,7 +206,7 @@ void BCIInterfaceImpl::DisplayLoop(bool fullscreen)
     m_display_fun = boost::bind(&sf::RenderWindow::display, m_app);
 
 
-    //m_app->EnableVerticalSync(true);
+    m_app->setVerticalSyncEnabled(true);
 
     m_app->setKeyRepeatEnabled(false);
 
@@ -240,7 +242,7 @@ sf::RenderWindow * BCIInterfaceImpl::DisplayLoop(sf::RenderWindow * app, bool fu
 
     m_display_fun = boost::bind(&sf::RenderWindow::display, m_app);
 
-    //m_app->EnableVerticalSync(true);
+    m_app->setVerticalSyncEnabled(true);
     m_app->setKeyRepeatEnabled(false);
 
     InitGL();
@@ -264,10 +266,13 @@ void BCIInterfaceImpl::InitOculus()
 
 void BCIInterfaceImpl::OculusDisplayLoop(int & cmd)
 {
+    XInitThreads();
     if(!m_oculus_window)
     {
         InitOculus();
     }
+
+    m_oculus_window->getApplication().setVerticalSyncEnabled(true);
 
     while(!m_close)
     {
