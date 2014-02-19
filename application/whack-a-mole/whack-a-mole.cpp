@@ -77,7 +77,7 @@ int main(int, char * [])
     int out_cmd = -1;
     float timeout = 2;
     sf::RenderWindow * app = 0;
-    boost::thread th(boost::bind(&bciinterface::BCIInterface::DisplayLoop, bciinterface, app, fullscreen, out_cmd, timeout));
+    boost::thread th(boost::bind(&bciinterface::BCIInterface::DisplayLoop, bciinterface, app, fullscreen, boost::ref(out_cmd), timeout));
 
     unsigned int score = 0;
     sf::SoundBuffer buffer;
