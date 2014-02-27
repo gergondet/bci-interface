@@ -20,7 +20,11 @@ struct FontManagerImpl
     FontManagerImpl()
     : loaded_fonts(), font_directories(), default_font("arial.ttf")
     {
+#ifndef WIN32
         font_directories.insert("/usr/share/fonts");
+#else
+        font_directories.insert(".");
+#endif
     }
 
     ~FontManagerImpl()
@@ -47,6 +51,7 @@ struct FontManagerImpl
         {
             return *(loaded_fonts[font]);
         }
+        std::cerr << "FontManager has failed to find " << font << std::endl;
         std::stringstream ss; ss << "Font " << font << " could not be loaded";
         throw(ss.str().c_str());
     }

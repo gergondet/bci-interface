@@ -1,6 +1,15 @@
 #include "BCIInterfaceImpl.h"
 
+#ifndef WIN32
 #include <X11/Xlib.h>
+#else
+#include <cmath>
+template<typename T>
+inline T trunc(T d)
+{
+    return (d>0) ? floor(d) : ceil(d);
+}
+#endif
 
 namespace bciinterface
 {
@@ -266,7 +275,9 @@ void BCIInterfaceImpl::InitOculus()
 
 void BCIInterfaceImpl::OculusDisplayLoop(int & cmd)
 {
+    #ifndef WIN32
     XInitThreads();
+    #endif
     if(!m_oculus_window)
     {
         InitOculus();

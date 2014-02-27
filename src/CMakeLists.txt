@@ -29,37 +29,32 @@ INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include)
 INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
 INCLUDE_DIRECTORIES(${CMAKE_INSTALL_PREFIX}/include)
 
-ADD_LIBRARY(${LIB_NAME}
-  SHARED
-  ${${LIB_NAME}_src}
-  ${${LIB_NAME}_headers}
-)
-
 IF(WIN32)
-add_library( "bci-interface-static" STATIC ${${LIB_NAME}_src} ${${LIB_NAME}_headers} )
-set_target_properties( "bci-interface-static" PROPERTIES OUTPUT_NAME "bci-interface")
-ENDIF(WIN32)
-
-SET_TARGET_PROPERTIES(${LIB_NAME}
-  PROPERTIES
-  SOVERSION ${PROJECT_VERSION}
-  INSTALL_RPATH lib)
+    ADD_LIBRARY(${LIB_NAME}
+      STATIC
+      ${${LIB_NAME}_src}
+      ${${LIB_NAME}_headers}
+    )
+    ADD_DEFINITIONS(-DSFML_STATIC -DGLEW_STATIC)
+    TARGET_LINK_LIBRARIES(${LIB_NAME} "-Wl,--whole-archive sfml-oculus.lib;sfml-graphics-s.lib;sfml-window-s.lib;sfml-system-s.lib;glu32.lib;${OCULUS_LIB}")
+ELSE()
+    ADD_LIBRARY(${LIB_NAME}
+      SHARED
+      ${${LIB_NAME}_src}
+      ${${LIB_NAME}_headers}
+    )
+    SET_TARGET_PROPERTIES(${LIB_NAME}
+      PROPERTIES
+      SOVERSION ${PROJECT_VERSION}
+      INSTALL_RPATH lib)
+    TARGET_LINK_LIBRARIES(${LIB_NAME} glut GLU GL)
+    TARGET_LINK_LIBRARIES(${LIB_NAME} ${Boost_LIBRARIES})
+    TARGET_LINK_LIBRARIES(${LIB_NAME} ${SFML_LIBRARIES})
+    TARGET_LINK_LIBRARIES(${LIB_NAME} udev Xinerama)
+ENDIF()
 
 ADD_DEFINITIONS(${${PROJECT_NAME}_CXXFLAGS})
 LINK_DIRECTORIES(${CMAKE_INSTALL_PREFIX}/lib)
-TARGET_LINK_LIBRARIES(${LIB_NAME} glut GLU GL)
-# -- Not needed in WIN32 because boost comes with autolink
-
-IF(NOT WIN32)
-TARGET_LINK_LIBRARIES(${LIB_NAME} ${Boost_LIBRARIES})
-TARGET_LINK_LIBRARIES(${LIB_NAME} ${SFML_LIBRARIES})
-TARGET_LINK_LIBRARIES(${LIB_NAME} udev Xinerama)
-ENDIF(NOT WIN32)
-
-# -- Manual link for WIN32
-IF(WIN32)
-TARGET_LINK_LIBRARIES(${LIB_NAME} "sfml-graphics.lib;sfml-window.lib;sfml-system.lib;OpenGL32.lib;glu32.lib")
-ENDIF(WIN32)
 
 INSTALL(TARGETS ${LIB_NAME}
     DESTINATION lib)

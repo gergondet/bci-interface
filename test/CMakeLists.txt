@@ -16,17 +16,11 @@ ADD_EXECUTABLE(${EXEC_NAME}
   ${${EXEC_NAME}_src}
   )
 
-SET_TARGET_PROPERTIES(${PROJECT_NAME_LIB}
-  PROPERTIES
-  COMPILE_FLAGS ${${PROJECT_NAME}_src_CXXFLAGS}
-  LINK_FLAGS "${${PROJECT_NAME}_src_LDFLAGS} -pthread"}
-)
-
-IF(WIN32)
-TARGET_LINK_LIBRARIES(${EXEC_NAME} "bci-interface.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;ws2_32.lib;OpenGL32.lib;glu32.lib")
-ELSE(WIN32)
-TARGET_LINK_LIBRARIES(${EXEC_NAME} bci-interface ${SFML_LIBRARIES} pthread)
-ENDIF(WIN32)
+IF(UNIX)
+TARGET_LINK_LIBRARIES(${EXEC_NAME} ${PROJECT_NAME} ${SFML_LIBRARIES} pthread)
+ELSE(UNIX)
+TARGET_LINK_LIBRARIES(${EXEC_NAME} "bci-interface.lib;sfml-oculus.lib;sfml-graphics-s.lib;sfml-window-s.lib;sfml-system-s.lib;glu32.lib;${OCULUS_LIB}")
+ENDIF(UNIX)
 TARGET_LINK_LIBRARIES(${EXEC_NAME} ${Boost_LIBRARIES})
 
 # -- testssvep-interface 
@@ -44,17 +38,11 @@ ADD_EXECUTABLE(${EXEC_NAME}
   ${${EXEC_NAME}_src}
   )
 
-SET_TARGET_PROPERTIES(${PROJECT_NAME_LIB}
-  PROPERTIES
-  COMPILE_FLAGS ${${PROJECT_NAME}_src_CXXFLAGS}
-  LINK_FLAGS "${${PROJECT_NAME}_src_LDFLAGS} -pthread"}
-)
-
-IF(WIN32)
-TARGET_LINK_LIBRARIES(${EXEC_NAME} "bci-interface.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;ws2_32.lib;OpenGL32.lib;glu32.lib")
-ELSE(WIN32)
-TARGET_LINK_LIBRARIES(${EXEC_NAME} bci-interface ${SFML_LIBRARIES} pthread)
-ENDIF(WIN32)
+IF(UNIX)
+TARGET_LINK_LIBRARIES(${EXEC_NAME} ${PROJECT_NAME} ${SFML_LIBRARIES} pthread)
+ELSE(UNIX)
+TARGET_LINK_LIBRARIES(${EXEC_NAME} "bci-interface.lib;sfml-oculus.lib;sfml-graphics-s.lib;sfml-window-s.lib;sfml-system-s.lib;glu32.lib;${OCULUS_LIB}")
+ENDIF(UNIX)
 TARGET_LINK_LIBRARIES(${EXEC_NAME} ${Boost_LIBRARIES})
 
 #testoculus-interface
@@ -72,17 +60,11 @@ ADD_EXECUTABLE(${EXEC_NAME}
   ${${EXEC_NAME}_src}
   )
 
-SET_TARGET_PROPERTIES(${PROJECT_NAME_LIB}
-  PROPERTIES
-  COMPILE_FLAGS ${${PROJECT_NAME}_src_CXXFLAGS}
-  LINK_FLAGS "${${PROJECT_NAME}_src_LDFLAGS} -pthread"}
-)
-
-IF(WIN32)
-TARGET_LINK_LIBRARIES(${EXEC_NAME} "bci-interface.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;ws2_32.lib;OpenGL32.lib;glu32.lib")
-ELSE(WIN32)
-TARGET_LINK_LIBRARIES(${EXEC_NAME} bci-interface ${SFML_LIBRARIES} pthread)
-ENDIF(WIN32)
+IF(UNIX)
+TARGET_LINK_LIBRARIES(${EXEC_NAME} ${PROJECT_NAME} ${SFML_LIBRARIES} pthread)
+ELSE(UNIX)
+TARGET_LINK_LIBRARIES(${EXEC_NAME} "bci-interface.lib;sfml-oculus.lib;sfml-graphics-s.lib;sfml-window-s.lib;sfml-system-s.lib;glu32.lib;${OCULUS_LIB}")
+ENDIF(UNIX)
 TARGET_LINK_LIBRARIES(${EXEC_NAME} ${Boost_LIBRARIES})
 
 # -- testsquare-function 
@@ -100,18 +82,12 @@ ADD_EXECUTABLE(${EXEC_NAME}
   ${${EXEC_NAME}_src}
   )
 
-SET_TARGET_PROPERTIES(${PROJECT_NAME_LIB}
-  PROPERTIES
-  COMPILE_FLAGS ${${PROJECT_NAME}_src_CXXFLAGS}
-  LINK_FLAGS "${${PROJECT_NAME}_src_LDFLAGS}"}
-)
-
-IF(WIN32)
-TARGET_LINK_LIBRARIES(${EXEC_NAME} "bci-interface.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;ws2_32.lib;OpenGL32.lib;glu32.lib")
-ELSE(WIN32)
-TARGET_LINK_LIBRARIES(${EXEC_NAME} bci-interface ${SFML_LIBRARIES})
-ENDIF(WIN32)
-TARGET_LINK_LIBRARIES(${EXEC_NAME} ${Boost_LIBRARIES} pthread)
+IF(UNIX)
+TARGET_LINK_LIBRARIES(${EXEC_NAME} ${PROJECT_NAME} ${SFML_LIBRARIES} pthread)
+ELSE(UNIX)
+TARGET_LINK_LIBRARIES(${EXEC_NAME} "bci-interface.lib;sfml-oculus.lib;sfml-graphics-s.lib;sfml-window-s.lib;sfml-system-s.lib;glu32.lib;${OCULUS_LIB}")
+ENDIF(UNIX)
+TARGET_LINK_LIBRARIES(${EXEC_NAME} ${Boost_LIBRARIES})
 
 # -- testfontmanager 
 SET(EXEC_NAME testfontmanager)
@@ -128,18 +104,12 @@ ADD_EXECUTABLE(${EXEC_NAME}
   ${${EXEC_NAME}_src}
   )
 
-SET_TARGET_PROPERTIES(${PROJECT_NAME_LIB}
-  PROPERTIES
-  COMPILE_FLAGS ${${PROJECT_NAME}_src_CXXFLAGS}
-  LINK_FLAGS "${${PROJECT_NAME}_src_LDFLAGS}"}
-)
-
 IF(WIN32)
 TARGET_LINK_LIBRARIES(${EXEC_NAME} "bci-interface.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;ws2_32.lib;OpenGL32.lib;glu32.lib")
 ELSE(WIN32)
-TARGET_LINK_LIBRARIES(${EXEC_NAME} bci-interface ${SFML_LIBRARIES})
+TARGET_LINK_LIBRARIES(${EXEC_NAME} bci-interface ${SFML_LIBRARIES} pthread)
 ENDIF(WIN32)
-TARGET_LINK_LIBRARIES(${EXEC_NAME} ${Boost_LIBRARIES} pthread)
+TARGET_LINK_LIBRARIES(${EXEC_NAME} ${Boost_LIBRARIES})
 
 
 # -- EchoServer
@@ -157,17 +127,11 @@ ADD_EXECUTABLE(${EXEC_NAME}
   ${${EXEC_NAME}_src}
   )
 
-SET_TARGET_PROPERTIES(${PROJECT_NAME_LIB}
-  PROPERTIES
-  COMPILE_FLAGS ${${PROJECT_NAME}_src_CXXFLAGS}
-  LINK_FLAGS "${${PROJECT_NAME}_src_LDFLAGS}"}
-)
-
-IF(WIN32)
-TARGET_LINK_LIBRARIES(${EXEC_NAME} "bci-interface.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;ws2_32.lib;OpenGL32.lib;glu32.lib")
-ELSE(WIN32)
-TARGET_LINK_LIBRARIES(${EXEC_NAME} bci-interface ${SFML_LIBRARIES} pthread)
-ENDIF(WIN32)
+IF(UNIX)
+TARGET_LINK_LIBRARIES(${EXEC_NAME} ${PROJECT_NAME} ${SFML_LIBRARIES} pthread)
+ELSE(UNIX)
+TARGET_LINK_LIBRARIES(${EXEC_NAME} "bci-interface.lib;sfml-oculus.lib;sfml-graphics-s.lib;sfml-window-s.lib;sfml-system-s.lib;glu32.lib;${OCULUS_LIB}")
+ENDIF(UNIX)
 TARGET_LINK_LIBRARIES(${EXEC_NAME} ${Boost_LIBRARIES})
 
 

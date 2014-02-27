@@ -23,16 +23,10 @@ ADD_EXECUTABLE(${EXEC_NAME}
   ${${EXEC_NAME}_src}
   )
 
-SET_TARGET_PROPERTIES(${PROJECT_NAME_LIB}
-  PROPERTIES
-  COMPILE_FLAGS ${${PROJECT_NAME}_src_CXXFLAGS}
-  LINK_FLAGS "${${PROJECT_NAME}_src_LDFLAGS}"}
-)
-
 IF(UNIX)
 TARGET_LINK_LIBRARIES(${EXEC_NAME} ${PROJECT_NAME} ${SFML_LIBRARIES} pthread)
 ELSE(UNIX)
-TARGET_LINK_LIBRARIES(${EXEC_NAME} "bci-interface.lib;sfml-audio.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;OpenGL32.lib;glu32.lib")
+TARGET_LINK_LIBRARIES(${EXEC_NAME} "bci-interface.lib;sfml-oculus.lib;sfml-audio-s.lib;sfml-graphics-s.lib;sfml-window-s.lib;sfml-system-s.lib;glu32.lib;${OCULUS_LIB}")
 ENDIF(UNIX)
 TARGET_LINK_LIBRARIES(${EXEC_NAME} ${Boost_LIBRARIES})
 
@@ -55,16 +49,10 @@ ADD_EXECUTABLE(${EXEC_NAME}
   ${${EXEC_NAME}_src}
   )
 
-SET_TARGET_PROPERTIES(${PROJECT_NAME_LIB}
-  PROPERTIES
-  COMPILE_FLAGS ${${PROJECT_NAME}_src_CXXFLAGS}
-  LINK_FLAGS "${${PROJECT_NAME}_src_LDFLAGS}"}
-)
-
 IF(UNIX)
 TARGET_LINK_LIBRARIES(${EXEC_NAME} ${PROJECT_NAME} ${SFML_LIBRARIES} pthread)
 ELSE(UNIX)
-TARGET_LINK_LIBRARIES(${EXEC_NAME} "bci-interface.lib;sfml-audio.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;OpenGL32.lib;glu32.lib")
+TARGET_LINK_LIBRARIES(${EXEC_NAME} "bci-interface.lib;sfml-oculus.lib;sfml-graphics-s.lib;sfml-window-s.lib;sfml-system-s.lib;glu32.lib;${OCULUS_LIB}")
 ENDIF(UNIX)
 TARGET_LINK_LIBRARIES(${EXEC_NAME} ${Boost_LIBRARIES})
 
@@ -87,15 +75,9 @@ ADD_EXECUTABLE(${EXEC_NAME}
   ${${EXEC_NAME}_src}
   )
 
-SET_TARGET_PROPERTIES(${PROJECT_NAME_LIB}
-  PROPERTIES
-  COMPILE_FLAGS ${${PROJECT_NAME}_src_CXXFLAGS}
-  LINK_FLAGS "${${PROJECT_NAME}_src_LDFLAGS}"}
-)
-
 IF(UNIX)
 TARGET_LINK_LIBRARIES(${EXEC_NAME} ${PROJECT_NAME} ${SFML_LIBRARIES} pthread)
 ELSE(UNIX)
-TARGET_LINK_LIBRARIES(${EXEC_NAME} "bci-interface.lib;sfml-audio.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;OpenGL32.lib;glu32.lib")
+TARGET_LINK_LIBRARIES(${EXEC_NAME} "bci-interface.lib;sfml-oculus.lib;sfml-graphics-s.lib;sfml-window-s.lib;sfml-system-s.lib;glu32.lib;${OCULUS_LIB}")
 ENDIF(UNIX)
 TARGET_LINK_LIBRARIES(${EXEC_NAME} ${Boost_LIBRARIES})
