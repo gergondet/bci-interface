@@ -16,13 +16,13 @@ class HoldInterpreter : public SimpleInterpreter
 {
 public:
     /* Time to hold a command before triggering switch */
-    HoldInterpreter(unsigned int msec, int ign_cmd = -1);
+    BCIINTERFACE_API HoldInterpreter(unsigned int msec, int ign_cmd = -1);
 
-    HoldInterpreter(unsigned int msec, const std::vector<int> & ign_cmds);
+    BCIINTERFACE_API HoldInterpreter(unsigned int msec, const std::vector<int> & ign_cmds);
 
-    virtual bool InterpretCommand(int command, const std::vector<DisplayObject *> & objects);
+    BCIINTERFACE_API virtual bool InterpretCommand(int command, const std::vector<DisplayObject *> & objects);
 
-    void Reset();
+    BCIINTERFACE_API void Reset();
 private:
     boost::shared_ptr<HoldInterpreterImpl> m_impl;
 };

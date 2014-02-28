@@ -21,61 +21,61 @@ class SSVEPStimulus : public DisplayObject
 {
 public:
     /*! \brief Constructor: x and y are stimulus centers, can provide an image as graphic for the stim */
-    SSVEPStimulus(int frequency, int screenFrequency, float x, float y, float size_x, float size_y, const std::string & tx, const std::string & tx_hl);
+    BCIINTERFACE_API SSVEPStimulus(int frequency, int screenFrequency, float x, float y, float size_x, float size_y, const std::string & tx, const std::string & tx_hl);
 
     /*! \brief Constructor: x and y are stimulus centers, can provide an image as graphic for the stim */
-    SSVEPStimulus(int frequency, int screenFrequency, float x, float y, float size_x, float size_y, const std::string & tx, const std::string & tx_hl, const std::string & unactive_tx, const std::string & unactive_tx_hl);
+    BCIINTERFACE_API SSVEPStimulus(int frequency, int screenFrequency, float x, float y, float size_x, float size_y, const std::string & tx, const std::string & tx_hl, const std::string & unactive_tx, const std::string & unactive_tx_hl);
 
     /*! \brief Constructor: x and y are stimulus centers, can provide an image as graphic for the stim, size is set to the image size */
-    SSVEPStimulus(int frequency, int screenFrequency, float x, float y, const std::string & tx, const std::string & tx_hl);
+    BCIINTERFACE_API SSVEPStimulus(int frequency, int screenFrequency, float x, float y, const std::string & tx, const std::string & tx_hl);
 
     /*! \brief Constructor: x and y are stimulus centers, can provide an image as graphic for the stim, 
                                 size is set to the image size, second image is the unactive sprite */
-    SSVEPStimulus(int frequency, int screenFrequency, float x, float y, const std::string & tx, const std::string & tx_hl, const std::string & unactive_tx, const std::string & unactive_tx_hl);
+    BCIINTERFACE_API SSVEPStimulus(int frequency, int screenFrequency, float x, float y, const std::string & tx, const std::string & tx_hl, const std::string & unactive_tx, const std::string & unactive_tx_hl);
 
     /*! \brief Constructor: x and y are stimulus centers, circle shape */
-    SSVEPStimulus(int frequency, int screenFrequency, float x, float y, float radius, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
+    BCIINTERFACE_API SSVEPStimulus(int frequency, int screenFrequency, float x, float y, float radius, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
 
     /*! \brief Constructor: x and y are stimulus centers */ 
-    SSVEPStimulus(int frequency, int screenFrequency, float x, float y, float size_x, float size_y, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
+    BCIINTERFACE_API SSVEPStimulus(int frequency, int screenFrequency, float x, float y, float size_x, float size_y, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
 
     /*! \brief Constructor: for OpenGL SSVEPStimulus */
-    SSVEPStimulus(int frequency, int screenFrequency);
+    BCIINTERFACE_API SSVEPStimulus(int frequency, int screenFrequency);
 
     /* \brief Get flickering frequency */
-    int GetFrequency();
+    BCIINTERFACE_API int GetFrequency();
 
     /* \brief Change flickering frequency */
-    bool ChangeFrequency(int frequency, int screenFrequency);
+    BCIINTERFACE_API bool ChangeFrequency(int frequency, int screenFrequency);
 
     /*! \brief Highlight the stimulus by changing outline color */
-    virtual void Highlight();
+    BCIINTERFACE_API virtual void Highlight();
 
     /*! \brief Unhighlight the stimulus */
-    virtual void Unhighlight();
+    BCIINTERFACE_API virtual void Unhighlight();
 
     /*Change position of the square*/
-    void Move(float diffX, float diffY);
+    BCIINTERFACE_API void Move(float diffX, float diffY);
 
     /* Set absolute position */
-    void SetPosition(float X, float Y);
+    BCIINTERFACE_API void SetPosition(float X, float Y);
 
     /* Set absolute rotation */
-    void SetRotation(float deg_angle);
+    BCIINTERFACE_API void SetRotation(float deg_angle);
 
     /* Set scale */
-    void SetScale(float sX, float sY);
+    BCIINTERFACE_API void SetScale(float sX, float sY);
 
     /* Resize the stimulus */
-    void Resize(float size_x, float size_y);
+    BCIINTERFACE_API void Resize(float size_x, float size_y);
 
     /* Display function */
-    virtual void Display(sf::RenderTarget * app, unsigned int frameCount, sf::Clock & clock);
+    BCIINTERFACE_API virtual void Display(sf::RenderTarget * app, unsigned int frameCount, sf::Clock & clock);
 
-    virtual bool DrawWithGL();
+    BCIINTERFACE_API virtual bool DrawWithGL();
 
     /* Should draw active or inactive? Use if you implement Display */
-    bool DisplayActive(unsigned int frameCount);
+    BCIINTERFACE_API bool DisplayActive(unsigned int frameCount);
 
 
 private:

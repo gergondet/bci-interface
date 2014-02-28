@@ -15,25 +15,25 @@ struct CommandOverriderImpl;
 class CommandOverrider
 {
 public:
-    CommandOverrider();
+    BCIINTERFACE_API CommandOverrider();
 
-    virtual void Process(sf::Event & event, const BCIInterface & iface);
+    BCIINTERFACE_API virtual void Process(sf::Event & event, const BCIInterface & iface);
 
     /* Handle keyboards events */
-    void AddOverrideCommand(sf::Keyboard::Key ekey, int command);
+    BCIINTERFACE_API void AddOverrideCommand(sf::Keyboard::Key ekey, int command);
 
     /* Handle mouse click events */
-    void AddOverrideCommand(sf::Mouse::Button ebutton, int command);
+    BCIINTERFACE_API void AddOverrideCommand(sf::Mouse::Button ebutton, int command);
 
     /* Handle joypad button events */
-    void AddOverrideCommand(unsigned int button, int command);
+    BCIINTERFACE_API void AddOverrideCommand(unsigned int button, int command);
 
     /* Remove all handled events */
-    void Clean();
+    BCIINTERFACE_API void Clean();
 
-    virtual int GetCommand();
+    BCIINTERFACE_API virtual int GetCommand();
 
-    virtual bool IsOverriding(); 
+    BCIINTERFACE_API virtual bool IsOverriding(); 
 
 private:
     boost::shared_ptr<CommandOverriderImpl> m_impl;

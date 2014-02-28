@@ -3,24 +3,26 @@
 #ifndef _H_COMMANDRECEIVER_H_
 #define _H_COMMANDRECEIVER_H_
 
+#include <bci-interface/BCIAPI.h>
+
 namespace bciinterface
 {
 
 class CommandReceiver
 {
 public:
-    CommandReceiver() {}
+    BCIINTERFACE_API CommandReceiver() {}
 
-    virtual ~CommandReceiver() {}
+    BCIINTERFACE_API virtual ~CommandReceiver() {}
 
     /* Loop to receive command */
-    virtual void CommandLoop() = 0;
+    BCIINTERFACE_API virtual void CommandLoop() = 0;
 
     /* Close command receiver */
-    virtual void Close() = 0;
+    BCIINTERFACE_API virtual void Close() = 0;
 
     /* Returns the current command output from the BCI */
-    virtual int GetCommand() = 0;
+    BCIINTERFACE_API virtual int GetCommand() = 0;
 };
 
 } // namespace bciinterface

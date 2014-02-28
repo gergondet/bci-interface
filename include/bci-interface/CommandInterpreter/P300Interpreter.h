@@ -13,9 +13,9 @@ struct P300InterpreterImpl;
 class P300Interpreter : public CommandInterpreter
 {
 public:
-    P300Interpreter(bool training, unsigned int nb_objects);
+    BCIINTERFACE_API P300Interpreter(bool training, unsigned int nb_objects);
 
-    virtual bool InterpretCommand(int command, const std::vector<DisplayObject*> & objects);
+    BCIINTERFACE_API virtual bool InterpretCommand(int command, const std::vector<DisplayObject*> & objects);
 
 private:
     boost::shared_ptr<P300InterpreterImpl> m_impl;

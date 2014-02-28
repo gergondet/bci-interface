@@ -1,6 +1,8 @@
 #ifndef _H_DISPLAY_OBJECT_H_
 #define _H_DISPLAY_OBJECT_H_
 
+#include <bci-interface/BCIAPI.h>
+
 namespace sf
 {
     class Clock;
@@ -18,31 +20,31 @@ class BCIInterface;
 class DisplayObject
 {
 public:
-    DisplayObject() {}; 
+    BCIINTERFACE_API DisplayObject() {}; 
 
-    virtual ~DisplayObject() {};
+    BCIINTERFACE_API virtual ~DisplayObject() {};
 
     /* Display function which needs to be implemented, can expect to receive frameCount from the interface */
-    virtual void Display(sf::RenderTarget * app, unsigned int frameCount, sf::Clock & clock) = 0;
+    BCIINTERFACE_API virtual void Display(sf::RenderTarget * app, unsigned int frameCount, sf::Clock & clock) = 0;
 
     /* Override to implement Display using OpenGL directly */
-    virtual bool DrawWithGL() { return false; }
+    BCIINTERFACE_API virtual bool DrawWithGL() { return false; }
 
     /* Process an event */
-    virtual void Process(sf::Event &, const BCIInterface &) {}
+    BCIINTERFACE_API virtual void Process(sf::Event &, const BCIInterface &) {}
 
     /* Set the position of the object, arguments: X and Y */
-    virtual void SetPosition(float, float) {}
+    BCIINTERFACE_API virtual void SetPosition(float, float) {}
 
     /* Set absolute rotation, in degree */
-    virtual void SetRotation(float) {}
+    BCIINTERFACE_API virtual void SetRotation(float) {}
 
     /* Resize object, arguments: size_x and size_y */
-    virtual void Resize(float, float) {}
+    BCIINTERFACE_API virtual void Resize(float, float) {}
 
-    virtual void Highlight() {}
+    BCIINTERFACE_API virtual void Highlight() {}
 
-    virtual void Unhighlight() {}
+    BCIINTERFACE_API virtual void Unhighlight() {}
 };
 
 } // namespace bciinterface

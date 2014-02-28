@@ -31,12 +31,12 @@ INCLUDE_DIRECTORIES(${CMAKE_INSTALL_PREFIX}/include)
 
 IF(WIN32)
     ADD_LIBRARY(${LIB_NAME}
-      STATIC
+      SHARED
       ${${LIB_NAME}_src}
       ${${LIB_NAME}_headers}
     )
-    ADD_DEFINITIONS(-DSFML_STATIC -DGLEW_STATIC)
-    TARGET_LINK_LIBRARIES(${LIB_NAME} "-Wl,--whole-archive sfml-oculus.lib;sfml-graphics-s.lib;sfml-window-s.lib;sfml-system-s.lib;glu32.lib;${OCULUS_LIB}")
+
+    TARGET_LINK_LIBRARIES(${LIB_NAME} "sfml-oculus.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;glu32.lib;${OCULUS_LIB};OpenGL32.lib;")
 ELSE()
     ADD_LIBRARY(${LIB_NAME}
       SHARED
@@ -57,4 +57,6 @@ ADD_DEFINITIONS(${${PROJECT_NAME}_CXXFLAGS})
 LINK_DIRECTORIES(${CMAKE_INSTALL_PREFIX}/lib)
 
 INSTALL(TARGETS ${LIB_NAME}
-    DESTINATION lib)
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib)

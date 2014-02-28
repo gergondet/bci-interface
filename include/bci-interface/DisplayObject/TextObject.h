@@ -19,17 +19,17 @@ struct TextObjectImpl;
 class TextObject : public DisplayObject
 {
 public:
-    TextObject(sf::Font & font, const std::string & txt);
+    BCIINTERFACE_API TextObject(sf::Font & font, const std::string & txt);
 
-    virtual void Display(sf::RenderTarget * app, unsigned int frameCount, sf::Clock & clock);
+    BCIINTERFACE_API virtual void Display(sf::RenderTarget * app, unsigned int frameCount, sf::Clock & clock);
 
-    void SetPosition(float x, float y);
+    BCIINTERFACE_API void SetPosition(float x, float y);
 
-    void SetText(const std::string & txt);
+    BCIINTERFACE_API void SetText(const std::string & txt);
 
-    void SetCharacterSize(unsigned int size);
+    BCIINTERFACE_API void SetCharacterSize(unsigned int size);
 
-    void SetColor(const sf::Color & color);
+    BCIINTERFACE_API void SetColor(const sf::Color & color);
 private:
     boost::shared_ptr<TextObjectImpl> m_impl;
 };

@@ -1,6 +1,8 @@
 #ifndef _H_EVENT_HANDLER_H_
 #define _H_EVENT_HANDLER_H_
 
+#include <bci-interface/BCIAPI.h>
+
 namespace sf
 {
     class Event;
@@ -12,12 +14,12 @@ namespace bciinterface
 class EventHandler
 {
 public:
-    EventHandler() {}; 
+    BCIINTERFACE_API EventHandler() {}; 
 
-    virtual ~EventHandler() {};
+    BCIINTERFACE_API virtual ~EventHandler() {};
 
     /* Process an event */
-    virtual void Process(sf::Event & event) = 0;
+    BCIINTERFACE_API virtual void Process(sf::Event & event) = 0;
 };
 
 } // namespace bciinterface

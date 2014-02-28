@@ -9,6 +9,8 @@
 
 using boost::asio::ip::udp;
 
+#include <bci-interface/BCIAPI.h>
+
 namespace bciinterface
 {
 
@@ -16,12 +18,12 @@ class UDPServer
 {
 public:
     /* Rely on furnished io_service */
-    UDPServer(boost::asio::io_service & io_service, short port);
+    BCIINTERFACE_API UDPServer(boost::asio::io_service & io_service, short port);
 
     /* Function to be implemented by the user */
-    virtual std::string handle_request(const std::string & request_in) = 0;
+    BCIINTERFACE_API virtual std::string handle_request(const std::string & request_in) = 0;
 
-    const boost::asio::io_service & get_io_service();
+    BCIINTERFACE_API const boost::asio::io_service & get_io_service();
 
 private:
     void handle_receive_from(const boost::system::error_code& error, size_t bytes_recvd);

@@ -18,15 +18,15 @@ class DisplayObject;
 class CommandInterpreter
 {
 public:
-    CommandInterpreter() {}
+    BCIINTERFACE_API CommandInterpreter() {}
 
-    virtual ~CommandInterpreter() {}
+    BCIINTERFACE_API virtual ~CommandInterpreter() {}
 
     /* Set input command */
-    virtual bool InterpretCommand(int command, const std::vector<DisplayObject*> & objects) = 0;
+    BCIINTERFACE_API virtual bool InterpretCommand(int command, const std::vector<DisplayObject*> & objects) = 0;
 
     /* Handle events */
-    virtual void Process(sf::Event &, const BCIInterface &) {}
+    BCIINTERFACE_API virtual void Process(sf::Event &, const BCIInterface &) {}
 };
 
 } // namespace bciinterface

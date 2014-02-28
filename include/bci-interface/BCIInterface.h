@@ -6,6 +6,8 @@
 #include <SFML/Graphics/Font.hpp>
 #include <string>
 
+#include <bci-interface/BCIAPI.h>
+
 namespace sf
 {
     class RenderWindow;
@@ -28,71 +30,71 @@ struct BCIInterfaceImpl;
 class BCIInterface
 {
 public:
-    BCIInterface(unsigned int width, unsigned int height);
+    BCIINTERFACE_API BCIInterface(unsigned int width, unsigned int height);
 
-    bool ParadigmStatus();
+    BCIINTERFACE_API bool ParadigmStatus();
     
-    void StartParadigm();
+    BCIINTERFACE_API void StartParadigm();
 
-    void StopParadigm();
+    BCIINTERFACE_API void StopParadigm();
 
     /* Add an event handler, the interface assumes ownership of the object */
-    void AddEventHandler(EventHandler * handler);
+    BCIINTERFACE_API void AddEventHandler(EventHandler * handler);
 
     /* Set Background */
-    void SetBackground(Background * background);
+    BCIINTERFACE_API void SetBackground(Background * background);
 
     /* Get Background, can be zero */
-    Background * GetBackground() const;
+    BCIINTERFACE_API Background * GetBackground() const;
 
     /* Add a display object to the interface, the interface assumes ownership of the object */
-    void AddObject(DisplayObject * object);
+    BCIINTERFACE_API void AddObject(DisplayObject * object);
 
     /* Add a display object not owned by the interface*/
-    void AddNonOwnedObject(DisplayObject * object);
+    BCIINTERFACE_API void AddNonOwnedObject(DisplayObject * object);
 
     /* Set the current command receiver: BCIInterface does NOT assume ownership of the receiver */
-    void SetCommandReceiver(CommandReceiver * receiver);
+    BCIINTERFACE_API void SetCommandReceiver(CommandReceiver * receiver);
 
     /* Set the current command overrider: BCIInterface does NOT assume ownership of the overrider */
-    void SetCommandOverrider(CommandOverrider * overrider);
+    BCIINTERFACE_API void SetCommandOverrider(CommandOverrider * overrider);
 
     /* Set the current command interpreter: BCIInterface does NOT assume ownership of the interpreter */
-    void SetCommandInterpreter(CommandInterpreter * interpreter);
+    BCIINTERFACE_API void SetCommandInterpreter(CommandInterpreter * interpreter);
 
     /* Get the current command interpreter */
-    CommandInterpreter * GetCommandInterpreter();
+    BCIINTERFACE_API CommandInterpreter * GetCommandInterpreter();
 
     /* Remove all objects from the interface */
-    void Clean();
+    BCIINTERFACE_API void Clean();
 
     /* Infinite DisplayLoop function */
-    void DisplayLoop(bool fullscreen = true);
+    BCIINTERFACE_API void DisplayLoop(bool fullscreen = true);
 
     /* DisplayLoop function for interface chaining */
-    sf::RenderWindow * DisplayLoop(sf::RenderWindow * app, bool fullscreen, int & cmd, float timeout = 0);
+    BCIINTERFACE_API sf::RenderWindow * DisplayLoop(sf::RenderWindow * app, bool fullscreen, int & cmd, float timeout = 0);
 
     /* DisplayLoop function for interface chaining alternate proto */
-    sf::RenderWindow * DisplayLoop(sf::RenderWindow * app, int & cmd, float timeout = 0);
+    BCIINTERFACE_API sf::RenderWindow * DisplayLoop(sf::RenderWindow * app, int & cmd, float timeout = 0);
 
     /* Init things for the oculus display, this should be called if you wish to
      * access the renderscale before starting the display */
-    void InitOculus();
+    BCIINTERFACE_API void InitOculus();
 
     /* DisplayLoop for Oculus */
-    void OculusDisplayLoop(int & cmd);
+    BCIINTERFACE_API void OculusDisplayLoop(int & cmd);
 
-    sf::RenderWindow * GetRenderWindow();
+    BCIINTERFACE_API sf::RenderWindow * GetRenderWindow();
 
-    OculusWindow * GetOculusWindow();
+    BCIINTERFACE_API OculusWindow * GetOculusWindow();
 
     /* Enable FPS counter in Oculus window */
-    void EnableFPSCounter(sf::Font & font);
+    BCIINTERFACE_API void EnableFPSCounter(sf::Font & font);
 
-    float GetRenderScale();
+    BCIINTERFACE_API float GetRenderScale();
 
     /* Close the interface */
-    void Close();
+    BCIINTERFACE_API void Close();
 
 private:
     boost::shared_ptr<BCIInterfaceImpl> m_impl;

@@ -15,21 +15,21 @@ struct TCPClientReceiverImpl;
 class TCPClientReceiver : public CommandReceiver
 {
 public:
-    TCPClientReceiver(const std::string & srv_name, unsigned short port);
+    BCIINTERFACE_API TCPClientReceiver(const std::string & srv_name, unsigned short port);
 
-    virtual ~TCPClientReceiver() {}
+    BCIINTERFACE_API virtual ~TCPClientReceiver() {}
 
     /* Loop to receive command */
-    virtual void CommandLoop();
+    BCIINTERFACE_API virtual void CommandLoop();
 
     /* Close command Client */
-    virtual void Close();
+    BCIINTERFACE_API virtual void Close();
 
     /* Returns the current command output from the BCI */
-    virtual int GetCommand();
+    BCIINTERFACE_API virtual int GetCommand();
 
     /* Sends a message to the server */
-    void Send(const std::string & message);
+    BCIINTERFACE_API void Send(const std::string & message);
 
 private:
     boost::shared_ptr<TCPClientReceiverImpl> m_impl;

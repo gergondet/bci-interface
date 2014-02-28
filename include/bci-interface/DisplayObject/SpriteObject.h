@@ -13,15 +13,15 @@ struct SpriteObjectImpl;
 class SpriteObject : public DisplayObject
 {
 public:
-    SpriteObject(const std::string & image_src);
+    BCIINTERFACE_API SpriteObject(const std::string & image_src);
 
-    void Display(sf::RenderTarget * app, unsigned int frameCount, sf::Clock & clock);
+    BCIINTERFACE_API void Display(sf::RenderTarget * app, unsigned int frameCount, sf::Clock & clock);
 
-    void SetSubRect(int left, int top, int width, int height);
+    BCIINTERFACE_API void SetSubRect(int left, int top, int width, int height);
 
-    void SetPosition(float x, float y);
+    BCIINTERFACE_API void SetPosition(float x, float y);
 
-    void Resize(float size_x, float size_y);
+    BCIINTERFACE_API void Resize(float size_x, float size_y);
 private:
     boost::shared_ptr<SpriteObjectImpl> m_impl;
 };

@@ -1,5 +1,7 @@
 #ifdef WIN32
 
+#include <bci-interface/BCIAPI.h>
+
 #include <stdint.h>
 #include <iostream>
 #include <Windows.h>
@@ -11,8 +13,8 @@
 # endif
 namespace bciinterface
 {
-void gettimeofday(struct timeval *tv, void *);
+BCIINTERFACE_API void gettimeofday(struct timeval *tv, void *);
 
-void usleep(int t);
+BCIINTERFACE_API void usleep(int t);
 }
 #endif

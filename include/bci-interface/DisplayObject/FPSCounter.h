@@ -13,9 +13,9 @@ struct FPSCounterImpl;
 class FPSCounter : public TextObject
 {
 public:
-    FPSCounter(sf::Font & font);
+    BCIINTERFACE_API FPSCounter(sf::Font & font);
 
-    void Display(sf::RenderTarget * app, unsigned int frameCount, sf::Clock & clock);
+    BCIINTERFACE_API void Display(sf::RenderTarget * app, unsigned int frameCount, sf::Clock & clock);
 private:
     boost::shared_ptr<FPSCounterImpl> impl;
 };

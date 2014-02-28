@@ -27,6 +27,8 @@
 
 #include <string>
 
+#include <bci-interface/BCIAPI.h>
+
 namespace bciinterface
 {
 
@@ -35,13 +37,13 @@ class TCPClient
 
 public:
     /*! \brief Default constructor */
-    TCPClient(const std::string & serverName, unsigned short serverPort);
+    BCIINTERFACE_API TCPClient(const std::string & serverName, unsigned short serverPort);
 
-    virtual ~TCPClient();
+    BCIINTERFACE_API virtual ~TCPClient();
 
-    void SendMessage(const std::string & message);
+    BCIINTERFACE_API void SendMessage(const std::string & message);
 
-    void ReceiveMessage(std::string & message);
+    BCIINTERFACE_API void ReceiveMessage(std::string & message);
 
 private:
 #ifndef WIN32

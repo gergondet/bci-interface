@@ -15,18 +15,18 @@ struct UDPReceiverImpl;
 class UDPReceiver : public CommandReceiver
 {
 public:
-    UDPReceiver(unsigned short port);
+    BCIINTERFACE_API UDPReceiver(unsigned short port);
 
-    virtual ~UDPReceiver() {}
+    BCIINTERFACE_API virtual ~UDPReceiver() {}
 
     /* Loop to receive command */
-    virtual void CommandLoop();
+    BCIINTERFACE_API virtual void CommandLoop();
 
     /* Close command receiver */
-    virtual void Close();
+    BCIINTERFACE_API virtual void Close();
 
     /* Returns the current command output from the BCI */
-    virtual int GetCommand();
+    BCIINTERFACE_API virtual int GetCommand();
 private:
     boost::shared_ptr<UDPReceiverImpl> m_impl;
 };

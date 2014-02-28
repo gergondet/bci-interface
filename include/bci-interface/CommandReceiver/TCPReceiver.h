@@ -15,18 +15,18 @@ struct TCPReceiverImpl;
 class TCPReceiver : public CommandReceiver
 {
 public:
-    TCPReceiver(unsigned short port);
+    BCIINTERFACE_API TCPReceiver(unsigned short port);
 
-    virtual ~TCPReceiver() {}
+    BCIINTERFACE_API virtual ~TCPReceiver() {}
 
     /* Loop to receive command */
-    virtual void CommandLoop();
+    BCIINTERFACE_API virtual void CommandLoop();
 
     /* Close command receiver */
-    virtual void Close();
+    BCIINTERFACE_API virtual void Close();
 
     /* Returns the current command output from the BCI */
-    virtual int GetCommand();
+    BCIINTERFACE_API virtual int GetCommand();
 private:
     boost::shared_ptr<TCPReceiverImpl> m_impl;
 };

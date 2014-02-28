@@ -10,6 +10,8 @@
 #include <boost/shared_ptr.hpp>
 #include <string>
 
+#include <bci-interface/BCIAPI.h>
+
 namespace sf
 {
     class Font;
@@ -23,24 +25,24 @@ struct FontManagerImpl;
 class FontManager : public boost::noncopyable
 {
 public:
-    FontManager();
+    BCIINTERFACE_API FontManager();
 
-    ~FontManager();
+    BCIINTERFACE_API ~FontManager();
 
     /* Returns the default font (arial.ttf if not changed by the user), can throw if font cannot be loaded */
-    sf::Font & GetDefaultFont();
+    BCIINTERFACE_API sf::Font & GetDefaultFont();
 
     /* Returns a font by name, can throw if font cannot be loaded */
-    sf::Font & GetFont(const std::string & font);
+    BCIINTERFACE_API sf::Font & GetFont(const std::string & font);
 
     /* Load a font, search for it in all font directories configured by the user, can throw if font cannot be loaded */
-    sf::Font & LoadFont(const std::string & font);
+    BCIINTERFACE_API sf::Font & LoadFont(const std::string & font);
 
     /* Change the font returned by GetDefaultFont */
-    void SetDefaultFont(const std::string & font);
+    BCIINTERFACE_API void SetDefaultFont(const std::string & font);
 
     /* Add a font directory that will be searched when loading a new font */
-    void AddFontDirectory(const std::string & dir);
+    BCIINTERFACE_API void AddFontDirectory(const std::string & dir);
 private:
     boost::shared_ptr<FontManagerImpl> impl;
 };

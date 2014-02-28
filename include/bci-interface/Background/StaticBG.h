@@ -16,16 +16,16 @@ struct StaticBGImpl;
 class StaticBG : public Background
 {
 public:
-    StaticBG(const std::string & src_file, 
+    BCIINTERFACE_API StaticBG(const std::string & src_file, 
         unsigned int wwidth, unsigned int wheight, unsigned int iwidth = 0, unsigned int iheight = 0);
 
-    void UpdateLoop();
+    BCIINTERFACE_API void UpdateLoop();
 
-    void Close();
+    BCIINTERFACE_API void Close();
 
-    void Draw(sf::RenderTarget * app);
+    BCIINTERFACE_API void Draw(sf::RenderTarget * app);
 
-    void ChangeImage(const std::string & new_src);
+    BCIINTERFACE_API void ChangeImage(const std::string & new_src);
 
 private:
     boost::shared_ptr<StaticBGImpl> m_impl;
