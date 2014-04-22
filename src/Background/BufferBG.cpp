@@ -42,16 +42,16 @@ public:
             m_sprite_display(new sf::Sprite),
             m_color_enabled(true)
     {
-        m_scale_x = (float)m_iwidth/(float)m_width;
-        m_scale_y = (float)m_iheight/(float)m_height;
-        memset(m_dataImage, 0, width*height*4);
-        m_texture_display->create(width, height);
-        m_sprite_display->setTexture(*m_texture_display);
         if(iwidth == 0 || iheight == 0)
         {
             m_iwidth = m_wwidth;
             m_iheight = m_wheight;
         }
+        m_scale_x = (float)m_iwidth/(float)m_width;
+        m_scale_y = (float)m_iheight/(float)m_height;
+        memset(m_dataImage, 0, width*height*4);
+        m_texture_display->create(width, height);
+        m_sprite_display->setTexture(*m_texture_display);
         m_sprite_display->setScale(m_scale_x, m_scale_y);
         m_sprite_display->setPosition((float)(m_wwidth/2 - m_iwidth/2), (float)(m_wheight/2 - m_iheight/2));
         m_sprite_display->setTextureRect(m_subrect);
