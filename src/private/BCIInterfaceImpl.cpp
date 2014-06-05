@@ -367,26 +367,6 @@ void BCIInterfaceImpl::DisplayLoop(sf::Window & eventWindow, sf::RenderTarget & 
             }
         }
 
-        /* Current command of the BCI system */
-        if(m_receiver && m_interpreter)
-        {
-            int in_cmd = 0;
-            if(clock.getElapsedTime().asMilliseconds() > timeout)
-            {
-                in_cmd = m_receiver->GetCommand();
-                if(m_overrider && m_overrider->IsOverriding())
-                {
-                    in_cmd = m_overrider->GetCommand();
-                }
-            }
-            bool interpreter_status = m_interpreter->InterpretCommand(in_cmd, m_active_objects);
-            if(interpreter_status)
-            {
-                cmd = in_cmd;
-                m_in_paradigm = false;
-                SetCommandInterpreter(0);
-            }
-        }
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         /* Draw background */
@@ -433,6 +413,27 @@ void BCIInterfaceImpl::DisplayLoop(sf::Window & eventWindow, sf::RenderTarget & 
 
 
         m_display_fun();
+
+        /* Current command of the BCI system */
+        if(m_receiver && m_interpreter)
+        {
+            int in_cmd = 0;
+            if(clock.getElapsedTime().asMilliseconds() > timeout)
+            {
+                in_cmd = m_receiver->GetCommand();
+                if(m_overrider && m_overrider->IsOverriding())
+                {
+                    in_cmd = m_overrider->GetCommand();
+                }
+            }
+            bool interpreter_status = m_interpreter->InterpretCommand(in_cmd, m_active_objects);
+            if(interpreter_status)
+            {
+                cmd = in_cmd;
+                m_in_paradigm = false;
+                SetCommandInterpreter(0);
+            }
+        }
 
         if(m_take_screenshot && m_app)
         {
