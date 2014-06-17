@@ -80,7 +80,6 @@ int main(int argc, char * argv[])
     bciinterface->InitOculus();
 
     FontManager fm;
-    bciinterface->GetOculusWindow()->enableFPSCounter(fm.GetDefaultFont());
 
     rwidth = rwidth*bciinterface->GetRenderScale();
     rheight = rheight*bciinterface->GetRenderScale();
@@ -97,6 +96,8 @@ int main(int argc, char * argv[])
     bciinterface->AddObject(new SSVEPStimulus(14, 60, (float)rwidth/2, (float)rheight/2, 200, 200, 255, 0, 0, 255));
 
     int cmd = -1;
+    while(!bciinterface->GetOculusWindow()); /* Wait for the full initialization of the oculus window */
+    bciinterface->GetOculusWindow()->enableFPSCounter(fm.GetDefaultFont());
     bciinterface->OculusDisplayLoop(cmd);
 
     delete bciinterface;
