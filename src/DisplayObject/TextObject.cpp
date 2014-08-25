@@ -1,53 +1,11 @@
 #include "bci-interface/DisplayObject/TextObject.h"
+#include "../private/DisplayObject/TextObjectImpl.h"
 
 #include <iostream>
 #include <SFML/Graphics.hpp>
 
 namespace bciinterface
 {
-
-struct TextObjectImpl
-{
-private:
-    sf::Text m_text;
-public:
-    TextObjectImpl(sf::Font & font, const std::string & txt)
-        : m_text()
-    {
-        m_text.setFont(font);
-        m_text.setString(txt);
-        m_text.setPosition(0,0);
-    }
-
-    ~TextObjectImpl()
-    {
-    }
-
-    void Display(sf::RenderTarget * app, unsigned int, sf::Clock &)
-    {
-        app->draw(m_text);
-    } 
-
-    void SetPosition(float x, float y)
-    {
-        m_text.setPosition(x, y);
-    }
-
-    void SetText(const std::string & txt)
-    {
-        m_text.setString(txt);
-    }
-
-    void SetCharacterSize(unsigned int size)
-    {
-        m_text.setCharacterSize(size);
-    }
-
-    void SetColor(const sf::Color & color)
-    {
-        m_text.setColor(color);
-    }
-};
 
 TextObject::TextObject(sf::Font & font, const std::string & txt) : m_impl(new TextObjectImpl(font, txt))
 {}

@@ -18,6 +18,7 @@ DisplayObject/SSVEPStimulus.cpp
 DisplayObject/P300Object.cpp
 DisplayObject/SpriteObject.cpp
 DisplayObject/TextObject.cpp
+private/DisplayObject/TextObjectImpl.cpp
 DisplayObject/FPSCounter.cpp
 CommandInterpreter/HoldInterpreter.cpp
 CommandInterpreter/SimpleInterpreter.cpp
