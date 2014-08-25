@@ -16,15 +16,15 @@ public:
 
     ~TextObjectImpl();
 
-    void Display(sf::RenderTarget * app, unsigned int, sf::Clock &);
+    virtual void Display(sf::RenderTarget * app, unsigned int, sf::Clock &);
 
-    void SetPosition(float x, float y);
+    virtual void SetPosition(float x, float y);
 
-    void SetText(const std::string & txt);
+    virtual void SetText(const std::string & txt);
 
-    void SetCharacterSize(unsigned int size);
+    virtual void SetCharacterSize(unsigned int size);
 
-    void SetColor(const sf::Color & color);
+    virtual void SetColor(const sf::Color & color);
 };
 
 } // namespace bciinterface

@@ -1,5 +1,5 @@
-#ifndef _H_TEXTOBJECT_H_
-#define _H_TEXTOBJECT_H_
+#ifndef _H_BOXEDTEXTOBJECT_H_
+#define _H_BOXEDTEXTOBJECT_H_
 
 #include <bci-interface/DisplayObject.h>
 
@@ -14,12 +14,12 @@ namespace sf
 namespace bciinterface
 {
 
-struct TextObjectImpl;
+struct BoxedTextObjectImpl;
 
-class TextObject : public DisplayObject
+class BoxedTextObject : public DisplayObject
 {
 public:
-    BCIINTERFACE_API TextObject(sf::Font & font, const std::string & txt);
+    BCIINTERFACE_API BoxedTextObject(sf::Font & font, const std::string & txt);
 
     BCIINTERFACE_API virtual void Display(sf::RenderTarget * app, unsigned int frameCount, sf::Clock & clock);
 
@@ -30,8 +30,12 @@ public:
     BCIINTERFACE_API void SetCharacterSize(unsigned int size);
 
     BCIINTERFACE_API void SetColor(const sf::Color & color);
-protected:
-    boost::shared_ptr<TextObjectImpl> m_impl;
+
+    BCIINTERFACE_API void SetBoxColor(const sf::Color & color);
+
+    BCIINTERFACE_API void SetBoxMargin(const float & m);
+private:
+    boost::shared_ptr<BoxedTextObjectImpl> m_impl;
 };
 
 }  // namespace bciinterface

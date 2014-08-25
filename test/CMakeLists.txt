@@ -45,6 +45,27 @@ TARGET_LINK_LIBRARIES(${EXEC_NAME} "bci-interface.lib;sfml-oculus.lib;sfml-graph
 ENDIF(UNIX)
 TARGET_LINK_LIBRARIES(${EXEC_NAME} ${Boost_LIBRARIES})
 
+# -- testboxed-text 
+SET(EXEC_NAME testboxed-text)
+
+SET(${EXEC_NAME}_src
+    testboxed-text.cpp
+)
+
+INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include)
+LINK_DIRECTORIES(${${PROJECT_NAME}_BINARY_DIR}/src)
+
+ADD_EXECUTABLE(${EXEC_NAME}
+  ${${EXEC_NAME}_src}
+  )
+
+IF(UNIX)
+TARGET_LINK_LIBRARIES(${EXEC_NAME} ${PROJECT_NAME} ${SFML_LIBRARIES} pthread)
+ELSE(UNIX)
+TARGET_LINK_LIBRARIES(${EXEC_NAME} "bci-interface.lib;sfml-oculus.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;glu32.lib;${OCULUS_LIB}")
+ENDIF(UNIX)
+TARGET_LINK_LIBRARIES(${EXEC_NAME} ${Boost_LIBRARIES})
+
 #testoculus-interface
 SET(EXEC_NAME testoculus-interface)
 

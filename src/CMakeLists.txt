@@ -19,6 +19,8 @@ DisplayObject/P300Object.cpp
 DisplayObject/SpriteObject.cpp
 DisplayObject/TextObject.cpp
 private/DisplayObject/TextObjectImpl.cpp
+DisplayObject/BoxedTextObject.cpp
+private/DisplayObject/BoxedTextObjectImpl.cpp
 DisplayObject/FPSCounter.cpp
 CommandInterpreter/HoldInterpreter.cpp
 CommandInterpreter/SimpleInterpreter.cpp
