@@ -23,20 +23,25 @@ void BoxedTextObjectImpl::Display(sf::RenderTarget * app, unsigned int fc, sf::C
 
 void BoxedTextObjectImpl::SetPosition(float x, float y)
 {
-  TextObjectImpl::SetPosition(x, y);
+  sf::FloatRect textB = m_text.getGlobalBounds();
+  TextObjectImpl::SetPosition(x - textB.width/2, y - textB.height/2);
   UpdateBox();
 }
 
 void BoxedTextObjectImpl::SetText(const std::string & txt)
 {
+  sf::FloatRect textB = m_text.getGlobalBounds();
+  sf::FloatRect localB = m_text.getLocalBounds();
   TextObjectImpl::SetText(txt);
-  UpdateBox();
+  SetPosition(textB.width/2 + textB.left - localB.left, textB.height/2 + textB.top - localB.top);
 }
 
 void BoxedTextObjectImpl::SetCharacterSize(unsigned int size)
 {
+  sf::FloatRect textB = m_text.getGlobalBounds();
+  sf::FloatRect localB = m_text.getLocalBounds();
   TextObjectImpl::SetCharacterSize(size);
-  UpdateBox();
+  SetPosition(textB.width/2 + textB.left - localB.left, textB.height/2 + textB.top - localB.top);
 }
 
 void BoxedTextObjectImpl::SetColor(const sf::Color & color)
