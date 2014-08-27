@@ -34,6 +34,10 @@ public:
   void SetBoxColor(const sf::Color & color);
 
   void SetBoxMargin(const float & margin);
+
+  void Highlight();
+
+  void Unhighlight();
 };
 
 } // namespace bciinterface

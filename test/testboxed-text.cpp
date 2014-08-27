@@ -2,6 +2,10 @@
 #include <bci-interface/EventHandler.h>
 #include <bci-interface/Utils/FontManager.h>
 #include <bci-interface/DisplayObject/BoxedTextObject.h>
+#include <bci-interface/DisplayObject/SSVEPStimulus.h>
+#include <bci-interface/CommandReceiver/UDPReceiver.h>
+#include <bci-interface/CommandInterpreter/SimpleInterpreter.h>
+#include <bci-interface/CommandOverrider.h>
 
 #include <stdlib.h>
 #include <iostream>
@@ -69,13 +73,24 @@ int main(int argc, char * argv[])
 
   BCIInterface * bciinterface = new BCIInterface(width, height);
   FontManager fm;
+  UDPReceiver * receiver = new UDPReceiver(1111);
+  SimpleInterpreter * interpreter = new SimpleInterpreter();
+  bciinterface->SetCommandReceiver(receiver);
+  bciinterface->SetCommandInterpreter(interpreter);
 
-  BoxedTextObject text(fm.GetDefaultFont(), "Hello \nworld!");
-  text.SetPosition(width/2, height/2);
-  text.SetCharacterSize(30);
-  bciinterface->AddNonOwnedObject(&text);
+  CommandOverrider overrider;
+  overrider.AddOverrideCommand(sf::Keyboard::Up, 1);
+  overrider.AddOverrideCommand(sf::Keyboard::Right, 2);
+  overrider.AddOverrideCommand(sf::Keyboard::Down, 3);
+  overrider.AddOverrideCommand(sf::Keyboard::Left, 4);
+  bciinterface->SetCommandOverrider(&overrider);
 
-  BoxMover mover(text);
+  BoxedTextObject * text = new BoxedTextObject(fm.GetDefaultFont(), "Hello \nworld!");
+  text->SetPosition(width/2, height/2);
+  text->SetCharacterSize(30);
+  bciinterface->AddObject(new SSVEPStimulus(6, 60, text));
+
+  BoxMover mover(*text);
   bciinterface->AddEventHandler(&mover);
 
   bciinterface->DisplayLoop(fullscreen);

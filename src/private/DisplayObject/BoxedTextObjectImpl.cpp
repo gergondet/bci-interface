@@ -68,3 +68,12 @@ void BoxedTextObjectImpl::UpdateBox()
   m_box.setSize(sf::Vector2f(textB.width + 2*box_margin, textB.height + 2*box_margin));
 }
 
+void BoxedTextObjectImpl::Highlight()
+{
+  m_box.setOutlineThickness(6);
+}
+
+void BoxedTextObjectImpl::Unhighlight()
+{
+  m_box.setOutlineThickness(0);
+}

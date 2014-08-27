@@ -34,6 +34,10 @@ public:
     BCIINTERFACE_API void SetBoxColor(const sf::Color & color);
 
     BCIINTERFACE_API void SetBoxMargin(const float & m);
+
+    BCIINTERFACE_API virtual void Highlight();
+
+    BCIINTERFACE_API virtual void Unhighlight();
 private:
     boost::shared_ptr<BoxedTextObjectImpl> m_impl;
 };

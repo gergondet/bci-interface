@@ -39,6 +39,9 @@ public:
     /*! \brief Constructor: x and y are stimulus centers */ 
     BCIINTERFACE_API SSVEPStimulus(int frequency, int screenFrequency, float x, float y, float size_x, float size_y, uint8_t r, uint8_t g, uint8_t b, uint8_t a);
 
+    /*! \brief Constructor: Generic constructor for DisplayObject */
+    BCIINTERFACE_API SSVEPStimulus(int frequency, int screenFrequency, DisplayObject * object, DisplayObject * inactive_object = 0);
+
     /*! \brief Constructor: for OpenGL SSVEPStimulus */
     BCIINTERFACE_API SSVEPStimulus(int frequency, int screenFrequency);
 

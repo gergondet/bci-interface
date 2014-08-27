@@ -43,3 +43,13 @@ void BoxedTextObject::SetBoxMargin(const float & m)
 {
   m_impl->SetBoxMargin(m);
 }
+
+void BoxedTextObject::Highlight()
+{
+  m_impl->Highlight();
+}
+
+void BoxedTextObject::Unhighlight()
+{
+  m_impl->Unhighlight();
+}
