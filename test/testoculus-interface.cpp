@@ -15,6 +15,8 @@
 #include <sstream>
 #include <fstream>
 
+#include <OculusWindow.h>
+
 #ifdef WIN32
 #include <Windows.h>
 void sleep(DWORD t)
@@ -49,6 +51,7 @@ int main(int argc, char * argv[])
 
     FontManager fm;
     FPSCounter fps_c(fm.GetDefaultFont());
+    bciinterface->GetOculusWindow()->enableFPSCounter(fm.GetDefaultFont());
 
     rwidth = rwidth*bciinterface->GetRenderScale();
     rheight = rheight*bciinterface->GetRenderScale();
@@ -87,7 +90,7 @@ int main(int argc, char * argv[])
         }
     }
     bufferBG->UpdateFromBuffer_RGB((unsigned char*)buffer);
-    bciinterface->SetBackground(bufferBG);
+    //bciinterface->SetBackground(bufferBG);
 
     std::string dir = dirname(argv[0]);
     dir += "/";

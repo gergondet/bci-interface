@@ -216,6 +216,7 @@ void BCIInterfaceImpl::DisplayLoop(bool fullscreen)
 
 
     m_app->setVerticalSyncEnabled(true);
+    m_app->setFramerateLimit(60);
 
     m_app->setKeyRepeatEnabled(false);
 
@@ -252,6 +253,7 @@ sf::RenderWindow * BCIInterfaceImpl::DisplayLoop(sf::RenderWindow * app, bool fu
     m_display_fun = boost::bind(&sf::RenderWindow::display, m_app);
 
     m_app->setVerticalSyncEnabled(true);
+    m_app->setFramerateLimit(60);
     m_app->setKeyRepeatEnabled(false);
 
     InitGL();
@@ -284,6 +286,7 @@ void BCIInterfaceImpl::OculusDisplayLoop(int & cmd)
     }
 
     m_oculus_window->getApplication().setVerticalSyncEnabled(true);
+    m_oculus_window->getApplication().setFramerateLimit(60);
 
     while(!m_close)
     {

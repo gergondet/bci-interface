@@ -9,25 +9,25 @@ namespace bciinterface
 
 struct FPSCounterImpl
 {
-    FPSCounterImpl() : initFrameCount(0), timeAsMicroSeconds(0)
+    FPSCounterImpl() : fc(0), timeAsMicroSeconds(0)
     {}
 
-    inline void reset(unsigned int && iF, sf::Int64 && tM)
+    inline void reset(sf::Int64 && tM)
     {
-        initFrameCount = iF;
+        fc = 0;
         timeAsMicroSeconds = tM;
     }
 
-    inline std::string getNewText(unsigned int && iF, sf::Int64 && tM)
+    inline std::string getNewText(sf::Int64 && tM)
     {
         std::stringstream ss;
         ss << "FPS: ";
-        ss << 1e6*(iF - initFrameCount)/(double)(tM - timeAsMicroSeconds);
-        reset(std::move(iF), std::move(tM));
+        ss << 1e6*(100)/(double)(tM - timeAsMicroSeconds);
+        reset(std::move(tM));
         return ss.str();
     }
 
-    unsigned int initFrameCount;
+    unsigned int fc;
     sf::Int64 timeAsMicroSeconds;
 };
 
@@ -40,13 +40,10 @@ FPSCounter::FPSCounter(sf::Font & font) : TextObject(font, "FPS: 0"), impl(new F
 
 void FPSCounter::Display(sf::RenderTarget * app, unsigned int frameCount, sf::Clock & clock)
 {
-    if(impl->initFrameCount == 0)
+    impl->fc++;
+    if(impl->fc > 99)
     {
-        impl->reset(std::move(frameCount), clock.getElapsedTime().asMicroseconds());
-    }
-    if(frameCount - impl->initFrameCount > 99)
-    {
-        SetText( impl->getNewText(std::move(frameCount), clock.getElapsedTime().asMicroseconds()) );
+        SetText( impl->getNewText(clock.getElapsedTime().asMicroseconds()) );
     }
     TextObject::Display(app, frameCount, clock);
 }

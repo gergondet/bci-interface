@@ -1,5 +1,7 @@
 #include <bci-interface/BCIInterface.h>
 #include <bci-interface/DisplayObject/SSVEPStimulus.h>
+#include <bci-interface/DisplayObject/FPSCounter.h>
+#include <bci-interface/Utils/FontManager.h>
 #include <bci-interface/CommandReceiver/UDPReceiver.h>
 #include <bci-interface/CommandInterpreter/SimpleInterpreter.h>
 #include <bci-interface/CommandOverrider.h>
@@ -208,6 +210,10 @@ int main(int argc, char * argv[])
     bciinterface->AddObject(new SSVEPStimulus(9, 60, 100, (float)height/2,200, 200, dir + "LEFT.png", dir + "LEFT_HL.png"));
     bciinterface->AddObject(new SSVEPStimulus(14, 60, (float)width/2, (float)height/2, 200, 200, "STOP.png", "STOP_HL.png"));
 //    bciinterface->AddObject(new Cube3D(9,60));
+
+    FontManager fm;
+    FPSCounter fps_c(fm.GetDefaultFont());
+    bciinterface->AddNonOwnedObject(&fps_c);
 
     bciinterface->DisplayLoop(fullscreen);
 
