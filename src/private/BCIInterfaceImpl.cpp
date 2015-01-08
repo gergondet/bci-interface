@@ -15,7 +15,7 @@ namespace bciinterface
 {
 
 BCIInterfaceImpl::BCIInterfaceImpl(const BCIInterface & ref, unsigned int width, unsigned int height)
-: m_ref(ref), m_width(width), m_height(height), m_in_paradigm(false), m_close(false), m_finished(true),
+: m_ref(ref), m_width(width), m_height(height), m_wwidth(width), m_wheight(height), m_in_paradigm(false), m_close(false), m_finished(true),
     m_app(0), m_oculus_window(0), m_fpslog("/tmp/bciinterface_fps.log"),
     m_take_screenshot(false), m_screenshot_index(0),
     m_handlers(0),
@@ -268,9 +268,11 @@ sf::RenderWindow * BCIInterfaceImpl::DisplayLoop(sf::RenderWindow * app, bool fu
 
 void BCIInterfaceImpl::InitOculus()
 {
-    sf::ContextSettings contextSettings;
-    contextSettings.depthBits = 32;
-    m_oculus_window = new OculusWindow(sf::VideoMode(m_width, m_height), "bci-interface (Oculus)", sf::Style::Close, contextSettings);
+    m_oculus_window = new OculusWindow("bci-interface (Oculus)");
+    m_width = m_oculus_window->getRenderTarget().getSize().x;
+    m_height = m_oculus_window->getRenderTarget().getSize().y;
+    m_wwidth = m_oculus_window->getResolution().x;
+    m_wheight = m_oculus_window->getResolution().y;
 
     m_display_fun = boost::bind(&OculusWindow::display, m_oculus_window);
 }
@@ -493,15 +495,24 @@ OculusWindow * BCIInterfaceImpl::GetOculusWindow()
     return m_oculus_window;
 }
 
-float BCIInterfaceImpl::GetRenderScale()
+unsigned int BCIInterfaceImpl::GetWidth()
 {
-    if(m_oculus_window) return m_oculus_window->getRenderScale();
-    return 1.0f;
+  return m_width;
 }
 
-void BCIInterfaceImpl::EnableFPSCounter(sf::Font & font)
+unsigned int BCIInterfaceImpl::GetHeight()
 {
-    if(m_oculus_window) { m_oculus_window->enableFPSCounter(font); }
+  return m_height;
+}
+
+unsigned int BCIInterfaceImpl::GetWindowWidth()
+{
+  return m_wwidth;
+}
+
+unsigned int BCIInterfaceImpl::GetWindowHeight()
+{
+  return m_wheight;
 }
 
 } // namespace bciinterface

@@ -15,8 +15,6 @@
 #include <sstream>
 #include <fstream>
 
-#include <OculusWindow.h>
-
 #ifdef WIN32
 #include <Windows.h>
 void sleep(DWORD t)
@@ -39,22 +37,14 @@ using namespace bciinterface;
 
 int main(int argc, char * argv[])
 {
-    unsigned int width = 1280;
-    unsigned int height = 800;
-
-    /* Render width/height */
-    unsigned int rwidth = width/2;
-    unsigned int rheight = 480;
-
-    BCIInterface * bciinterface = new BCIInterface(width, height);
+    BCIInterface * bciinterface = new BCIInterface();
     bciinterface->InitOculus();
+    /* Render width/height */
+    unsigned int rwidth = bciinterface->GetWidth();
+    unsigned int rheight = bciinterface->GetHeight();
 
     FontManager fm;
     FPSCounter fps_c(fm.GetDefaultFont());
-    bciinterface->GetOculusWindow()->enableFPSCounter(fm.GetDefaultFont());
-
-    rwidth = rwidth*bciinterface->GetRenderScale();
-    rheight = rheight*bciinterface->GetRenderScale();
 
     UDPReceiver * receiver = new UDPReceiver(1111);
     SimpleInterpreter * interpreter = new SimpleInterpreter();

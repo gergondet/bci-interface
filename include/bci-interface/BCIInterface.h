@@ -30,7 +30,8 @@ struct BCIInterfaceImpl;
 class BCIInterface
 {
 public:
-    BCIINTERFACE_API BCIInterface(unsigned int width, unsigned int height);
+    /* Width and height are optionnal for Oculus interface */
+    BCIINTERFACE_API BCIInterface(unsigned int width = 0, unsigned int height = 0);
 
     BCIINTERFACE_API bool ParadigmStatus();
     
@@ -88,10 +89,14 @@ public:
 
     BCIINTERFACE_API OculusWindow * GetOculusWindow();
 
-    /* Enable FPS counter in Oculus window */
-    BCIINTERFACE_API void EnableFPSCounter(sf::Font & font);
+    /* GetWidth/Height will report the size of the drawing area, in most cases (i.e. no HMD) this will match WindowWidth/WindowHeight */
+    BCIINTERFACE_API unsigned int GetWidth();
 
-    BCIINTERFACE_API float GetRenderScale();
+    BCIINTERFACE_API unsigned int GetHeight();
+
+    BCIINTERFACE_API unsigned int GetWindowWidth();
+
+    BCIINTERFACE_API unsigned int GetWindowHeight();
 
     /* Close the interface */
     BCIINTERFACE_API void Close();

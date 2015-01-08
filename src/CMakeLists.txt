@@ -39,7 +39,7 @@ IF(WIN32)
       ${${LIB_NAME}_headers}
     )
 
-    TARGET_LINK_LIBRARIES(${LIB_NAME} "sfml-oculus.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;glu32.lib;${OCULUS_LIB};OpenGL32.lib;")
+    TARGET_LINK_LIBRARIES(${LIB_NAME} "sfml-oculus.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;glu32.lib;OpenGL32.lib;")
 ELSE()
     ADD_LIBRARY(${LIB_NAME}
       SHARED
@@ -49,7 +49,7 @@ ELSE()
     SET_TARGET_PROPERTIES(${LIB_NAME}
       PROPERTIES
       VERSION 1.0.0
-      SOVERSION ${PROJECT_VERSION}
+      SOVERSION 1
     )
     TARGET_LINK_LIBRARIES(${LIB_NAME} glut GLU GL)
     TARGET_LINK_LIBRARIES(${LIB_NAME} ${Boost_LIBRARIES})

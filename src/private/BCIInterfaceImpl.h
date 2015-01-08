@@ -22,7 +22,7 @@
 
 #include "bci-interface/Utils/Win32.h"
 
-#include "OculusWindow.h"
+#include <sfml-oculus/OculusWindow.h>
 
 namespace bciinterface
 {
@@ -33,6 +33,8 @@ private:
     const BCIInterface & m_ref;
     unsigned int m_width;
     unsigned int m_height;
+    unsigned int m_wwidth;
+    unsigned int m_wheight;
     bool m_in_paradigm;
     bool m_close;
     bool m_finished;
@@ -121,9 +123,13 @@ public:
 
     OculusWindow * GetOculusWindow();
 
-    float GetRenderScale();
+    unsigned int GetWidth();
 
-    void EnableFPSCounter(sf::Font & font);
+    unsigned int GetHeight();
+
+    unsigned int GetWindowWidth();
+
+    unsigned int GetWindowHeight();
 };
 
 } // namespace bciinterface

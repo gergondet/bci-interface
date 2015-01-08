@@ -113,14 +113,24 @@ OculusWindow * BCIInterface::GetOculusWindow()
     return m_impl->GetOculusWindow();
 }
 
-float BCIInterface::GetRenderScale()
+unsigned int BCIInterface::GetWidth()
 {
-    return m_impl->GetRenderScale();
+  return m_impl->GetWidth();
 }
 
-void BCIInterface::EnableFPSCounter(sf::Font & font)
+unsigned int BCIInterface::GetHeight()
 {
-    return m_impl->EnableFPSCounter(font);
+  return m_impl->GetHeight();
+}
+
+unsigned int BCIInterface::GetWindowWidth()
+{
+  return m_impl->GetWindowWidth();
+}
+
+unsigned int BCIInterface::GetWindowHeight()
+{
+  return m_impl->GetWindowHeight();
 }
 
 } // namespace bciinterface

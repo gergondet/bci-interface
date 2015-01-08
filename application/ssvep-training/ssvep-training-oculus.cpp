@@ -11,8 +11,6 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/OpenGL.hpp>
 
-#include <OculusWindow.h>
-
 #include <iostream>
 #include <sstream>
 #include <fstream>
@@ -69,20 +67,13 @@ private:
 
 int main(int argc, char * argv[])
 {
-    unsigned int width = 1280;
-    unsigned int height = 800;
-
-    /* Render width/height */
-    unsigned int rwidth = width/2;
-    unsigned int rheight = 480;
-
-    BCIInterface * bciinterface = new BCIInterface(width, height);
+    BCIInterface * bciinterface = new BCIInterface();
     bciinterface->InitOculus();
+    /* Render width/height */
+    unsigned int rwidth = bciinterface->GetWidth();
+    unsigned int rheight = bciinterface->GetHeight();
 
     FontManager fm;
-
-    rwidth = rwidth*bciinterface->GetRenderScale();
-    rheight = rheight*bciinterface->GetRenderScale();
 
     UDPReceiver * receiver = new UDPReceiver(2222);
     TrainingInterpreter * interpreter = new TrainingInterpreter(rwidth, rheight);
@@ -97,7 +88,6 @@ int main(int argc, char * argv[])
 
     int cmd = -1;
     while(!bciinterface->GetOculusWindow()); /* Wait for the full initialization of the oculus window */
-    bciinterface->GetOculusWindow()->enableFPSCounter(fm.GetDefaultFont());
     bciinterface->OculusDisplayLoop(cmd);
 
     delete bciinterface;
