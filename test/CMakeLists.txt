@@ -134,24 +134,24 @@ TARGET_LINK_LIBRARIES(${EXEC_NAME} ${Boost_LIBRARIES})
 
 
 # -- EchoServer
-SET(EXEC_NAME EchoServer)
-
-SET(${EXEC_NAME}_src
-    EchoServer.cpp
-)
-
-INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include)
-
-ADD_EXECUTABLE(${EXEC_NAME}
-  ${${EXEC_NAME}_src}
-  )
-
-IF(UNIX)
-TARGET_LINK_LIBRARIES(${EXEC_NAME} ${PROJECT_NAME} ${SFML_LIBRARIES} pthread)
-ELSE(UNIX)
-TARGET_LINK_LIBRARIES(${EXEC_NAME} ${PROJECT_NAME} "sfml-oculus.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;glu32.lib;${OCULUS_LIB}")
-ENDIF(UNIX)
-TARGET_LINK_LIBRARIES(${EXEC_NAME} ${Boost_LIBRARIES})
+#SET(EXEC_NAME EchoServer)
+#
+#SET(${EXEC_NAME}_src
+#    EchoServer.cpp
+#)
+#
+#INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/include)
+#
+#ADD_EXECUTABLE(${EXEC_NAME}
+#  ${${EXEC_NAME}_src}
+#  )
+#
+#IF(UNIX)
+#TARGET_LINK_LIBRARIES(${EXEC_NAME} ${PROJECT_NAME} ${SFML_LIBRARIES} pthread)
+#ELSE(UNIX)
+#TARGET_LINK_LIBRARIES(${EXEC_NAME} ${PROJECT_NAME} "sfml-oculus.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;glu32.lib;${OCULUS_LIB}")
+#ENDIF(UNIX)
+#TARGET_LINK_LIBRARIES(${EXEC_NAME} ${Boost_LIBRARIES})
 
 
 #SET(EXEC_NAME testp300-interface)

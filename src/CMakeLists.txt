@@ -7,7 +7,7 @@ CommandReceiver/TCPReceiver.cpp
 Utils/FontManager.cpp
 Utils/TCPClient.cpp
 Utils/UDPSocket.cpp
-Utils/UDPServer.cpp
+#Utils/UDPServer.cpp
 Utils/square-function.cpp
 Utils/Win32.cpp
 BCIInterface.cpp
