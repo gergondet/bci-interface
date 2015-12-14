@@ -2,8 +2,9 @@ language: cpp
 compiler: gcc
 env:
   global:
-  - APT_DEPENDENCIES="libpthread-stubs0-dev libgl1-mesa-dev libx11-dev libxrandr-dev libfreetype6-dev libglew1.5-dev libjpeg8-dev libgpgme11-dev libsndfile1-dev libopenal-dev doxygen doxygen-latex libltdl-dev libboost-all-dev liblog4cxx10-dev freeglut3-dev libglm-dev libxxf86vm-dev libudev-dev libxinerama-dev libeigen3-dev"
-  - GIT_DEPENDENCIES="LaurentGomila/SFML jherico/OculusSDK:0.2.x gergondet/sfml-oculus"
+  - APT_DEPENDENCIES="libpthread-stubs0-dev libgl1-mesa-dev libx11-dev libxrandr-dev libfreetype6-dev libglew1.5-dev libjpeg8-dev libgpgme11-dev libsndfile1-dev libopenal-dev doxygen doxygen-latex libltdl-dev libboost-all-dev liblog4cxx10-dev freeglut3-dev libglm-dev libxxf86vm-dev libudev-dev libxinerama-dev libeigen3-dev libx11-xcb-dev libxcb-image0-dev libxcb-randr0-dev"
+  - GIT_DEPENDENCIES="LaurentGomila/SFML gergondet/OculusSDK gergondet/sfml-oculus"
+  - MASTER_PPA="boost-latest/ppa"
 notifications:
   email:
   - pierre.gergondet+github@gmail.com 
@@ -13,4 +14,12 @@ branches:
 script: ./.travis/run build
 after_success: ./.travis/run after_success
 after_failure: ./.travis/run after_failure
-before_install: ./.travis/run before_install
+before_install:
+  - sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test
+  - sudo apt-get -y update
+  - sudo apt-get install -y gcc-4.8 g++-4.8 gccxml
+  - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.8 20
+  - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 20
+  - sudo update-alternatives --config gcc
+  - sudo update-alternatives --config g++
+  - ./.travis/run before_install
